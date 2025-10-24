@@ -3,9 +3,33 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36212.18
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6C83A596-D32D-B35F-00DD-F0C99B673980}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlaisePascal.SmartHouse.Domain", "src\BlaisePascal.SmartHouse.Domain\BlaisePascal.SmartHouse.Domain.csproj", "{0A117D86-7CD6-F952-E5AD-D4D2A1732F4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlaisePascal.SmartHouse.Console", "src\BlaisePascal.SmartHouse.Console\BlaisePascal.SmartHouse.Console.csproj", "{9235F4DF-C64F-926B-54E3-4A697FFFBBC3}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0A117D86-7CD6-F952-E5AD-D4D2A1732F4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A117D86-7CD6-F952-E5AD-D4D2A1732F4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A117D86-7CD6-F952-E5AD-D4D2A1732F4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A117D86-7CD6-F952-E5AD-D4D2A1732F4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9235F4DF-C64F-926B-54E3-4A697FFFBBC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9235F4DF-C64F-926B-54E3-4A697FFFBBC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9235F4DF-C64F-926B-54E3-4A697FFFBBC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9235F4DF-C64F-926B-54E3-4A697FFFBBC3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0A117D86-7CD6-F952-E5AD-D4D2A1732F4F} = {6C83A596-D32D-B35F-00DD-F0C99B673980}
+		{9235F4DF-C64F-926B-54E3-4A697FFFBBC3} = {6C83A596-D32D-B35F-00DD-F0C99B673980}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {664F6CDA-7A16-4475-9D88-3E535D40D7F4}
