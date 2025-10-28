@@ -1,51 +1,61 @@
-﻿ public class Lamp
+﻿public class Lamp
+{
+    // --- Proprietà ---
+    public int LuminosityPercentage { get; private set; }
+    public int Luminosity;
+    public int Power { get; }
+    public string Color { get; set; }
+    public string Model { get; }
+    public bool IsOn { get; private set; }
+    public string Brand { get; }
+    public string EnergyClass { get; }
+
+    // --- Costruttore ---
+    public Lamp(int power, string color, string model, string brand, string energyClass)
     {
-
-    private int luminosity_perc { get; set; }
-    private int luminosity { get;  set; }
-    private int power { get; }
-    private string color { get; set; }
-    private string model { get; }
-    private bool isOn { get; set; }
-    private string brand { get;  }
-    string energyClass { get; }
-
-    public Lamp(int _power,string _color, string _model, string _brand, string _energyclass)
-    {
-      
-        luminosity_perc = 0;
-        power = _power;
-        color = _color;
-        model = _model;
-        brand = _brand;
-        isOn = false;
-        energyClass = _energyclass;
-
+        Power = power;
+        Color = color;
+        Model = model;
+        Brand = brand;
+        EnergyClass = energyClass;
+        IsOn = false;
+        LuminosityPercentage = 0;
     }
 
-
+    // --- Metodi ---
     public void TurnOn()
     {
-        isOn = true;
-        luminosity_perc = 100;
+        IsOn = true;
+        LuminosityPercentage = 100;
     }
 
     public void TurnOff()
     {
-        isOn = false;
-        luminosity_perc = 0;
+        IsOn = false;
+        LuminosityPercentage = 0;
     }
 
-    
+    public void SetLuminosity(int percentage)
+    {
+        if (!IsOn)
+        {
+            Console.WriteLine("Accendi prima la lampada!");
+           
+        }
 
+        if (percentage < 0 || percentage > 100)
+        {
+            Console.WriteLine("Luminosità deve essere tra 0 e 100.");
+            
+        }
 
+        LuminosityPercentage = percentage;
+        Luminosity = CalcLuminosity(); // Aggiorna il valore interno
+    }
 
-
-
-
-
-
-
-
+    private int CalcLuminosity()
+    {
+        return (Power * LuminosityPercentage) / 100;
+    }
 
 }
