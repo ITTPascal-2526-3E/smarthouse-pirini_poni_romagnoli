@@ -1,17 +1,18 @@
 ﻿public class Lamp
 {
-    // --- Proprietà ---
+    
     public int LuminosityPercentage { get; private set; }
     public int Luminosity;
     public int Power { get; }
     public string Color { get; set; }
+    //public int SerialNumber { get; }
     public string Model { get; }
     public bool IsOn { get; private set; }
     public string Brand { get; }
     public string EnergyClass { get; }
 
-    // --- Costruttore ---
-    public Lamp(int power, string color, string model, string brand, string energyClass)
+    
+    public Lamp(int power, string color, string model, string brand, string energyClass, int serialNumber)
     {
         Power = power;
         Color = color;
@@ -20,9 +21,10 @@
         EnergyClass = energyClass;
         IsOn = false;
         LuminosityPercentage = 0;
+        //SerialNumber = serialNumber;
     }
 
-    // --- Metodi ---
+    
     public void TurnOn()
     {
         IsOn = true;
