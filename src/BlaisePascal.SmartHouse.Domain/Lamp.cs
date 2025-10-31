@@ -1,19 +1,16 @@
 ﻿public class Lamp
 {
-    
-    public int LuminosityPercentage { get; private set; }
-    public int Luminosity;
+    // Proprietà principali ---
     public int Power { get; }
     public string Color { get; set; }
-    //public int SerialNumber { get; }
-    public string Model { get; }
-    public bool IsOn { get; private set; }
     public string Brand { get; }
+    public string Model { get; }
     public string EnergyClass { get; }
+    public bool IsOn { get; protected set; }
+    public int LuminosityPercentage { get; protected set; }
 
-    private int mela = 0;
-    
-    public Lamp(int power, string color, string model, string brand, string energyClass, int serialNumber)
+
+    public Lamp(int power, string color, string model, string brand, string energyClass)
     {
         Power = power;
         Color = color;
@@ -22,43 +19,31 @@
         EnergyClass = energyClass;
         IsOn = false;
         LuminosityPercentage = 0;
-        //SerialNumber = serialNumber;
     }
 
-    
-    public void TurnOn()
+    //accensione
+    public virtual void TurnOn()
     {
         IsOn = true;
         LuminosityPercentage = 100;
     }
 
-    public void TurnOff()
+    //spegnimento
+    public virtual void TurnOff()
     {
         IsOn = false;
         LuminosityPercentage = 0;
     }
 
-    public void SetLuminosity(int percentage)
+    //regolazione luminosità
+    public virtual void SetLuminosity(int percentage)
     {
         if (!IsOn)
         {
-            Console.WriteLine("Accendi prima la lampada!");
-           
-        }
 
-        if (percentage < 0 || percentage > 100)
-        {
-            Console.WriteLine("Luminosità deve essere tra 0 e 100.");
+            LuminosityPercentage = percentage;
 
         }
-
-        LuminosityPercentage = percentage;
-        Luminosity = CalcLuminosity(); // Aggiorna il valore interno
-    }
-
-    private int CalcLuminosity()
-    {
-        return (Power * LuminosityPercentage) / 100;
     }
 
 }
