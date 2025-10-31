@@ -11,6 +11,7 @@
     public string Brand { get; }
     public string EnergyClass { get; }
 
+    private int mela = 0;
     
     public Lamp(int power, string color, string model, string brand, string energyClass, int serialNumber)
     {
@@ -48,7 +49,7 @@
         if (percentage < 0 || percentage > 100)
         {
             Console.WriteLine("Luminosità deve essere tra 0 e 100.");
-            
+
         }
 
         LuminosityPercentage = percentage;
