@@ -38,7 +38,7 @@
     //regolazione luminosità
     public virtual void SetLuminosity(int percentage)
     {
-        if (!IsOn)
+        if (IsOn)
         {
 
             LuminosityPercentage = percentage;

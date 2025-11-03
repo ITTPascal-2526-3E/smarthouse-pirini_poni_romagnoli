@@ -2,6 +2,25 @@
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Hello, World!");
+        Lamp lamp = new Lamp(10, "Warm White", "EcoModelX", "EcoBrand", "A++");
+        lamp.TurnOn();
+        Console.WriteLine($"Lamp is on: {lamp.IsOn}, Luminosity: {lamp.LuminosityPercentage}%");
+        lamp.TurnOff();
+        Console.WriteLine($"Lamp is on: {lamp.IsOn}, Luminosity: {lamp.LuminosityPercentage}%");
+        lamp.TurnOn();
+        lamp.SetLuminosity(70);
+        Console.WriteLine($"Lamp is on: {lamp.IsOn}, Luminosity: {lamp.LuminosityPercentage}%");
+
+        EcoLamp ecoLamp = new EcoLamp(8, "Cool White", "SmartEcoX", "SmartBrand", "A+++");
+        ecoLamp.TurnOn();
+        Console.WriteLine($"EcoLamp is on: {ecoLamp.IsOn}, Luminosity: {ecoLamp.LuminosityPercentage}%");
+        ecoLamp.TurnOff();
+        ecoLamp.TurnOn();
+        ecoLamp.RegisterPresence();
+        ecoLamp.Schedule(DateTime.Now.AddSeconds(5), DateTime.Now.AddSeconds(10));
+        ecoLamp.Update(DateTime.Now.AddSeconds(6));
+        Console.WriteLine($"EcoLamp is on: {ecoLamp.IsOn}, Luminosity: {ecoLamp.LuminosityPercentage}%");
+
+
     }
 }
