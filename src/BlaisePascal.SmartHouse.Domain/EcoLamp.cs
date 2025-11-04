@@ -10,16 +10,16 @@
     public TimeSpan TotalOnTime { get; private set; } = TimeSpan.Zero;
 
     // programmazione 
-    public DateTime? ScheduledOn { get; private set; }
-    public DateTime? ScheduledOff { get; private set; }
+    public DateTime? ScheduledOn { get; private set; }//il punto interrogativo indica che può essere null
+    public DateTime? ScheduledOff { get; private set; }//uso il private set per evitare che venga modificato dall'esterno
 
     public EcoLamp(int power, string color, string model, string brand, string energyClass)
-        : base(power, color, model, brand, energyClass)
+        : base(power, color, model, brand, energyClass)//chiamo il costruttore della classe base
     {
         lastPresenceTime = DateTime.Now;
     }
 
-  
+    // registrazione presenza
     public void RegisterPresence()
     {
         lastPresenceTime = DateTime.Now;
@@ -30,7 +30,7 @@
         }
     }
 
-  
+    // pianificazione accensione/spegnimento
     public void Schedule(DateTime? onTime, DateTime? offTime)
     {
         ScheduledOn = onTime;
@@ -66,7 +66,7 @@
         }
     }
 
-    // conteggio ore accesa
+    
     public override void TurnOn()//override significa che sto ridefinendo un metodo della classe base
     {
         // se era spenta segno l'ora di accensione
@@ -75,6 +75,9 @@
 
         base.TurnOn();
     }
+
+
+    // conteggio ore accesa
     public override void TurnOff()//override significa che sto ridefinendo un metodo della classe base
     {
         // se stava andando aggiungo le ore

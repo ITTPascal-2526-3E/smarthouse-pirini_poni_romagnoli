@@ -3,6 +3,7 @@
     // Proprietà principali ---
     public int Power { get; }
     public string Color { get; set; }
+
     public string Brand { get; }
     public string Model { get; }
     public string EnergyClass { get; }
@@ -13,7 +14,7 @@
     public Lamp(int power, string color, string model, string brand, string energyClass)
     {
         Power = power;
-        Color = color;
+        Color = 
         Model = model;
         Brand = brand;
         EnergyClass = energyClass;
