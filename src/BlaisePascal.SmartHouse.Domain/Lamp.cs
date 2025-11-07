@@ -1,19 +1,21 @@
-﻿public class Lamp
-{
-    
-    public int LuminosityPercentage { get; private set; }
-    public int Luminosity;
-    public int Power { get; }
-    public string Color { get; set; }
-    //public int SerialNumber { get; }
-    public string Model { get; }
-    public bool IsOn { get; private set; }
-    public string Brand { get; }
-    public string EnergyClass { get; }
+﻿using System;
 
-    private int mela = 0;
-    
-    public Lamp(int power, string color, string model, string brand, string energyClass, int serialNumber)
+public class Lamp
+{
+    //  Enumeration of available lamp colors 
+    public enum ColorOption {White,WarmWhite,CoolWhite,Yellow,Blue,Red,Green}
+
+    //  Main properties 
+    public int Power { get; }                  // Lamp power in watts
+    public ColorOption Color { get; set; }     // Lamp color (chosen from predefined options)
+    public string Brand { get; }               // Manufacturer brand
+    public string Model { get; }               // Lamp model name or number
+    public string EnergyClass { get; }         // Energy efficiency label (e.g. A++, B, etc.)
+    public bool IsOn { get; protected set; }   // True if the lamp is currently ON
+    public int LuminosityPercentage { get; protected set; } // Brightness level (0–100%)
+
+    //  Constructor 
+    public Lamp(int power, ColorOption color, string model, string brand, string energyClass)
     {
 
         Power = power;
@@ -23,43 +25,44 @@
         EnergyClass = energyClass;
         IsOn = false;
         LuminosityPercentage = 0;
-        //SerialNumber = serialNumber;
     }
 
-    
-    public void TurnOn()
+    //  Turn lamp ON 
+    public virtual void TurnOn()
     {
         IsOn = true;
         LuminosityPercentage = 100;
+        
     }
 
-    public void TurnOff()
+    //  Turn lamp OFF 
+    public virtual void TurnOff()
     {
         IsOn = false;
         LuminosityPercentage = 0;
+        
     }
 
-    public void SetLuminosity(int percentage)
+    //  Adjust brightness 
+    public virtual void SetLuminosity(int percentage)
     {
+        // Brightness can be adjusted only if the lamp is ON
         if (!IsOn)
         {
-            Console.WriteLine("Accendi prima la lampada!");
-           
+            
+            return;
         }
 
         if (percentage < 0 || percentage > 100)
         {
-            Console.WriteLine("Luminosità deve essere tra 0 e 100.");
-
+            
+            return;
         }
 
         LuminosityPercentage = percentage;
-        Luminosity = CalcLuminosity(); // Aggiorna il valore interno
+       
     }
 
-    private int CalcLuminosity()
-    {
-        return (Power * LuminosityPercentage) / 100;
-    }
 
+    
 }
