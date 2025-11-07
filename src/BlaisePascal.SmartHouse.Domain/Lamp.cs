@@ -15,6 +15,7 @@
     
     public Lamp(int power, string color, string model, string brand, string energyClass, int serialNumber)
     {
+
         Power = power;
         Color = color;
         Model = model;
