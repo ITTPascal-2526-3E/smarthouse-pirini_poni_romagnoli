@@ -3,7 +3,7 @@
 public class Lamp
 {
     //  Enumeration of available lamp colors 
-    public enum ColorOption {White,WarmWhite,CoolWhite,Yellow,Blue,Red,Green}
+    public enum ColorOption {White,WarmWhite,CoolWhite,Yellow,Blue,Red,Green }//  Lamp color options
 
     //  Main properties 
     public int Power { get; }                  // Lamp power in watts

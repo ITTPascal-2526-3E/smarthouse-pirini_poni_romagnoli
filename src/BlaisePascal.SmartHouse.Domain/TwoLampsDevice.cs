@@ -5,7 +5,7 @@ public class TwoLampsDevice()
 	private Lamp MyLamp;
 	private EcoLamp MyEcolamp;
 
-	public TwoLmapsDevice(Lamp mylamp, EcoLamp myecolamp)
+	public TwoLampsDevice(Lamp mylamp, EcoLamp myecolamp)
 	{
 		MyLamp = mylamp;
 		MyEcolamp = myecolamp;
