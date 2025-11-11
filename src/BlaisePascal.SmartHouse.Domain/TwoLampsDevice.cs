@@ -4,7 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 
 public class TwoLampsDevice()
 {
-
+    private Guid DeviceId { get; } = Guid.NewGuid();
+    private string name { get; set; } = "Unnamed TwoLampsDevice";
     List<object> values = new List<object>();
     
 

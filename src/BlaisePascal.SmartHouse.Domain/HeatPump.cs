@@ -3,7 +3,7 @@
 public class HeatPump
 {
     //Heat pump modes
-    public enum ModeOption { Heating, Cooling, Fan, Dry }
+    public enum ModeOption { Heating, Cooling, Fan, Dry, Off }
 	public int CurrentTemperature { get; private set; }
 	public ModeOption Mode { get; private set; }
 

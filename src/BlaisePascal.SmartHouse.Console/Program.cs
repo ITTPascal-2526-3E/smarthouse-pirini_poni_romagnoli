@@ -6,8 +6,8 @@
 
         Console.WriteLine("1) Aggiungo lampade...");
 
-        device.addLamp(new Lamp(60, Lamp.ColorOption.WarmWhite, "ModelX", "BrandY", "A++"));
-        device.addLamp(new Lamp(40, Lamp.ColorOption.White, "ModelA", "BrandZ", "A"));
+        device.addLamp(new Lamp(60, Lamp.ColorOption.WarmWhite, "ModelX", "BrandY", "A++","lampada soggiorno"));
+        device.addLamp(new Lamp(40, Lamp.ColorOption.White, "ModelA", "BrandZ", "A", "lampada smart soggiorno"));
         
 
         Console.WriteLine($"Lamps count dopo aggiunta: {device.getLampsCount()}");
@@ -59,5 +59,6 @@
         device.ClearAllLamps();
         Console.WriteLine($"Lamps count dopo ClearAllLamps: {device.getLampsCount()}");
 
+        
     }
 }
