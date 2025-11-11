@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlaisePascal.SmartHouse.Domain
-{
-    internal class CCTV
+
+
+     public class CCTV
     {
         private Guid Id { get; }
         // CCTV attributes
@@ -81,4 +81,4 @@ namespace BlaisePascal.SmartHouse.Domain
         }
 
     }
-}
+

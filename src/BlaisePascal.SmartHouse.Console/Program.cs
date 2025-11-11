@@ -59,6 +59,12 @@
         device.ClearAllLamps();
         Console.WriteLine($"Lamps count dopo ClearAllLamps: {device.getLampsCount()}");
 
-        
+        CCTV camera = new CCTV("ModelC", "BrandD", "1080p", 5, 2, "Front Door Camera");
+        camera.StartRecording();
+        camera.zoom(3);
+        camera.StopRecording();
+        camera.StartRecording();
+        camera.ToggleNightVision();
+        camera.StopRecording();
     }
 }

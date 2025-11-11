@@ -19,8 +19,8 @@
     // Private setter prevents external code from changing it directly
     public DateTime? ScheduledOff { get; private set; }
 
-    public EcoLamp(int power, ColorOption color, string model, string brand, string energyClass)
-        : base(power, color, model, brand, energyClass) // Call base-class constructor
+    public EcoLamp(int power, ColorOption color, string model, string brand, string energyClass, string nm)
+        :base(power, color, model, brand, energyClass, nm) // Call base-class constructor
     {
         lastPresenceTime = DateTime.Now;
     }

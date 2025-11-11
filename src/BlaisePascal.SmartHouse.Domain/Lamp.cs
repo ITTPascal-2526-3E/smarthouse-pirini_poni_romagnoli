@@ -66,7 +66,4 @@ public class Lamp
         LuminosityPercentage = percentage;
        
     }
-
-
-    
 }
