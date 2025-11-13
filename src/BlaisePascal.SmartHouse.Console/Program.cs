@@ -4,61 +4,45 @@
     {
         TwoLampsDevice device = new TwoLampsDevice();
 
-        Console.WriteLine("1) Aggiungo lampade...");
+        Console.WriteLine("Adding lamps");
+        device.addLamp(new Lamp(60, Lamp.ColorOption.WarmWhite, "ModelX", "BrandY", "A++", "Lamp Soggiorno"));
+        device.addLamp(new Lamp(40, Lamp.ColorOption.White, "ModelA", "BrandZ", "A", "Lamp Smart Soggiorno"));
+        Console.WriteLine($"Total lamps: {device.getLampsCount()}");
 
-        device.addLamp(new Lamp(60, Lamp.ColorOption.WarmWhite, "ModelX", "BrandY", "A++","lampada soggiorno"));
-        device.addLamp(new Lamp(40, Lamp.ColorOption.White, "ModelA", "BrandZ", "A", "lampada smart soggiorno"));
-        
-
-        Console.WriteLine($"Lamps count dopo aggiunta: {device.getLampsCount()}");
-
-        Console.WriteLine("\n2) Accendo tutte le lampade...");
+        Console.WriteLine("\nTurning on all lamps");
         device.TurnOnAllLamps();
-        Console.WriteLine($"Turned on lamps (count): {device.getONLampsCount()}");
+        Console.WriteLine($"Lamps ON: {device.getONLampsCount()}");
 
-       
-
-        Console.WriteLine("\n3) Imposto luminosità globale al 50%...");
+        Console.WriteLine("\nSetting global luminosity to 50%");
         device.SetLuminosityAllLamps(50);
-        
 
-        Console.WriteLine("\n4) Spengo la lamp alla posizione 0...");
+        Console.WriteLine("\nTurning off lamp at index 0");
         device.turnofflampsatindex(0);
-        Console.WriteLine($"Turned on lamps (count): {device.getONLampsCount()}");
-        
+        Console.WriteLine($"Lamps ON: {device.getONLampsCount()}");
 
-        Console.WriteLine("\n5) Riaccendo la lamp alla posizione 0 e setto luminosità indice 1 al 20%...");
+        Console.WriteLine("\nTurning on lamp at index 0 and setting index 1 to 20%");
         device.turnonlampsatindex(0);
         device.setluminosityatindex(1, 20);
-        
 
-        Console.WriteLine("\n6) Rimuovo la lamp alla posizione 0...");
+        Console.WriteLine("\nRemoving lamp at index 0");
         device.RemoveLampAtIndex(0);
-        Console.WriteLine($"Lamps count dopo rimozione: {device.getLampsCount()}");
-        
+        Console.WriteLine($"Total lamps: {device.getLampsCount()}");
 
-        Console.WriteLine("\n7) Test funzionalità EcoLamp: register presence, schedule, update...");
-
-        // Registrazione presenza su tutte le EcoLamp
+        Console.WriteLine("\nTesting EcoLamp schedule and presence");
         device.RegisterPresenceAllEcoLamps();
-        Console.WriteLine("Registrata presenza su tutte le EcoLamp.");
 
-        // Schedule: accensione tra 1 sec e spegnimento tra 2 minuti
         DateTime onTime = DateTime.Now.AddSeconds(1);
         DateTime offTime = DateTime.Now.AddMinutes(2);
         device.ScheduleAllEcoLamps(onTime, offTime);
-        Console.WriteLine($"Scheduled EcoLamps ON at {onTime}, OFF at {offTime}");
 
-        // Simulo passaggio del tempo: aggiorno con un tempo futuro per verificare comportamento di UpdateAllEcoLamps
-        DateTime later = DateTime.Now.AddMinutes(6); // oltre il timeout di presenza di 5 minuti => dovrebbe ridurre luminosità delle EcoLamp
+        DateTime later = DateTime.Now.AddMinutes(6);
         device.UpdateAllEcoLamps(later);
-        Console.WriteLine($"Eseguito UpdateAllEcoLamps con ora = {later}");
-        
 
-        Console.WriteLine("\n8) Svuoto tutte le lampade...");
+        Console.WriteLine("\nClearing all lamps");
         device.ClearAllLamps();
-        Console.WriteLine($"Lamps count dopo ClearAllLamps: {device.getLampsCount()}");
+        Console.WriteLine($"Total lamps: {device.getLampsCount()}");
 
+        // CCTV
         CCTV camera = new CCTV("ModelC", "BrandD", "1080p", 5, 2, "Front Door Camera");
         camera.StartRecording();
         camera.zoom(3);
@@ -66,5 +50,27 @@
         camera.StartRecording();
         camera.ToggleNightVision();
         camera.StopRecording();
+
+        // thermostat + heat pump 
+
+        Console.WriteLine("\nThermostat + HeatPump test");
+
+        HeatPump pump1 = new HeatPump(20, "Living Room Pump");
+        HeatPump pump2 = new HeatPump(18, "Bedroom Pump");
+
+        Thermostat thermostat = new Thermostat(20, Thermostat.ModeOption.Off, 22);
+        thermostat.AddHeatPump(pump1);
+        thermostat.AddHeatPump(pump2);
+
+        thermostat.SetTargetTemperature(22);
+
+        thermostat.updateCurrentTemp(19); // Heating
+        Console.WriteLine($"Mode after temp=19: {thermostat.Mode}");
+
+        thermostat.updateCurrentTemp(24); // Cooling
+        Console.WriteLine($"Mode after temp=24: {thermostat.Mode}");
+
+        thermostat.updateCurrentTemp(22); // Off
+        Console.WriteLine($"Mode after temp=22: {thermostat.Mode}");
     }
 }

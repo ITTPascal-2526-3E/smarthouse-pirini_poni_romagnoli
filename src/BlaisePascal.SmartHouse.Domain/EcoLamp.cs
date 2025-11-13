@@ -83,7 +83,7 @@
         base.TurnOn();
     }
 
-    // --- Override: specialize base behavior to accumulate uptime on shutdown ---
+    //  Override: specialize base behavior to accumulate uptime on shutdown ---
     public override void TurnOff() // "override" = redefine a virtual method from the base class
     {
         // If it was ON, accumulate elapsed time since lastTurnOnTime

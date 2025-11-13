@@ -2,39 +2,49 @@
 
 public class HeatPump
 {
-    //Heat pump modes
+    // Heat pump modes
     public enum ModeOption { Heating, Cooling, Fan, Dry, Off }
-	public int CurrentTemperature { get; private set; }
-	public ModeOption Mode { get; private set; }
 
-	//Mode setting
-	public void SetMode(ModeOption mode)
-	{
-		Mode = mode;
-	}
+    public int CurrentTemperature { get; private set; }
+    public int TargetTemperature { get; private set; }
+    public ModeOption Mode { get; private set; }
 
-    //Temperature setting based on mode and temperature wanted
-    public void SetTemperature(int temperature)
-	{
-		if (Mode == ModeOption.Heating && temperature < CurrentTemperature)
-		{
-			return;
-		}
-		if (Mode == ModeOption.Cooling && temperature > CurrentTemperature)
-		{
-			return;
-		}
-		if (Mode == ModeOption.Fan)
-		{
-			CurrentTemperature -= temperature;
-			return;
-		}
-		if (Mode == ModeOption.Dry)
-		{
-			CurrentTemperature += temperature;
-			return;
-		}
-		CurrentTemperature = temperature;
-	}
-	
+    public string Name { get; }
+    private Guid DeviceId { get; } = Guid.NewGuid();
+
+    public HeatPump(int initialTemperature, string name = "Unnamed HeatPump")
+    {
+        CurrentTemperature = initialTemperature;
+        TargetTemperature = initialTemperature; // start aligned
+        Mode = ModeOption.Off;
+        Name = name;
+    }
+
+    // Set mode (called by the thermostat)
+    public void SetMode(ModeOption mode)
+    {
+        Mode = mode;
+    }
+
+    // Set a target temperature requested by the thermostat
+    public void SetTargetTemperature(int temperature)
+    {
+        TargetTemperature = temperature;
+    }
+
+    // simulate temperature changing when called
+    public void Update()
+    {
+        if (Mode == ModeOption.Heating && CurrentTemperature < TargetTemperature)
+        {
+            CurrentTemperature++;
+        }
+        else if (Mode == ModeOption.Cooling && CurrentTemperature > TargetTemperature)
+        {
+            CurrentTemperature--;
+        }
+        // Fan and Dry may get optional modifiers in future
+    }
+
+
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-public class AirConditioner
+/*public class AirConditioner
 {
     private Guid Id { get; }
     public string Name { get; set; }
@@ -144,4 +144,4 @@ public class AirConditioner
 
     }
 
-}
+}*/
