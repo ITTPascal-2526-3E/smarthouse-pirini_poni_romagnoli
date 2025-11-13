@@ -1,5 +1,5 @@
 ﻿using System;
-public class Door()
+public class Door
 {
     private Guid Id { get; }
     public string Name { get; set; } //name that the user can assign to the device
@@ -8,9 +8,10 @@ public class Door()
 
     public Door(string name)
     {
-        Name = name;
-        IsOpen = false;
-        IsLock = true; 
+        this.Name = name;
+        this.IsOpen = false;
+        this.IsLock = true; 
+        this.Id = Guid.NewGuid();
     }
 
     public void OpenDoor()
