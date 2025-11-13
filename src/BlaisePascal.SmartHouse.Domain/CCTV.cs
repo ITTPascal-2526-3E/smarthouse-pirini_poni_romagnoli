@@ -21,7 +21,6 @@ using System.Threading.Tasks;
         private int WideAngleLevel { get; set; }
         public bool IsNightVisionOn { get; private set; }
         private string name { get; set; }
-
         // Constructor
         public CCTV(string model, string brand, string resolution, int cameraTelephotoLevel, int cameraWideAngleLevel, string cameraName)
         {
@@ -38,19 +37,11 @@ using System.Threading.Tasks;
         public void StartRecording()
         {
             zoomLevel = WideAngleLevel;
-            if (IsRecording == true)
-            {
-                return;
-            }
             IsRecording = true;
         }
         // Stop recording
         public void StopRecording()
         {
-            if (IsRecording == false)
-            {
-                return;
-            }
             IsRecording = false;
             zoomLevel = 0;
         }
@@ -70,15 +61,7 @@ using System.Threading.Tasks;
         }
         public void ToggleNightVision()
         {
-            if (IsNightVisionOn == false)
-            {
-                IsNightVisionOn = true;
-            }
-            else
-            {
-                IsNightVisionOn = false;
-            }
+            IsNightVisionOn = !IsNightVisionOn;
         }
-
     }
 
