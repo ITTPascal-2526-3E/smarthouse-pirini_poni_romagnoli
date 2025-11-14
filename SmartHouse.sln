@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlaisePascal.SmartHouse.Dom
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlaisePascal.SmartHouse.Console", "src\BlaisePascal.SmartHouse.Console\BlaisePascal.SmartHouse.Console.csproj", "{9235F4DF-C64F-926B-54E3-4A697FFFBBC3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{ED5A7ADE-91A3-43C1-AC93-9B4BD8B333E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blaisepascal.Smarthouse.Domain.unitTests", "test\Blaisepascal.Smarthouse.Domain.unitTests\Blaisepascal.Smarthouse.Domain.unitTests.csproj", "{D8E76780-498F-7E27-E580-C5D95899ADFD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +27,10 @@ Global
 		{9235F4DF-C64F-926B-54E3-4A697FFFBBC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9235F4DF-C64F-926B-54E3-4A697FFFBBC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9235F4DF-C64F-926B-54E3-4A697FFFBBC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8E76780-498F-7E27-E580-C5D95899ADFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8E76780-498F-7E27-E580-C5D95899ADFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8E76780-498F-7E27-E580-C5D95899ADFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8E76780-498F-7E27-E580-C5D95899ADFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -30,6 +38,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0A117D86-7CD6-F952-E5AD-D4D2A1732F4F} = {6C83A596-D32D-B35F-00DD-F0C99B673980}
 		{9235F4DF-C64F-926B-54E3-4A697FFFBBC3} = {6C83A596-D32D-B35F-00DD-F0C99B673980}
+		{D8E76780-498F-7E27-E580-C5D95899ADFD} = {ED5A7ADE-91A3-43C1-AC93-9B4BD8B333E5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {664F6CDA-7A16-4475-9D88-3E535D40D7F4}
