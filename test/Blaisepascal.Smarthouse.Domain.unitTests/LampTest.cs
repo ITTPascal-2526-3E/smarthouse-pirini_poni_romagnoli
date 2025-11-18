@@ -8,5 +8,6 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests
 {
     internal class LampTest
     {
+        
     }
 }
