@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Blaisepascal.Smarthouse.Domain.unitTests
+namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
 {
     public class LampTest
     {
@@ -30,6 +30,20 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests
             // Assert
             Assert.False(lamp.IsOn);
             Assert.Equal(0, lamp.LuminosityPercentage);
+        }
+
+        [Fact]
+        public void Constructor_SetsFixedPropertiesCorrectly()
+        {
+            // Arrange
+            var lamp = CreateDefaultLamp();
+
+            // Assert
+            Assert.Equal(Power, lamp.Power);
+            Assert.Equal(Brand, lamp.Brand);
+            Assert.Equal(Model, lamp.Model);
+            Assert.Equal(EnergyClass, lamp.EnergyClass);
+            Assert.Equal(Name, lamp.name);
         }
     }
 }
