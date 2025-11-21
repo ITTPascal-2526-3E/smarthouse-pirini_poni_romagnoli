@@ -2,12 +2,7 @@
 {
     //  Presence handling in the room 
     // After 5 minutes without detected presence, dim the light
-    private TimeSpan noPresenceTimeout = TimeSpan.FromMinutes(5);
     private DateTime lastPresenceTime;
-    // Target brightness percentage when no one is around
-    private int presenceDimLuminosity = 30;
-
-  
     // Moment when the lamp was last turned on (nullable: it's null when currently OFF or not started yet)
     private DateTime? lastTurnOnTime;
     // Total accumulated time the lamp has been ON
@@ -18,6 +13,15 @@
     public DateTime? ScheduledOn { get; private set; }
     // Private setter prevents external code from changing it directly
     public DateTime? ScheduledOff { get; private set; }
+
+    // Target brightness percentage when no one is around
+    private const int PRESENCE_DIM_LUMINOSITY = 30;
+    // Max luminosity percentage is a const
+    private const int MAX_LUMINOSITY_PERCENTAGE = 100;
+    // Minutes  
+    private const int MINUTES = 5;
+    // After 5 minutes without detected presence, dim the light
+    private TimeSpan noPresenceTimeout = TimeSpan.FromMinutes(MINUTES);
 
     public EcoLamp(int power, ColorOption color, string model, string brand, string energyClass, string nm)
         : base(power, color, model, brand, energyClass, nm) // Call base-class constructor
@@ -31,9 +35,9 @@
         lastPresenceTime = DateTime.Now;
 
         // If the lamp is ON and currently dimmed, restore full brightness when presence is detected
-        if (base.IsOn && LuminosityPercentage < 100)
+        if (base.IsOn && LuminosityPercentage < MAX_LUMINOSITY_PERCENTAGE)
         {
-            SetLuminosity(100);
+            SetLuminosity(MAX_LUMINOSITY_PERCENTAGE);
         }
     }
 
@@ -67,8 +71,8 @@
             if (now - lastPresenceTime >= noPresenceTimeout)
             {
                 // No presence for too long -> dim down to the target percentage
-                if (LuminosityPercentage > presenceDimLuminosity)
-                    SetLuminosity(presenceDimLuminosity);
+                if (LuminosityPercentage > PRESENCE_DIM_LUMINOSITY)
+                    SetLuminosity(PRESENCE_DIM_LUMINOSITY);
             }
         }
     }
