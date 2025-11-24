@@ -33,5 +33,10 @@ public class CofeeMachine
     }
 
     public void changeName(string name)
+    { 
+        Name = name;
+    }
+
+    public void IsReadyToUse()
     { }
 }
