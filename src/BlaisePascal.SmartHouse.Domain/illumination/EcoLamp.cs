@@ -29,7 +29,7 @@
         lastPresenceTime = DateTime.Now;
     }
 
-    //  Presence registration (e.g., called by a motion sensor) 
+    //  Presence registration
     public void RegisterPresence()
     {
         lastPresenceTime = DateTime.Now;
