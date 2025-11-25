@@ -14,8 +14,8 @@ public class Lamp
     public bool IsOn { get; protected set; }   // True if the lamp is currently ON
     public int LuminosityPercentage { get; protected set; } // Brightness level (0–100%)
 
-    internal Guid LampId { get; } = Guid.NewGuid(); // Unique identifier for the lamp
-    internal string name { get; set; } = "Unnamed Lamp"; // Optional name for easier identification
+    public Guid LampId { get; } = Guid.NewGuid(); // Unique identifier for the lamp
+    public string name { get; set; } = "Unnamed Lamp"; // Optional name for easier identification
 
     //  Constructor 
     public Lamp(int power, ColorOption color, string model, string brand, string energyClass, string nm)
@@ -66,4 +66,7 @@ public class Lamp
         LuminosityPercentage = percentage;
        
     }
+
+
+
 }
