@@ -16,7 +16,7 @@ using System.Threading.Tasks;
         private string Brand { get; set; }
         private string Resolution { get; set; }
         public bool IsRecording { get; private set; }
-        private int zoomLevel { get; set; }
+        public int zoomLevel { get; private set; }
         private int TelephotoLevel { get; set; }
         private int WideAngleLevel { get; set; }
         public bool IsNightVisionOn { get; private set; }
