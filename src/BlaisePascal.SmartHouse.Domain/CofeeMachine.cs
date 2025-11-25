@@ -9,6 +9,9 @@ public class CofeeMachine
     public enum EnergyClass { A_plus_plus_plus, A_plus_plus, A_plus, A, B, C, D } // Energy efficiency standard classes
     public EnergyClass EnergyEfficency; // The energy efficiency class of the air conditioner
     public bool IsOn { get; set; } // True if the cofee machine is on
+    public bool IsReady { get; set; } // True if the cofee machine is ready to use
+    public DateTime IgnitionTime { get; set; } // Time taken to heat up and be ready
+    public DateTime ShutdownTime { get; set; } // Time taken to cool down after turning off
     public DateTime? ScheduledOn { get; private set; } // Scheduled time to turn ON
     public DateTime? ScheduledOff { get; private set; } // Scheduled time to turn OFF       
 
@@ -20,23 +23,29 @@ public class CofeeMachine
         Model = model;
         EnergyEfficency = energyEfficency;
         IsOn = false;
+        IsReady = false;
     }
 
     public void turnOn()
     { 
         IsOn = true;
+        IgnitionTime = DateTime.Now;
     }
 
     public void turnOff()
     { 
         IsOn = false;
+
     }
 
     public void changeName(string name)
     { 
         Name = name;
+        
     }
 
     public void IsReadyToUse()
-    { }
+    { 
+        IsReady = true;
+    }
 }
