@@ -38,7 +38,7 @@
         DateTime later = DateTime.Now.AddMinutes(6);
         device.UpdateAllEcoLamps(later);
 
-        Console.WriteLine("\nClearing all lamps");
+        Console.WriteLine("\nClearing all lamps.");
         device.ClearAllLamps();
         Console.WriteLine($"Total lamps: {device.getLampsCount()}");
 
