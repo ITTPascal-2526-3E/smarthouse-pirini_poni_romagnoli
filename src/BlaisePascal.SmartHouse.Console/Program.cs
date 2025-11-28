@@ -2,7 +2,7 @@
 {
     static void Main(string[] args)
     {
-        TwoLampsDevice device = new TwoLampsDevice();
+        LampsRow device = new LampsRow();
 
         Console.WriteLine("Adding lamps");
         device.addLamp(new Lamp(60, Lamp.ColorOption.WarmWhite, "ModelX", "BrandY", "A++", "Lamp Soggiorno"));

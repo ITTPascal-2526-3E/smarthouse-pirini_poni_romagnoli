@@ -17,6 +17,8 @@ public class Lamp
     public Guid LampId { get; } = Guid.NewGuid(); // Unique identifier for the lamp
     public string name { get; set; } = "Unnamed Lamp"; // Optional name for easier identification
 
+    public DateTime CreatedAtUTC { get; }
+
     //  Constructor 
     public Lamp(int power, ColorOption color, string model, string brand, string energyClass, string nm)
     {
@@ -29,6 +31,7 @@ public class Lamp
         IsOn = false;
         LuminosityPercentage = 0;
         name = nm;
+        CreatedAtUTC = DateTime.Now;
     }
 
     //  Turn lamp ON 

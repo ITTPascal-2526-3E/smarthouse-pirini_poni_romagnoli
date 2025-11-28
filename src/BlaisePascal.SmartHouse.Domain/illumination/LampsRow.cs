@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-public class TwoLampsDevice()
+public class LampsRow()
 {
     private Guid DeviceId { get; } = Guid.NewGuid();
-    private string name { get; set; } = "Unnamed TwoLampsDevice";
+    private string name { get; set; } = "Unnamed LampsRow";
     List<object> values = new List<object>();
     
 

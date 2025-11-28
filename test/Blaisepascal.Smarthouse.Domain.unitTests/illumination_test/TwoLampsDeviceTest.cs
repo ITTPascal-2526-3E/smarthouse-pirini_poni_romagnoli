@@ -8,9 +8,9 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
 
         //  Helper Methods to create instances 
 
-        private TwoLampsDevice CreateDevice()
+        private LampsRow CreateDevice()
         {
-            return new TwoLampsDevice();
+            return new LampsRow();
         }
 
         private Lamp CreateStandardLamp()
