@@ -11,7 +11,7 @@ public class Thermostat
     public int TargetTemperature { get; private set; }
 
     // List of  heat pumps
-    private  List<HeatPump> _heatPumps = new List<HeatPump>();
+    public List<HeatPump> _heatPumps = new List<HeatPump>();
 
     private Guid DeviceId { get; } = Guid.NewGuid();
     private string name { get; set; } = "Unnamed Thermostat";
