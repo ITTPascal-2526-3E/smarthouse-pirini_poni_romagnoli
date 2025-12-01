@@ -46,7 +46,7 @@ public class HeatPump
     public DateTime? ScheduledOn { get; private set; }
     public DateTime? ScheduledOff { get; private set; }
 
-    // Operational limits
+    // Constants for limits and defaults
     private const int MIN_TEMP = 16;
     private const int MAX_TEMP = 30;
     private const int DEFAULT_TEMP = 20;
@@ -61,7 +61,7 @@ public class HeatPump
 
     private const int DEFAULT_INCREASE_POW = 5;
 
-    // Constructor to initialize base parameters
+    
     public HeatPump(
         int initialTemperature,
         string name = "Unnamed HeatPump",

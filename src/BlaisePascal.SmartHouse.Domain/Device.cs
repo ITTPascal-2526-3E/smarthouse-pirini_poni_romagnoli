@@ -1,6 +1,6 @@
 ﻿using System;
 
-public class Device
+/*public class Device
 {
 	public string name;
 	public bool status = false;
@@ -19,4 +19,4 @@ public class Device
 
 
 
-}
+}*/
