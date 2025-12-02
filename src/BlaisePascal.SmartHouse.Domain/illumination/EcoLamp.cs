@@ -1,4 +1,5 @@
 ﻿using BlaisePascal.SmartHouse.Domain.illumination;
+using System;
 
 public class EcoLamp : Lamp
 {
@@ -37,6 +38,7 @@ public class EcoLamp : Lamp
         lastPresenceTime = DateTime.Now;
 
         // If the lamp is ON and currently dimmed, restore full brightness when presence is detected
+        // base.IsOn ora legge correttamente lo Status della classe Device
         if (base.IsOn && LuminosityPercentage < MAX_LUMINOSITY_PERCENTAGE)
         {
             SetLuminosity(MAX_LUMINOSITY_PERCENTAGE);
@@ -57,14 +59,14 @@ public class EcoLamp : Lamp
         if (ScheduledOn.HasValue && now >= ScheduledOn.Value)
         {
             TurnOn();
-            ScheduledOn = null; 
+            ScheduledOn = null;
         }
 
         // 2) Execute OFF schedule
         if (ScheduledOff.HasValue && now >= ScheduledOff.Value)
         {
             TurnOff();
-            ScheduledOff = null; 
+            ScheduledOff = null;
         }
 
         // 3) Dim if no presence for a while
@@ -86,7 +88,7 @@ public class EcoLamp : Lamp
         if (!base.IsOn)
             lastTurnOnTime = DateTime.Now;
 
-        base.TurnOn();
+        base.TurnOn(); // Questo aggiornerà anche LastmodifiedAtUtc in Device
     }
 
     //  Override: specialize base behavior to accumulate uptime on shutdown ---
@@ -99,6 +101,6 @@ public class EcoLamp : Lamp
             lastTurnOnTime = null; // Reset: not ON anymore
         }
 
-        base.TurnOff();
+        base.TurnOff(); // Questo aggiornerà anche LastmodifiedAtUtc in Device
     }
 }
