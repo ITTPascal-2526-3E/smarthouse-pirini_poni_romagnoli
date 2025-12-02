@@ -1,22 +1,18 @@
 ﻿using System;
 
-/*public class Device
+public class Device
 {
-	public string name;
-	public bool status = false;
-    public DateTime CreatedAtUTC { get; }
-    public LastmodifiedAtUtc;
-    public Device(string name )
+	public string Name;
+	public bool Status ;
+    public DateTime CreatedAtUTC { get; set; }
+    public DateTime LastmodifiedAtUtc;
+    public Device(string name, bool status )
 	{
         CreatedAtUTC = DateTime.Now;
+        Name = name;
+        Status = status;
 
     }
 
-    public LastmodifiedUpdater(DateTime time)
-    {
-        CreatedAtUTC = time;
-    }
 
-
-
-}*/
+}

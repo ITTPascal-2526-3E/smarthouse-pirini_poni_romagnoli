@@ -1,27 +1,34 @@
 ﻿using System;
-public class Door
+public class Door:Device
 {
     private Guid Id { get; }
-    public string Name { get; set; } //name that the user can assign to the device
-    public bool IsOpen { get; set; } //True if the door is open
+     
+    
     public bool IsLock { get; set; } //True if the door is lock
 
-    public Door(string name)
+    public Door(string name, bool status)
+        : base(name, status)
+
     {
-        this.Name = name;
-        this.IsOpen = false;
+        base.Name = name;
+        base.Status = status;
         this.IsLock = true; 
         this.Id = Guid.NewGuid();
     }
 
     public void OpenDoor()
     {
-        IsOpen = true;
+        if (!IsLock)
+        {
+            base.Status = true;
+
+        }
+
     }
 
     public void CloseDoor()
     {
-        IsOpen = false;
+        Status = false;
     }
 
     public void LockDoor()
@@ -29,10 +36,24 @@ public class Door
         IsLock = true;
     }
 
-    public void OpenDoorWithKey()
+    public void UnlockDoor()
     {
         IsLock = false;
     }
+
+    public void OpenDoorWithKey()
+    {
+        base.Status = true;
+        IsLock = false;
+    }
+
+    public void CloseDoorWithKey()
+    {
+        base.Status = false;
+        IsLock = true;
+        LastmodifiedAtUtc = DateTime.Now;
+    }
+
 }
 
 
