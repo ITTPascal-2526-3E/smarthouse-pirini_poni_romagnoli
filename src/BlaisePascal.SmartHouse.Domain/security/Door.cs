@@ -12,8 +12,8 @@ public class Door:Device
     {
         base.Name = name;
         base.Status = status;
-        this.IsLock = true; 
-        this.Id = Guid.NewGuid();
+        IsLock = true; 
+        Id = Guid.NewGuid();
     }
 
     public void OpenDoor()
@@ -21,7 +21,7 @@ public class Door:Device
         if (!IsLock)
         {
             base.Status = true;
-
+            LastmodifiedAtUtc = DateTime.Now;
         }
 
     }
@@ -29,22 +29,26 @@ public class Door:Device
     public void CloseDoor()
     {
         Status = false;
+        LastmodifiedAtUtc = DateTime.Now;
     }
 
     public void LockDoor()
     {
         IsLock = true;
+        LastmodifiedAtUtc = DateTime.Now;
     }
 
     public void UnlockDoor()
     {
         IsLock = false;
+        LastmodifiedAtUtc = DateTime.Now;
     }
 
     public void OpenDoorWithKey()
     {
         base.Status = true;
         IsLock = false;
+        LastmodifiedAtUtc = DateTime.Now;
     }
 
     public void CloseDoorWithKey()

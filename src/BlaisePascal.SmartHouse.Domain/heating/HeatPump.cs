@@ -1,6 +1,6 @@
 ﻿using System;
 
-public class HeatPump
+public class HeatPump : Device
 {
     // Operating modes used also by Thermostat
     public enum ModeOption { Heating, Cooling, Fan, Dry, Off }
@@ -17,8 +17,7 @@ public class HeatPump
     // Current operating mode
     public ModeOption Mode { get; private set; }
 
-    // User-defined name
-    public string Name { get; private set; }
+    // RIMOSSO: User-defined name -> Ora usa base.Name ereditato da Device
 
     // Brand and model identification
     public string Brand { get; set; }
@@ -31,7 +30,12 @@ public class HeatPump
     private Guid DeviceId { get; } = Guid.NewGuid();
 
     // Whether the device is currently ON
-    public bool IsOn { get; private set; }
+    // Mappiamo IsOn sulla proprietà Status di Device
+    public bool IsOn
+    {
+        get { return Status; }
+        private set { Status = value; }
+    }
 
     // Fan/power intensity (0–100)
     public int Power { get; private set; }
@@ -61,30 +65,34 @@ public class HeatPump
 
     private const int DEFAULT_INCREASE_POW = 5;
 
-    
+
     public HeatPump(
         int initialTemperature,
         string name = "Unnamed HeatPump",
         string brand = "Generic",
         string model = "ModelX",
         EnergyClass energyEfficency = EnergyClass.A_plus_plus)
+        : base(name, false) // Inizializza Device con nome e stato spento
     {
         CurrentTemperature = initialTemperature;
         TargetTemperature = initialTemperature;
-        Name = name;
+        // Name = name; // Gestito da base
         Brand = brand;
         Model = model;
         EnergyEfficency = energyEfficency;
 
-        IsOn = false;
+        // IsOn = false; // Gestito da base
         Power = DEFAULT_POW;
         Angolation = DEFAULT_ANGLE;
+        LastmodifiedAtUtc = DateTime.Now;
     }
 
     // Sets the operating mode (called by the thermostat)
     public void SetMode(ModeOption mode)
     {
         Mode = mode;
+        LastmodifiedAtUtc = DateTime.Now; // Aggiornamento stato
+
         if (mode == ModeOption.Off) TurnOff();
         else TurnOn();
     }
@@ -93,12 +101,17 @@ public class HeatPump
     public void SetTargetTemperature(int temperature)
     {
         ChangeTemperature(temperature);
+        // ChangeTemperature aggiorna già LastmodifiedAtUtc
     }
 
     // Simulates device behavior and temperature progression
     public void Update()
     {
         if (!IsOn) return;
+
+        // Update simula solo il funzionamento interno, non modifica settings utente,
+        // quindi non aggiorno necessariamente LastmodifiedAtUtc qui, a meno che 
+        // CurrentTemperature non sia considerata uno stato persistente.
 
         if (Mode == ModeOption.Heating && CurrentTemperature < TargetTemperature)
             CurrentTemperature++;
@@ -110,19 +123,22 @@ public class HeatPump
     // Turns the device ON
     public void TurnOn()
     {
-        IsOn = true;
+        IsOn = true; // Aggiorna Status
+        LastmodifiedAtUtc = DateTime.Now;
     }
 
     // Turns the device OFF
     public void TurnOff()
     {
-        IsOn = false;
+        IsOn = false; // Aggiorna Status
+        LastmodifiedAtUtc = DateTime.Now;
     }
 
     // Changes the visible device name
     public void ChangeName(string name)
     {
-        Name = name;
+        Name = name; // Aggiorna la proprietà ereditata
+        LastmodifiedAtUtc = DateTime.Now;
     }
 
     // Validates and updates the target temperature
@@ -132,6 +148,8 @@ public class HeatPump
             TargetTemperature = temperature;
         else
             TargetTemperature = (temperature > MAX_TEMP) ? MAX_TEMP : MIN_TEMP;// if out of range, set to nearest limit
+
+        LastmodifiedAtUtc = DateTime.Now;
     }
 
     // Returns the current target temperature
@@ -147,6 +165,8 @@ public class HeatPump
             Power = power;
         else
             Power = (power > MAX_POW) ? MAX_POW : MIN_POW;// if out of range, set to nearest limit
+
+        LastmodifiedAtUtc = DateTime.Now;
     }
 
     // Returns the current power level
@@ -166,6 +186,7 @@ public class HeatPump
     {
         FixedAngleOn = true;
         Angolation = DEFAULT_ANGLE;
+        LastmodifiedAtUtc = DateTime.Now;
     }
 
     // Validates and updates the airflow angle
@@ -175,6 +196,8 @@ public class HeatPump
             Angolation = angle;
         else
             Angolation = (angle > MAX_ANGLE) ? MAX_ANGLE : MIN_ANGLE;// if out of range, set to nearest limit
+
+        LastmodifiedAtUtc = DateTime.Now;
     }
 
     // Schedules ON and OFF times
@@ -182,6 +205,7 @@ public class HeatPump
     {
         ScheduledOn = onTime;
         ScheduledOff = offTime;
+        LastmodifiedAtUtc = DateTime.Now;
     }
 
     // Verifies if scheduled events should trigger
