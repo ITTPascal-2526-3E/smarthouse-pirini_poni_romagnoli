@@ -11,7 +11,7 @@ public class Lamp
     public ColorOption Color { get; set; }     // Lamp color (chosen from predefined options)
     public string Brand { get; }               // Manufacturer brand
     public string Model { get; }               // Lamp model name or number
-    public string EnergyClass { get; }         // Energy efficiency label (e.g. A++, B, etc.)
+    public EnergyClass EnergyEfficency { get; }         // Energy efficiency label (e.g. A++, B, etc.)
     public bool IsOn { get; protected set; }   // True if the lamp is currently ON
     public int LuminosityPercentage { get; protected set; } // Brightness level (0–100%)
 
@@ -21,14 +21,14 @@ public class Lamp
     public DateTime CreatedAtUTC { get; }
 
     //  Constructor 
-    public Lamp(int power, ColorOption color, string model, string brand, string energyClass, string nm)
+    public Lamp(int power, ColorOption color, string model, string brand, EnergyClass energyClass, string nm)
     {
 
         Power = power;
         Color = color;
         Model = model;
         Brand = brand;
-        EnergyClass = energyClass;
+        EnergyEfficency = energyClass;
         IsOn = false;
         LuminosityPercentage = 0;
         name = nm;

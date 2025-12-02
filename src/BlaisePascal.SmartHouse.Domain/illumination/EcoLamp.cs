@@ -1,4 +1,6 @@
-﻿public class EcoLamp : Lamp
+﻿using BlaisePascal.SmartHouse.Domain.illumination;
+
+public class EcoLamp : Lamp
 {
     //  Presence handling in the room 
     // After 5 minutes without detected presence, dim the light
@@ -23,7 +25,7 @@
     // After 5 minutes without detected presence, dim the light
     private TimeSpan noPresenceTimeout = TimeSpan.FromMinutes(MINUTES);
 
-    public EcoLamp(int power, ColorOption color, string model, string brand, string energyClass, string nm)
+    public EcoLamp(int power, ColorOption color, string model, string brand, EnergyClass energyClass, string nm)
         : base(power, color, model, brand, energyClass, nm) // Call base-class constructor
     {
         lastPresenceTime = DateTime.Now;
