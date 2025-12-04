@@ -5,28 +5,28 @@
         LampsRow device = new LampsRow();
 
         Console.WriteLine("Adding lamps");
-        device.addLamp(new Lamp(60, Lamp.ColorOption.WarmWhite, "ModelX", "BrandY", "A++", "Lamp Soggiorno"));
-        device.addLamp(new Lamp(40, Lamp.ColorOption.White, "ModelA", "BrandZ", "A", "Lamp Smart Soggiorno"));
-        Console.WriteLine($"Total lamps: {device.getLampsCount()}");
+        device.AddLamp(new Lamp(60, BlaisePascal.SmartHouse.Domain.illumination.ColorOption.WarmWhite, "ModelX", "BrandY", BlaisePascal.SmartHouse.Domain.illumination.EnergyClass.A_plus_plus, "Lamp Soggiorno"));
+        device.AddLamp(new Lamp(40, BlaisePascal.SmartHouse.Domain.illumination.ColorOption.White, "ModelA", "BrandZ", BlaisePascal.SmartHouse.Domain.illumination.EnergyClass.A_plus_plus, "Lamp Smart Soggiorno"));
+        Console.WriteLine($"Total lamps: {device.GetLampsCount()}");
 
         Console.WriteLine("\nTurning on all lamps");
         device.TurnOnAllLamps();
-        Console.WriteLine($"Lamps ON: {device.getONLampsCount()}");
+        Console.WriteLine($"Lamps ON: {device.GetONLampsCount()}");
 
         Console.WriteLine("\nSetting global luminosity to 50%");
         device.SetLuminosityAllLamps(50);
 
         Console.WriteLine("\nTurning off lamp at index 0");
-        device.turnofflampsatindex(0);
-        Console.WriteLine($"Lamps ON: {device.getONLampsCount()}");
+        device.TurnOffLampAtIndex(0);
+        Console.WriteLine($"Lamps ON: {device.GetONLampsCount()}");
 
         Console.WriteLine("\nTurning on lamp at index 0 and setting index 1 to 20%");
-        device.turnonlampsatindex(0);
-        device.setluminosityatindex(1, 20);
+        device.TurnOnLampAtIndex(0);
+        device.SetLuminosityAtIndex(1, 20);
 
         Console.WriteLine("\nRemoving lamp at index 0");
         device.RemoveLampAtIndex(0);
-        Console.WriteLine($"Total lamps: {device.getLampsCount()}");
+        Console.WriteLine($"Total lamps: {device.GetLampsCount()}");
 
         Console.WriteLine("\nTesting EcoLamp schedule and presence");
         device.RegisterPresenceAllEcoLamps();
@@ -40,10 +40,10 @@
 
         Console.WriteLine("\nClearing all lamps.");
         device.ClearAllLamps();
-        Console.WriteLine($"Total lamps: {device.getLampsCount()}");
+        Console.WriteLine($"Total lamps: {device.GetLampsCount()}");
 
         // CCTV
-        CCTV camera = new CCTV("ModelC", "BrandD", "1080p", 5, 2, "Front Door Camera");
+        CCTV camera = new CCTV("ModelC", "BrandD", "1080p", 5, 2, "Front Door Camera", false);
         camera.StartRecording();
         camera.zoom(3);
         camera.StopRecording();
@@ -58,7 +58,7 @@
         HeatPump pump1 = new HeatPump(20, "Living Room Pump");
         HeatPump pump2 = new HeatPump(18, "Bedroom Pump");
 
-        Thermostat thermostat = new Thermostat(20, Thermostat.ModeOption.Off, 22);
+        Thermostat thermostat = new Thermostat(20, BlaisePascal.SmartHouse.Domain.ModeOptionThermostat.Off, 22);
         thermostat.AddHeatPump(pump1);
         thermostat.AddHeatPump(pump2);
 
