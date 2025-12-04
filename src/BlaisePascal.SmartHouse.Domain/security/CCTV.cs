@@ -1,72 +1,86 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+using BlaisePascal.SmartHouse.Domain;
 
-public class CCTV : Device
+namespace BlaisePascal.SmartHouse.Domain
 {
-    private Guid Id { get; }
-
-    // CCTV attributes
-    private string Model { get; set; }
-    private string Brand { get; set; }
-    private string Resolution { get; set; }
-    
-    public int zoomLevel { get; private set; }
-    private int TelephotoLevel { get; set; }
-    private int WideAngleLevel { get; set; }
-    public bool IsNightVisionOn { get; private set; }
-
-    
-
-    // Constructor
-    
-    public CCTV(string model, string brand, string resolution, int cameraTelephotoLevel, int cameraWideAngleLevel, string Name , bool status)
-        : base(Name, status) // Passiamo nome e status al genitore Device
+    // Represents a CCTV camera device with zoom and night vision capabilities
+    public class CCTV : Device
     {
-        Model = model;
-        Brand = brand;
-        Resolution = resolution;
-        base.Status = status; // lo status simboleggia se la telecamera è accesa o spenta
-        TelephotoLevel = cameraTelephotoLevel;
-        WideAngleLevel = cameraWideAngleLevel;
-        Id = Guid.NewGuid();
-    }
+        // CCTV model name
+        public string Model { get; private set; }
 
-    // Start recording
-    public void StartRecording()
-    {
-        zoomLevel = WideAngleLevel;
-        Status = true;
-    }
+        // CCTV brand name
+        public string Brand { get; private set; }
 
-    // Stop recording
-    public void StopRecording()
-    {
-        Status = false;
-        zoomLevel = 0;
-    }
+        // CCTV video resolution (for example "1080p")
+        public string Resolution { get; private set; }
 
-    public void zoom(int zoomLevelWanted)
-    {
-        if (Status == false)
+        // Current zoom level of the camera
+        public int ZoomLevel { get; private set; }
+
+        // Maximum telephoto zoom level allowed by the camera
+        public int TelephotoLevel { get; private set; }
+
+        // Minimum wide-angle zoom level allowed by the camera
+        public int WideAngleLevel { get; private set; }
+
+        // Indicates whether night vision mode is active
+        public bool IsNightVisionOn { get; private set; }
+
+        // Constructor initializes the CCTV camera with model, brand, resolution and zoom levels
+        public CCTV(string model,string brand,string resolution,int cameraTelephotoLevel,int cameraWideAngleLevel,string name,bool status)
+            : base(name, status) // Pass name and status to the Device base class
         {
-            return;
+            Model = model;
+            Brand = brand;
+            Resolution = resolution;
+            TelephotoLevel = cameraTelephotoLevel;
+            WideAngleLevel = cameraWideAngleLevel;
+
+            // Initialize zoom level based on current status
+            ZoomLevel = status ? WideAngleLevel : 0;
+
+            Touch();
         }
-        else if (Status == true)
+
+        // Starts recording by turning the camera ON and setting the zoom to wide angle
+        public void StartRecording()
         {
+            ZoomLevel = WideAngleLevel;
+            TurnOn();
+            Touch();
+        }
+
+        // Stops recording by turning the camera OFF and resetting the zoom level
+        public void StopRecording()
+        {
+            TurnOff();
+            ZoomLevel = 0;
+            Touch();
+        }
+
+        // Changes the zoom level if the camera is ON and the requested level is in the valid range
+        public void Zoom(int zoomLevelWanted)
+        {
+            // If the camera is OFF, zoom changes are ignored
+            if (!Status)
+            {
+                return;
+            }
+
+            // Zoom is valid only if it is between wide angle and telephoto levels
             if (zoomLevelWanted <= TelephotoLevel && zoomLevelWanted >= WideAngleLevel)
             {
-                zoomLevel = zoomLevelWanted;
+                ZoomLevel = zoomLevelWanted;
+                Touch();
             }
         }
-    }
 
-    public void ToggleNightVision()
-    {
-        IsNightVisionOn = !IsNightVisionOn;
+        // Toggles night vision mode ON or OFF and updates the last modified timestamp
+        public void ToggleNightVision()
+        {
+            IsNightVisionOn = !IsNightVisionOn;
+            Touch();
+        }
     }
 }

@@ -1,171 +1,175 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
-public class LampsRow : Device
+namespace BlaisePascal.SmartHouse.Domain
 {
-    private Guid DeviceId { get; } = Guid.NewGuid();
-
-    // RIMOSSO: private string name... -> Ora usiamo la proprietà 'Name' ereditata da Device
-
-    // Usiamo la lista di 'Lamp' per sfruttare il polimorfismo (EcoLamp è una Lamp)
-    private List<Lamp> values = new List<Lamp>();
-
-    // Costruttore: Inizializza il genitore Device
-    // Impostiamo il nome di default e lo stato iniziale a false (spento)
-    public LampsRow() : base("Unnamed LampsRow", false)
+    // Represents a row of lamps that can be controlled as a group
+    public class LampsRow : Device
     {
-    }
+        // Internal list of lamps in this row
+        private readonly List<Lamp> _lamps = new List<Lamp>();
 
-    public void AddLamp(Lamp lamp)
-    {
-        values.Add(lamp);
-    }
-
-    public void AddEcoLamp(EcoLamp ecoLamp)
-    {
-        values.Add(ecoLamp);
-    }
-
-    public void TurnOnAllLamps()
-    {
-        // Aggiorniamo lo stato della Fila stessa
-        Status = true;
-        LastmodifiedAtUtc = DateTime.Now;
-
-        foreach (var lamp in values)
+        // Constructor initializes the device with a default name and OFF status
+        public LampsRow() : base("Unnamed LampsRow", false)
         {
-            lamp.TurnOn();
         }
-    }
 
-    public void TurnOffAllLamps()
-    {
-        // Aggiorniamo lo stato della Fila stessa
-        Status = false;
-        LastmodifiedAtUtc = DateTime.Now;
-
-        foreach (var lamp in values)
+        // Adds a lamp to the row
+        public void AddLamp(Lamp lamp)
         {
-            lamp.TurnOff();
-        }
-    }
+            if (lamp == null) return;
 
-    public void SetLuminosityAllLamps(int percentage)
-    {
-        // Se si imposta la luminosità, consideriamo la fila "accesa" se > 0
-        if (percentage > 0 && !Status)
+            _lamps.Add(lamp);
+            Touch();
+        }
+
+        // Turns ON all lamps in the row and updates the row status
+        public void TurnOnAllLamps()
         {
             Status = true;
-            LastmodifiedAtUtc = DateTime.Now;
-        }
+            Touch();
 
-        foreach (var lamp in values)
-        {
-            lamp.SetLuminosity(percentage);
-        }
-    }
-
-    public void TurnOffLampAtIndex(int index)
-    {
-        if (index < 0 || index >= values.Count) return;
-
-        values[index].TurnOff();
-        LastmodifiedAtUtc = DateTime.Now; // La fila è cambiata
-    }
-
-    public void TurnOnLampAtIndex(int index)
-    {
-        if (index < 0 || index >= values.Count) return;
-
-        values[index].TurnOn();
-        // Se accendiamo una lampada, la fila è tecnicamente "attiva"
-        Status = true;
-        LastmodifiedAtUtc = DateTime.Now;
-    }
-
-    public void SetLuminosityAtIndex(int index, int percentage)
-    {
-        if (index < 0 || index >= values.Count) return;
-
-        values[index].SetLuminosity(percentage);
-        LastmodifiedAtUtc = DateTime.Now;
-    }
-
-    public int GetONLampsCount()
-    {
-        int count = 0;
-        foreach (var lamp in values)
-        {
-            if (lamp.IsOn) count++;
-        }
-        return count;
-    }
-
-    public int GetLampsCount()
-    {
-        return values.Count;
-    }
-
-    public Lamp? GetLampAtIndex(int index)
-    {
-        if (index < 0 || index >= values.Count)
-        {
-            return null;
-        }
-        return values[index];
-    }
-
-    public void RemoveLampAtIndex(int index)
-    {
-        if (index < 0 || index >= values.Count)
-        {
-            return;
-        }
-        values.RemoveAt(index);
-        LastmodifiedAtUtc = DateTime.Now;
-    }
-
-
-    public void ClearAllLamps()
-    {
-        values.Clear();
-        Status = false; // Se non ci sono lampade, la fila è spenta
-        LastmodifiedAtUtc = DateTime.Now;
-    }
-
-    // --- Metodi specifici EcoLamp ---
-
-    public void UpdateAllEcoLamps(DateTime now)
-    {
-        foreach (var lamp in values)
-        {
-            if (lamp is EcoLamp ecoLamp)
+            foreach (var lamp in _lamps)
             {
-                ecoLamp.Update(now);
+                lamp.TurnOn();
             }
         }
-    }
 
-    public void RegisterPresenceAllEcoLamps()
-    {
-        foreach (var lamp in values)
+        // Turns OFF all lamps in the row and updates the row status
+        public void TurnOffAllLamps()
         {
-            if (lamp is EcoLamp ecoLamp)
+            Status = false;
+            Touch();
+
+            foreach (var lamp in _lamps)
             {
-                ecoLamp.RegisterPresence();
+                lamp.TurnOff();
             }
         }
-    }
 
-    public void ScheduleAllEcoLamps(DateTime? onTime, DateTime? offTime)
-    {
-        foreach (var lamp in values)
+        // Sets luminosity for all lamps and updates row status if needed
+        public void SetLuminosityAllLamps(int percentage)
         {
-            if (lamp is EcoLamp ecoLamp)
+            // If luminosity is set above zero, consider the row as active
+            if (percentage > 0 && !Status)
             {
-                ecoLamp.Schedule(onTime, offTime);
+                Status = true;
+                Touch();
+            }
+
+            foreach (var lamp in _lamps)
+            {
+                lamp.SetLuminosity(percentage);
+            }
+        }
+
+        // Turns OFF the lamp at the specified index, if valid
+        public void TurnOffLampAtIndex(int index)
+        {
+            if (index < 0 || index >= _lamps.Count) return;
+
+            _lamps[index].TurnOff();
+            Touch();
+        }
+
+        // Turns ON the lamp at the specified index, if valid, and marks the row as active
+        public void TurnOnLampAtIndex(int index)
+        {
+            if (index < 0 || index >= _lamps.Count) return;
+
+            _lamps[index].TurnOn();
+            Status = true;
+            Touch();
+        }
+
+        // Sets luminosity for the lamp at the specified index, if valid
+        public void SetLuminosityAtIndex(int index, int percentage)
+        {
+            if (index < 0 || index >= _lamps.Count) return;
+
+            _lamps[index].SetLuminosity(percentage);
+            Touch();
+        }
+
+        // Returns the number of lamps that are currently ON in the row
+        public int GetOnLampsCount()
+        {
+            int count = 0;
+            foreach (var lamp in _lamps)
+            {
+                if (lamp.IsOn) count++;
+            }
+            return count;
+        }
+
+        // Returns the total number of lamps in the row
+        public int GetLampsCount()
+        {
+            return _lamps.Count;
+        }
+
+        // Returns the lamp at the specified index, or null if the index is invalid
+        public Lamp? GetLampAtIndex(int index)
+        {
+            if (index < 0 || index >= _lamps.Count)
+            {
+                return null;
+            }
+            return _lamps[index];
+        }
+
+        // Removes the lamp at the specified index, if valid
+        public void RemoveLampAtIndex(int index)
+        {
+            if (index < 0 || index >= _lamps.Count)
+            {
+                return;
+            }
+            _lamps.RemoveAt(index);
+            Touch();
+        }
+
+        // Removes all lamps from the row and marks the row as OFF
+        public void ClearAllLamps()
+        {
+            _lamps.Clear();
+            Status = false;
+            Touch();
+        }
+
+        // Calls Update on all EcoLamp instances contained in the row
+        public void UpdateAllEcoLamps(DateTime now)
+        {
+            foreach (var lamp in _lamps)
+            {
+                if (lamp is EcoLamp ecoLamp)
+                {
+                    ecoLamp.Update(now);
+                }
+            }
+        }
+
+        // Calls RegisterPresence on all EcoLamp instances contained in the row
+        public void RegisterPresenceAllEcoLamps()
+        {
+            foreach (var lamp in _lamps)
+            {
+                if (lamp is EcoLamp ecoLamp)
+                {
+                    ecoLamp.RegisterPresence();
+                }
+            }
+        }
+
+        // Schedules ON/OFF times for all EcoLamp instances contained in the row
+        public void ScheduleAllEcoLamps(DateTime? onTime, DateTime? offTime)
+        {
+            foreach (var lamp in _lamps)
+            {
+                if (lamp is EcoLamp ecoLamp)
+                {
+                    ecoLamp.Schedule(onTime, offTime);
+                }
             }
         }
     }

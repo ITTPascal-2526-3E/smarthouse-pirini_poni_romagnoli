@@ -1,106 +1,119 @@
-﻿using BlaisePascal.SmartHouse.Domain.illumination;
+﻿using BlaisePascal.SmartHouse.Domain.@enum;
+
 using System;
 
-public class EcoLamp : Lamp
+namespace BlaisePascal.SmartHouse.Domain
 {
-    //  Presence handling in the room 
-    // After 5 minutes without detected presence, dim the light
-    private DateTime lastPresenceTime;
-    // Moment when the lamp was last turned on (nullable: it's null when currently OFF or not started yet)
-    private DateTime? lastTurnOnTime;
-    // Total accumulated time the lamp has been ON
-    public TimeSpan TotalOnTime { get; private set; } = TimeSpan.Zero;
-
-    //  Simple scheduling (ON/OFF) 
-    // Nullable means: "no schedule set" (absence of a value)
-    public DateTime? ScheduledOn { get; private set; }
-    // Private setter prevents external code from changing it directly
-    public DateTime? ScheduledOff { get; private set; }
-
-    // Target brightness percentage when no one is around
-    private const int PRESENCE_DIM_LUMINOSITY = 30;
-    // Max luminosity percentage is a const
-    private const int MAX_LUMINOSITY_PERCENTAGE = 100;
-    // Minutes  
-    private const int MINUTES = 5;
-    // After 5 minutes without detected presence, dim the light
-    private TimeSpan noPresenceTimeout = TimeSpan.FromMinutes(MINUTES);
-
-    public EcoLamp(int power, ColorOption color, string model, string brand, EnergyClass energyClass, string nm)
-        : base(power, color, model, brand, energyClass, nm) // Call base-class constructor
+    // Represents a smart eco-friendly lamp with presence detection and scheduling
+    public class EcoLamp : Lamp
     {
-        lastPresenceTime = DateTime.Now;
-    }
+        // Stores the last time presence was detected in the room
+        private DateTime lastPresenceTime;
 
-    //  Presence registration
-    public void RegisterPresence()
-    {
-        lastPresenceTime = DateTime.Now;
+        // Stores the moment when the lamp was last turned on (null when OFF)
+        private DateTime? lastTurnOnTime;
 
-        // If the lamp is ON and currently dimmed, restore full brightness when presence is detected
-        // base.IsOn ora legge correttamente lo Status della classe Device
-        if (base.IsOn && LuminosityPercentage < MAX_LUMINOSITY_PERCENTAGE)
+        // Total accumulated time the lamp has been ON
+        public TimeSpan TotalOnTime { get; private set; } = TimeSpan.Zero;
+
+        // Scheduled ON time (null means no ON schedule set)
+        public DateTime? ScheduledOn { get; private set; }
+
+        // Scheduled OFF time (null means no OFF schedule set)
+        public DateTime? ScheduledOff { get; private set; }
+
+        // Target brightness percentage when no presence is detected
+        private const int PresenceDimLuminosity = 30;
+
+        // Minutes of no presence before dimming the light
+        private const int PresenceTimeoutMinutes = 5;
+
+        // Time span representing the no-presence timeout
+        private readonly TimeSpan noPresenceTimeout = TimeSpan.FromMinutes(PresenceTimeoutMinutes);
+
+        // Constructor calls the base lamp constructor and initializes presence tracking
+        public EcoLamp(int power, ColorOption color, string model, string brand, EnergyClass energyClass, string name)
+            : base(power, color, model, brand, energyClass, name)
         {
-            SetLuminosity(MAX_LUMINOSITY_PERCENTAGE);
-        }
-    }
-
-    //  Set ON/OFF scheduling (nullable parameters mean "optional") 
-    public void Schedule(DateTime? onTime, DateTime? offTime)
-    {
-        ScheduledOn = onTime;  // null => no ON schedule
-        ScheduledOff = offTime; // null => no OFF schedule
-    }
-
-    //  Periodic update tick (call this from a timer/loop with the current time) 
-    public void Update(DateTime now)
-    {
-        // 1) Execute ON schedule
-        if (ScheduledOn.HasValue && now >= ScheduledOn.Value)
-        {
-            TurnOn();
-            ScheduledOn = null;
+            lastPresenceTime = DateTime.UtcNow;
         }
 
-        // 2) Execute OFF schedule
-        if (ScheduledOff.HasValue && now >= ScheduledOff.Value)
+        // Registers presence in the room and restores full brightness if the lamp is dimmed
+        public void RegisterPresence()
         {
-            TurnOff();
-            ScheduledOff = null;
-        }
+            lastPresenceTime = DateTime.UtcNow;
 
-        // 3) Dim if no presence for a while
-        if (base.IsOn)
-        {
-            if (now - lastPresenceTime >= noPresenceTimeout)
+            // If the lamp is ON and currently dimmed, restore full brightness when presence is detected
+            if (IsOn && LuminosityPercentage < MaxLuminosity)
             {
-                // No presence for too long -> dim down to the target percentage
-                if (LuminosityPercentage > PRESENCE_DIM_LUMINOSITY)
-                    SetLuminosity(PRESENCE_DIM_LUMINOSITY);
+                SetLuminosity(MaxLuminosity);
             }
         }
-    }
 
-
-    public override void TurnOn() // "override" = redefine a virtual method from the base class
-    {
-        // If it was OFF, record the moment it gets turned ON
-        if (!base.IsOn)
-            lastTurnOnTime = DateTime.Now;
-
-        base.TurnOn(); // Questo aggiornerà anche LastmodifiedAtUtc in Device
-    }
-
-    //  Override: specialize base behavior to accumulate uptime on shutdown ---
-    public override void TurnOff() // "override" = redefine a virtual method from the base class
-    {
-        // If it was ON, accumulate elapsed time since lastTurnOnTime
-        if (base.IsOn && lastTurnOnTime.HasValue)
+        // Sets ON/OFF scheduling times for the eco lamp
+        public void Schedule(DateTime? onTime, DateTime? offTime)
         {
-            TotalOnTime += DateTime.Now - lastTurnOnTime.Value;
-            lastTurnOnTime = null; // Reset: not ON anymore
+            ScheduledOn = onTime;   // null means no ON schedule
+            ScheduledOff = offTime; // null means no OFF schedule
+            Touch();
         }
 
-        base.TurnOff(); // Questo aggiornerà anche LastmodifiedAtUtc in Device
+        // Periodic update tick to execute schedules and presence-based dimming
+        public void Update(DateTime now)
+        {
+            // Execute ON schedule when the scheduled time is reached
+            if (ScheduledOn.HasValue && now >= ScheduledOn.Value)
+            {
+                TurnOn();
+                ScheduledOn = null;
+            }
+
+            // Execute OFF schedule when the scheduled time is reached
+            if (ScheduledOff.HasValue && now >= ScheduledOff.Value)
+            {
+                TurnOff();
+                ScheduledOff = null;
+            }
+
+            // If the lamp is ON, check whether presence has been missing for too long
+            if (IsOn)
+            {
+                if (now - lastPresenceTime >= noPresenceTimeout)
+                {
+                    // No presence for too long -> dim down to the target percentage
+                    if (LuminosityPercentage > PresenceDimLuminosity)
+                    {
+                        SetLuminosity(PresenceDimLuminosity);
+                    }
+                }
+            }
+        }
+
+        // Turns the lamp ON, records the ON time and updates last modified timestamp
+        public override void TurnOn()
+        {
+            // If it was OFF, record the moment it gets turned ON
+            if (!IsOn)
+            {
+                lastTurnOnTime = DateTime.UtcNow;
+            }
+
+            base.TurnOn();
+            // base.TurnOn already calls Touch via the overridden method in Lamp
+        }
+
+        // Turns the lamp OFF, accumulates ON time and updates last modified timestamp
+        public override void TurnOff()
+        {
+            // If it was ON, accumulate elapsed time since lastTurnOnTime
+            if (IsOn && lastTurnOnTime.HasValue)
+            {
+                TotalOnTime += DateTime.UtcNow - lastTurnOnTime.Value;
+                lastTurnOnTime = null; // Reset: not ON anymore
+            }
+
+            base.TurnOff();
+            // base.TurnOff already calls Touch via the overridden method in Lamp
+        }
     }
 }

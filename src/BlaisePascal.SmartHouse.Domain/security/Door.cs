@@ -1,66 +1,74 @@
 ﻿using System;
-public class Door:Device
+using BlaisePascal.SmartHouse.Domain;
+
+namespace BlaisePascal.SmartHouse.Domain
 {
-    private Guid Id { get; }
-     
-    
-    public bool IsLock { get; set; } //True if the door is lock
-
-    public Door(string name, bool status)
-        : base(name, status)
-
+    // Represents a smart door that can be opened, closed, locked and unlocked
+    public class Door : Device
     {
-        base.Name = name;
-        base.Status = status;
-        IsLock = true; 
-        Id = Guid.NewGuid();
-    }
+        // Indicates whether the door is locked
+        public bool IsLocked { get; private set; }
 
-    public void OpenDoor()
-    {
-        if (!IsLock)
+        // Constructor initializes the door with a name, status and initial locked state
+        public Door(string name, bool status)
+            : base(name, status)
         {
-            base.Status = true;
-            LastmodifiedAtUtc = DateTime.Now;
+            // By default the door starts locked
+            IsLocked = true;
+            Touch();
         }
 
-    }
+        // Opens the door only if it is not locked and updates the device status
+        public void OpenDoor()
+        {
+            if (!IsLocked)
+            {
+                // Status = true means the door is open
+                TurnOn();
+                Touch();
+            }
+        }
 
-    public void CloseDoor()
-    {
-        Status = false;
-        LastmodifiedAtUtc = DateTime.Now;
-    }
+        // Closes the door and updates the device status
+        public void CloseDoor()
+        {
+            // Status = false means the door is closed
+            TurnOff();
+            Touch();
+        }
 
-    public void LockDoor()
-    {
-        IsLock = true;
-        LastmodifiedAtUtc = DateTime.Now;
-    }
+        // Locks the door and prevents it from being opened without a key
+        public void LockDoor()
+        {
+            IsLocked = true;
+            Touch();
+        }
 
-    public void UnlockDoor()
-    {
-        IsLock = false;
-        LastmodifiedAtUtc = DateTime.Now;
-    }
+        // Unlocks the door and allows it to be opened
+        public void UnlockDoor()
+        {
+            IsLocked = false;
+            Touch();
+        }
 
-    public void OpenDoorWithKey()
-    {
-        base.Status = true;
-        IsLock = false;
-        LastmodifiedAtUtc = DateTime.Now;
-    }
+        // Opens the door using a key: unlocks the door and sets the status to open
+        public void OpenDoorWithKey()
+        {
+            // Unlock the door first
+            IsLocked = false;
+            // Then open the door
+            TurnOn();
+            Touch();
+        }
 
-    public void CloseDoorWithKey()
-    {
-        base.Status = false;
-        IsLock = true;
-        LastmodifiedAtUtc = DateTime.Now;
+        // Closes and locks the door using a key
+        public void CloseDoorWithKey()
+        {
+            // Close the door
+            TurnOff();
+            // Lock the door after closing
+            IsLocked = true;
+            Touch();
+        }
     }
-
 }
-
-
-
-
-

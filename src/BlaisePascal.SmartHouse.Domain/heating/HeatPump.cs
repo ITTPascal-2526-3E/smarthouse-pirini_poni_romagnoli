@@ -1,224 +1,233 @@
-﻿using System;
-using BlaisePascal.SmartHouse.Domain;
-using BlaisePascal.SmartHouse.Domain.illumination;
+﻿using BlaisePascal.SmartHouse.Domain;
+using BlaisePascal.SmartHouse.Domain.@enum;
+using System;
 
-public class HeatPump : Device
+namespace BlaisePascal.SmartHouse.Domain
 {
-    
-
-    // Current measured temperature
-    public int CurrentTemperature { get; private set; }
-
-    // Target temperature set by the user or thermostat
-    public int TargetTemperature { get; private set; }
-
-    // Current operating mode
-    public ModeOptionheatPump Mode { get; private set; }
-
-    // RIMOSSO: User-defined name -> Ora usa base.Name ereditato da Device
-
-    // Brand and model identification
-    public string Brand { get; set; }
-    public string Model { get; set; }
-
-    // Energy efficiency rating
-    public EnergyClass EnergyEfficency { get; set; }
-
-    // Unique device identifier
-    private Guid DeviceId { get; } = Guid.NewGuid();
-
-    // Whether the device is currently ON
-    // Mappiamo IsOn sulla proprietà Status di Device
-    public bool IsOn
+    // Represents a smart heat pump device controlled by a thermostat
+    public class HeatPump : Device
     {
-        get { return Status; }
-        private set { Status = value; }
-    }
+        // Current measured temperature
+        public int CurrentTemperature { get; private set; }
 
-    // Fan/power intensity (0–100)
-    public int Power { get; private set; }
+        // Target temperature set by the user or thermostat
+        public int TargetTemperature { get; private set; }
 
-    // Airflow angle (1–90 degrees)
-    public int Angolation { get; private set; }
+        // Current operating mode of the heat pump
+        public ModeOptionHeatPump Mode { get; private set; }
 
-    // Indicates if fixed-angle mode is enabled
-    public bool FixedAngleOn { get; private set; }
+        // Brand identification
+        public string Brand { get; set; }
 
-    // Scheduled ON / OFF times
-    public DateTime? ScheduledOn { get; private set; }
-    public DateTime? ScheduledOff { get; private set; }
+        // Model identification
+        public string Model { get; set; }
 
-    // Constants for limits and defaults
-    private const int MIN_TEMP = 16;
-    private const int MAX_TEMP = 30;
-    private const int DEFAULT_TEMP = 20;
+        // Energy efficiency rating
+        public EnergyClass EnergyEfficiency { get; set; }
 
-    private const int MIN_POW = 0;
-    private const int MAX_POW = 100;
-    private const int DEFAULT_POW = 50;
+        // Indicates whether the device is currently ON (mapped to Status)
+        public bool IsOn => Status;
 
-    private const int MIN_ANGLE = 1;
-    private const int MAX_ANGLE = 90;
-    private const int DEFAULT_ANGLE = 45;
+        // Fan or power intensity (0–100)
+        public int Power { get; private set; }
 
-    private const int DEFAULT_INCREASE_POW = 5;
+        // Airflow angle (1–90 degrees)
+        public int Angle { get; private set; }
 
+        // Indicates if fixed-angle mode is enabled
+        public bool FixedAngleOn { get; private set; }
 
-    public HeatPump(
-        int initialTemperature,
-        string name = "Unnamed HeatPump",
-        string brand = "Generic",
-        string model = "ModelX",
-        EnergyClass energyEfficency = EnergyClass.A_plus_plus)
-        : base(name, false) // Inizializza Device con nome e stato spento
-    {
-        CurrentTemperature = initialTemperature;
-        TargetTemperature = initialTemperature;
-        // Name = name; // Gestito da base
-        Brand = brand;
-        Model = model;
-        EnergyEfficency = energyEfficency;
+        // Scheduled ON time
+        public DateTime? ScheduledOn { get; private set; }
 
-        // IsOn = false; // Gestito da base
-        Power = DEFAULT_POW;
-        Angolation = DEFAULT_ANGLE;
-        LastmodifiedAtUtc = DateTime.Now;
-    }
+        // Scheduled OFF time
+        public DateTime? ScheduledOff { get; private set; }
 
-    // Sets the operating mode (called by the thermostat)
-    public void SetMode(ModeOptionheatPump mode)
-    {
-        Mode = mode;
-        LastmodifiedAtUtc = DateTime.Now; // Aggiornamento stato
+        // Minimum allowed temperature
+        private const int MinTemperature = 16;
 
-        if (mode == ModeOptionheatPump.Off) TurnOff();
-        else TurnOn();
-    }
+        // Maximum allowed temperature
+        private const int MaxTemperature = 30;
 
-    // Sets the target temperature (called by the thermostat)
-    public void SetTargetTemperature(int temperature)
-    {
-        ChangeTemperature(temperature);
-        // ChangeTemperature aggiorna già LastmodifiedAtUtc
-    }
+        // Default temperature used as starting point when needed
+        private const int DefaultTemperature = 20;
 
-    // Simulates device behavior and temperature progression
-    public void Update()
-    {
-        if (!IsOn) return;
+        // Minimum allowed power level
+        private const int MinPower = 0;
 
-        // Update simula solo il funzionamento interno, non modifica settings utente,
-        // quindi non aggiorno necessariamente LastmodifiedAtUtc qui, a meno che 
-        // CurrentTemperature non sia considerata uno stato persistente.
+        // Maximum allowed power level
+        private const int MaxPower = 100;
 
-        if (Mode == ModeOptionheatPump.Heating && CurrentTemperature < TargetTemperature)
-            CurrentTemperature++;
+        // Default power level
+        private const int DefaultPower = 50;
 
-        else if (Mode == ModeOptionheatPump.Cooling && CurrentTemperature > TargetTemperature)
-            CurrentTemperature--;
-    }
+        // Minimum airflow angle
+        private const int MinAngle = 1;
 
-    // Turns the device ON
-    public void TurnOn()
-    {
-        IsOn = true; // Aggiorna Status
-        LastmodifiedAtUtc = DateTime.Now;
-    }
+        // Maximum airflow angle
+        private const int MaxAngle = 90;
 
-    // Turns the device OFF
-    public void TurnOff()
-    {
-        IsOn = false; // Aggiorna Status
-        LastmodifiedAtUtc = DateTime.Now;
-    }
+        // Default airflow angle
+        private const int DefaultAngle = 45;
 
-    // Changes the visible device name
-    public void ChangeName(string name)
-    {
-        Name = name; // Aggiorna la proprietà ereditata
-        LastmodifiedAtUtc = DateTime.Now;
-    }
+        // Default power increase step used for button control
+        private const int DefaultPowerIncreaseStep = 5;
 
-    // Validates and updates the target temperature
-    public void ChangeTemperature(int temperature)
-    {
-        if (temperature >= MIN_TEMP && temperature <= MAX_TEMP)
-            TargetTemperature = temperature;
-        else
-            TargetTemperature = (temperature > MAX_TEMP) ? MAX_TEMP : MIN_TEMP;// if out of range, set to nearest limit
-
-        LastmodifiedAtUtc = DateTime.Now;
-    }
-
-    // Returns the current target temperature
-    public int GetTemperature()
-    {
-        return TargetTemperature;
-    }
-
-    // Validates and updates the power level
-    public void ChangePower(int power)
-    {
-        if (power >= MIN_POW && power <= MAX_POW)
-            Power = power;
-        else
-            Power = (power > MAX_POW) ? MAX_POW : MIN_POW;// if out of range, set to nearest limit
-
-        LastmodifiedAtUtc = DateTime.Now;
-    }
-
-    // Returns the current power level
-    public int GetPower()
-    {
-        return Power;
-    }
-
-    // Increases power by a predefined step
-    public void IncreasePowerByButtonPerFive()
-    {
-        ChangePower(Power + DEFAULT_INCREASE_POW);
-    }
-
-    // Activates fixed-angle airflow mode
-    public void SetFixedAngle()
-    {
-        FixedAngleOn = true;
-        Angolation = DEFAULT_ANGLE;
-        LastmodifiedAtUtc = DateTime.Now;
-    }
-
-    // Validates and updates the airflow angle
-    public void ChangeAngolation(int angle)
-    {
-        if (angle >= MIN_ANGLE && angle <= MAX_ANGLE)
-            Angolation = angle;
-        else
-            Angolation = (angle > MAX_ANGLE) ? MAX_ANGLE : MIN_ANGLE;// if out of range, set to nearest limit
-
-        LastmodifiedAtUtc = DateTime.Now;
-    }
-
-    // Schedules ON and OFF times
-    public void Schedule(DateTime? onTime, DateTime? offTime)
-    {
-        ScheduledOn = onTime;
-        ScheduledOff = offTime;
-        LastmodifiedAtUtc = DateTime.Now;
-    }
-
-    // Verifies if scheduled events should trigger
-    public void UpdateSchedule(DateTime now)
-    {
-        if (ScheduledOn.HasValue && now >= ScheduledOn.Value)
+        // Constructor initializes a heat pump with basic identification and initial temperature
+        public HeatPump(int initialTemperature,string name = "Unnamed HeatPump",string brand = "Generic",string model = "ModelX", EnergyClass energyEfficiency = EnergyClass.A_plus_plus)
+            : base(name, false) // Initializes Device with name and OFF status
         {
-            TurnOn();
-            ScheduledOn = null;
+            CurrentTemperature = initialTemperature;
+            TargetTemperature = initialTemperature;
+            Brand = brand;
+            Model = model;
+            EnergyEfficiency = energyEfficiency;
+            Power = DefaultPower;
+            Angle = DefaultAngle;
+            Touch();
         }
 
-        if (ScheduledOff.HasValue && now >= ScheduledOff.Value)
+        // Sets the operating mode of the heat pump, optionally turning it ON or OFF
+        public void SetMode(ModeOptionHeatPump mode)
         {
-            TurnOff();
-            ScheduledOff = null;
+            Mode = mode;
+
+            if (mode == ModeOptionHeatPump.Off)
+            {
+                TurnOff();
+            }
+            else
+            {
+                TurnOn();
+            }
+
+            Touch();
+        }
+
+        // Sets the target temperature using internal validation logic
+        public void SetTargetTemperature(int temperature)
+        {
+            ChangeTemperature(temperature);
+        }
+
+        // Simulates device behavior and temperature progression toward the target
+        public void Update()
+        {
+            if (!IsOn) return;
+
+            // Simulate internal working: move current temperature toward the target
+            if (Mode == ModeOptionHeatPump.Heating && CurrentTemperature < TargetTemperature)
+            {
+                CurrentTemperature++;
+            }
+            else if (Mode == ModeOptionHeatPump.Cooling && CurrentTemperature > TargetTemperature)
+            {
+                CurrentTemperature--;
+            }
+
+            // We do not call Touch() here because Update may be called very frequently;
+            // you can decide to log this as a state change if needed.
+        }
+
+        // Turns the heat pump ON and updates the last modified timestamp
+        public override void TurnOn()
+        {
+            base.TurnOn();
+            Touch();
+        }
+
+        // Turns the heat pump OFF and updates the last modified timestamp
+        public override void TurnOff()
+        {
+            base.TurnOff();
+            Touch();
+        }
+
+        // Changes the visible device name and updates the last modified timestamp
+        public void ChangeName(string name)
+        {
+            Rename(name);
+        }
+
+        // Validates and updates the target temperature
+        public void ChangeTemperature(int temperature)
+        {
+            TargetTemperature = Clamp(temperature, MinTemperature, MaxTemperature);
+            Touch();
+        }
+
+        // Returns the current target temperature
+        public int GetTemperature()
+        {
+            return TargetTemperature;
+        }
+
+        // Validates and updates the power level
+        public void ChangePower(int power)
+        {
+            Power = Clamp(power, MinPower, MaxPower);
+            Touch();
+        }
+
+        // Returns the current power level
+        public int GetPower()
+        {
+            return Power;
+        }
+
+        // Increases power by a predefined step, respecting the maximum limit
+        public void IncreasePowerByButtonPerFive()
+        {
+            ChangePower(Power + DefaultPowerIncreaseStep);
+        }
+
+        // Activates fixed-angle airflow mode and sets the default angle
+        public void SetFixedAngle()
+        {
+            FixedAngleOn = true;
+            Angle = DefaultAngle;
+            Touch();
+        }
+
+        // Validates and updates the airflow angle
+        public void ChangeAngle(int angle)
+        {
+            Angle = Clamp(angle, MinAngle, MaxAngle);
+            Touch();
+        }
+
+        // Schedules ON and OFF times for the heat pump
+        public void Schedule(DateTime? onTime, DateTime? offTime)
+        {
+            ScheduledOn = onTime;
+            ScheduledOff = offTime;
+            Touch();
+        }
+
+        // Verifies if scheduled events should trigger and updates device state
+        public void UpdateSchedule(DateTime now)
+        {
+            if (ScheduledOn.HasValue && now >= ScheduledOn.Value)
+            {
+                TurnOn();
+                ScheduledOn = null;
+            }
+
+            if (ScheduledOff.HasValue && now >= ScheduledOff.Value)
+            {
+                TurnOff();
+                ScheduledOff = null;
+            }
+
+            Touch();
+        }
+
+        // Helper method that constrains a value within a min and max range
+        private static int Clamp(int value, int min, int max)
+        {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
         }
     }
 }

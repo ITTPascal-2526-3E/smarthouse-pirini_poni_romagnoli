@@ -1,78 +1,84 @@
-﻿using BlaisePascal.SmartHouse.Domain.illumination;
+﻿using BlaisePascal.SmartHouse.Domain.@enum;
 using System;
 
-public class Lamp : Device
+namespace BlaisePascal.SmartHouse.Domain
 {
-    //  Enumeration of available lamp colors 
-
-
-    //  Main properties 
-    public int Power { get; }                  // Lamp power in watts
-    public ColorOption Color { get; set; }     // Lamp color (chosen from predefined options)
-    public string Brand { get; }               // Manufacturer brand
-    public string Model { get; }               // Lamp model name or number
-    public EnergyClass EnergyEfficency { get; }         // Energy efficiency label (e.g. A++, B, etc.)
-    public bool IsOn { get; protected set; }   // True if the lamp is currently ON
-    public int LuminosityPercentage { get; protected set; } // Brightness level (0–100%)
-
-    public Guid LampId { get; } = Guid.NewGuid(); // Unique identifier for the lamp
-                                                  // name e CreatedAtUTC rimossi qui perché ereditati dalla classe Device
-
-    //  Constructor 
-    public Lamp(int power, ColorOption color, string model, string brand, EnergyClass energyClass, string nm)
-    : base(nm, false)
+    // Represents a basic smart lamp device
+    public class Lamp : Device
     {
+        // Minimum allowed luminosity percentage
+        public const int MinLuminosity = 0;
 
-        Power = power;
-        Color = color;
-        Model = model;
-        Brand = brand;
-        EnergyEfficency = energyClass;
-        IsOn = false;
-        LuminosityPercentage = 0;
-        // Inizializziamo anche l'ultima modifica alla creazione
-        LastmodifiedAtUtc = DateTime.Now;
-    }
+        // Maximum allowed luminosity percentage
+        public const int MaxLuminosity = 100;
 
-    //  Turn lamp ON 
-    public virtual void TurnOn()  // "virtual" = can be redefined in classes thtat inherit from Lamp
-    {
-        IsOn = true;
-        Status = true; // Aggiorno lo stato del padre
-        LuminosityPercentage = 100;
-        LastmodifiedAtUtc = DateTime.Now; // Aggiorno il timestamp di modifica
+        // Lamp power in watts
+        public int Power { get; }
 
-    }
+        // Lamp color chosen from predefined options
+        public ColorOption Color { get; set; }
 
-    //  Turn lamp OFF 
-    public virtual void TurnOff() // "virtual" = can be redefined in classes thtat inherit from Lamp
-    {
-        IsOn = false;
-        Status = false; // Aggiorno lo stato del padre
-        LuminosityPercentage = 0;
-        LastmodifiedAtUtc = DateTime.Now; // Aggiorno il timestamp di modifica
+        // Manufacturer brand
+        public string Brand { get; }
 
-    }
+        // Lamp model name or number
+        public string Model { get; }
 
-    //  Adjust brightness 
-    public virtual void SetLuminosity(int percentage)
-    {
-        // Brightness can be adjusted only if the lamp is ON
-        if (!IsOn)
+        // Energy efficiency label (e.g. A++, B, etc.)
+        public EnergyClass EnergyEfficiency { get; }
+
+        // Brightness level (0–100%)
+        public int LuminosityPercentage { get; protected set; }
+
+        // Indicates if the lamp is currently ON (mapped to the base Status)
+        public bool IsOn => Status;
+
+        // Constructor initializes lamp properties and sets initial state to OFF
+        public Lamp(int power, ColorOption color, string model, string brand, EnergyClass energyClass, string name)
+            : base(name, false)
         {
-
-            return;
+            Power = power;
+            Color = color;
+            Model = model;
+            Brand = brand;
+            EnergyEfficiency = energyClass;
+            LuminosityPercentage = MinLuminosity;
+            Touch(); // We consider the creation as an initial modification
         }
 
-        if (percentage < 0 || percentage > 100)
+        // Turns the lamp ON, sets full brightness and updates the last modified timestamp
+        public override void TurnOn()
         {
-
-            return;
+            base.TurnOn();
+            LuminosityPercentage = MaxLuminosity;
+            Touch();
         }
 
-        LuminosityPercentage = percentage;
-        LastmodifiedAtUtc = DateTime.Now; // Aggiorno il timestamp di modifica
+        // Turns the lamp OFF, sets brightness to zero and updates the last modified timestamp
+        public override void TurnOff()
+        {
+            base.TurnOff();
+            LuminosityPercentage = MinLuminosity;
+            Touch();
+        }
 
+        // Adjusts brightness if the lamp is ON and the requested value is in the valid range
+        public virtual void SetLuminosity(int percentage)
+        {
+            // Brightness can be adjusted only if the lamp is ON
+            if (!IsOn)
+            {
+                return;
+            }
+
+            // Reject values outside of the allowed range
+            if (percentage < MinLuminosity || percentage > MaxLuminosity)
+            {
+                return;
+            }
+
+            LuminosityPercentage = percentage;
+            Touch();
+        }
     }
-
 }
