@@ -84,7 +84,7 @@ namespace BlaisePascal.SmartHouse.Domain
             EnergyEfficiency = energyEfficiency;
             Power = DefaultPower;
             Angle = DefaultAngle;
-            Touch();
+            Touch();// Initial modification timestamp
         }
 
         // Sets the operating mode of the heat pump, optionally turning it ON or OFF
@@ -126,7 +126,7 @@ namespace BlaisePascal.SmartHouse.Domain
             }
 
             // We do not call Touch() here because Update may be called very frequently;
-            // you can decide to log this as a state change if needed.
+            
         }
 
         // Turns the heat pump ON and updates the last modified timestamp

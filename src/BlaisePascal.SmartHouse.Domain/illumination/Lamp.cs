@@ -63,7 +63,7 @@ namespace BlaisePascal.SmartHouse.Domain
         }
 
         // Adjusts brightness if the lamp is ON and the requested value is in the valid range
-        public virtual void SetLuminosity(int percentage)
+        public virtual void SetLuminosity(int percentage)//virtual allows derived classes to override this method
         {
             // Brightness can be adjusted only if the lamp is ON
             if (!IsOn)

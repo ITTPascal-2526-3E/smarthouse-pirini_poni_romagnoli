@@ -43,7 +43,7 @@ namespace BlaisePascal.SmartHouse.Domain
         {
             lastPresenceTime = DateTime.UtcNow;
 
-            // If the lamp is ON and currently dimmed, restore full brightness when presence is detected
+            // if the lamp is ON but dimmed(oscurato) due to no presence, restore full brightness
             if (IsOn && LuminosityPercentage < MaxLuminosity)
             {
                 SetLuminosity(MaxLuminosity);

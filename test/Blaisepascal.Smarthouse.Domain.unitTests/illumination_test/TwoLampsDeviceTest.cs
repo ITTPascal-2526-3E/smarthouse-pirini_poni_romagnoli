@@ -1,247 +1,256 @@
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using System.Collections.Generic;
+using BlaisePascal.SmartHouse.Domain;
+using BlaisePascal.SmartHouse.Domain.@enum;
+using System;
+using Xunit;
 
-namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test 
-{ 
+namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
+{
     public class TwoLampsDeviceTest
     {
-
-        //  Helper Methods to create instances 
-
-        private LampsRow CreateDevice()
+        // Helper method to create a new TwoLampsDevice
+        private TwoLampsDevice CreateDevice()
         {
-            return new LampsRow();
+            return new TwoLampsDevice("Test Two Lamps");
         }
 
+        // Helper method to create a standard Lamp
         private Lamp CreateStandardLamp()
         {
-            return new Lamp(10, Lamp.ColorOption.White, "Std-1", "BrandA", "A", "Standard Lamp");
+            return new Lamp(10, ColorOption.White, "Std-1", "BrandA", EnergyClass.A_plus_plus, "Standard Lamp");
         }
 
+        // Helper method to create an EcoLamp
         private EcoLamp CreateEcoLamp()
         {
-            return new EcoLamp(15, Lamp.ColorOption.Green, "Eco-1", "BrandB", "A++", "Eco Lamp");
+            return new EcoLamp(15, ColorOption.Green, "Eco-1", "BrandB", EnergyClass.A_plus_plus_plus, "Eco Lamp");
         }
 
-
-        // 1. TEST GESTIONE LISTA (ADD / REMOVE / COUNT)
-
-
+        // Test that adding lamps increases the total count up to the maximum of two
         [Fact]
-        public void AddLamp_IncreasesTotalCount()
+        public void AddLamp_IncreasesTotalCount_UpToTwo()
         {
-            // Arrange
             var device = CreateDevice();
 
-            // Act
-            device.addLamp(CreateStandardLamp());
-            device.addEcoLamp(CreateEcoLamp());
+            device.AddLamp(CreateStandardLamp());
+            device.AddLamp(CreateEcoLamp());
 
-            // Assert
-            Assert.Equal(2, device.getLampsCount());
+            Assert.Equal(2, device.GetLampsCount());
         }
 
+        // Test that adding more than two lamps does not exceed the maximum capacity
         [Fact]
-        public void GetLampAtIndex_ReturnsCorrectObject()
+        public void AddLamp_IgnoresExtraLampsBeyondCapacity()
         {
-            // Arrange
             var device = CreateDevice();
-            var lamp1 = CreateStandardLamp();
-            device.addLamp(lamp1);
 
-            // Act
-            var retrieved = device.getLampAtIndex(0);
+            device.AddLamp(CreateStandardLamp());
+            device.AddLamp(CreateEcoLamp());
+            device.AddLamp(CreateStandardLamp()); // Third lamp should be ignored
 
-            // Assert
-            Assert.Same(lamp1, retrieved); // Verify it's exactly the same object
+            Assert.Equal(2, device.GetLampsCount());
         }
 
+        // Test that GetLampAtIndex returns the correct lamp instance
         [Fact]
-        public void RemoveLampAtIndex_RemovesItemFromList()
+        public void GetLampAtIndex_ReturnsCorrectLamp()
         {
-            // Arrange
-            var device = CreateDevice();
-            device.addLamp(CreateStandardLamp()); // Index 0
-            device.addEcoLamp(CreateEcoLamp());   // Index 1
-
-            // Act
-            device.RemoveLampAtIndex(0);
-
-            // Assert
-            Assert.Equal(1, device.getLampsCount());
-            // The EcoLamp should now be at index 0
-            Assert.IsType<EcoLamp>(device.getLampAtIndex(0));
-        }
-
-        [Fact]
-        public void ClearAllLamps_EmptiesTheList()
-        {
-            // Arrange
-            var device = CreateDevice();
-            device.addLamp(CreateStandardLamp());
-            device.addLamp(CreateStandardLamp());
-
-            // Act
-            device.ClearAllLamps();
-
-            // Assert
-            Assert.Equal(0, device.getLampsCount());
-        }
-
-
-        // 2. TEST COMANDI GLOBALI (TUTTE LE LAMPADE)
-
-
-        [Fact]
-        public void TurnOnAllLamps_TurnsOnBothTypes()
-        {
-            // Arrange
-            var device = CreateDevice();
-            var normalLamp = CreateStandardLamp();
-            var ecoLamp = CreateEcoLamp();
-
-            device.addLamp(normalLamp);
-            device.addEcoLamp(ecoLamp);
-
-            // Act
-            device.TurnOnAllLamps();
-
-            // Assert
-            Assert.True(normalLamp.IsOn, "Standard lamp should be ON");
-            Assert.True(ecoLamp.IsOn, "Eco lamp should be ON");
-            Assert.Equal(2, device.getONLampsCount());
-        }
-
-        [Fact]
-        public void TurnOffAllLamps_TurnsOffBothTypes()
-        {
-            // Arrange
-            var device = CreateDevice();
-            var normalLamp = CreateStandardLamp();
-            normalLamp.TurnOn(); // Start ON
-
-            device.addLamp(normalLamp);
-
-            // Act
-            device.TurnOffAllLamps();
-
-            // Assert
-            Assert.False(normalLamp.IsOn);
-            Assert.Equal(0, device.getONLampsCount());
-        }
-
-        [Fact]
-        public void SetLuminosityAllLamps_ChangesBrightnessForEveryone()
-        {
-            // Arrange
             var device = CreateDevice();
             var lamp1 = CreateStandardLamp();
             var lamp2 = CreateEcoLamp();
 
-            device.addLamp(lamp1);
-            device.addEcoLamp(lamp2);
+            device.AddLamp(lamp1);
+            device.AddLamp(lamp2);
 
-            device.TurnOnAllLamps(); // Must be ON to change luminosity
+            var first = device.GetLampAtIndex(0);
+            var second = device.GetLampAtIndex(1);
 
-            // Act
-            device.SetLuminosityAllLamps(55);
-
-            // Assert
-            Assert.Equal(55, lamp1.LuminosityPercentage);
-            Assert.Equal(55, lamp2.LuminosityPercentage);
+            Assert.Same(lamp1, first);
+            Assert.Same(lamp2, second);
         }
 
+        // Test that RemoveLampAtIndex removes the lamp and shifts the remaining one
+        [Fact]
+        public void RemoveLampAtIndex_RemovesLampAndShiftsRemaining()
+        {
+            var device = CreateDevice();
+            var lamp1 = CreateStandardLamp();
+            var ecoLamp = CreateEcoLamp();
 
-        // 3. TEST COMANDI SINGOLI (INDEX) E EDGE CASES
+            device.AddLamp(lamp1);    // index 0
+            device.AddLamp(ecoLamp);  // index 1
 
+            device.RemoveLampAtIndex(0);
 
+            Assert.Equal(1, device.GetLampsCount());
+            Assert.Same(ecoLamp, device.GetLampAtIndex(0));
+        }
+
+        // Test that ClearAllLamps empties the device and turns its status OFF
+        [Fact]
+        public void ClearAllLamps_EmptiesDeviceAndTurnsStatusOff()
+        {
+            var device = CreateDevice();
+            device.AddLamp(CreateStandardLamp());
+            device.AddLamp(CreateEcoLamp());
+
+            device.TurnOnBothLamps();
+            Assert.True(device.Status);
+
+            device.ClearAllLamps();
+
+            Assert.Equal(0, device.GetLampsCount());
+            Assert.False(device.Status);
+        }
+
+        // Test that TurnOnBothLamps turns on all lamps and sets device status to ON
+        [Fact]
+        public void TurnOnBothLamps_TurnsOnAllLampsAndDevice()
+        {
+            var device = CreateDevice();
+            var lamp1 = CreateStandardLamp();
+            var ecoLamp = CreateEcoLamp();
+
+            device.AddLamp(lamp1);
+            device.AddLamp(ecoLamp);
+
+            device.TurnOnBothLamps();
+
+            Assert.True(lamp1.IsOn);
+            Assert.True(ecoLamp.IsOn);
+            Assert.Equal(2, device.GetOnLampsCount());
+            Assert.True(device.Status);
+        }
+
+        // Test that TurnOffBothLamps turns off all lamps and sets device status to OFF
+        [Fact]
+        public void TurnOffBothLamps_TurnsOffAllLampsAndDevice()
+        {
+            var device = CreateDevice();
+            var lamp1 = CreateStandardLamp();
+            var ecoLamp = CreateEcoLamp();
+
+            device.AddLamp(lamp1);
+            device.AddLamp(ecoLamp);
+
+            device.TurnOnBothLamps();
+            device.TurnOffBothLamps();
+
+            Assert.False(lamp1.IsOn);
+            Assert.False(ecoLamp.IsOn);
+            Assert.Equal(0, device.GetOnLampsCount());
+            Assert.False(device.Status);
+        }
+
+        // Test that SetLuminosityBothLamps applies the same brightness to all lamps
+        [Fact]
+        public void SetLuminosityBothLamps_ChangesBrightnessForAllLamps()
+        {
+            var device = CreateDevice();
+            var lamp1 = CreateStandardLamp();
+            var ecoLamp = CreateEcoLamp();
+
+            device.AddLamp(lamp1);
+            device.AddLamp(ecoLamp);
+
+            device.TurnOnBothLamps();
+            device.SetLuminosityBothLamps(60);
+
+            Assert.Equal(60, lamp1.LuminosityPercentage);
+            Assert.Equal(60, ecoLamp.LuminosityPercentage);
+        }
+
+        // Test that TurnOnLampAtIndex turns on only the selected lamp
         [Fact]
         public void TurnOnLampAtIndex_TurnsOnOnlySelectedLamp()
         {
-            // Arrange
             var device = CreateDevice();
-            var lamp1 = CreateStandardLamp(); // Index 0
-            var lamp2 = CreateStandardLamp(); // Index 1
+            var lamp1 = CreateStandardLamp(); // index 0
+            var lamp2 = CreateStandardLamp(); // index 1
 
-            device.addLamp(lamp1);
-            device.addLamp(lamp2);
+            device.AddLamp(lamp1);
+            device.AddLamp(lamp2);
 
-            // Act
-            device.turnonlampsatindex(1); // Turn on only the second one
+            device.TurnOnLampAtIndex(1);
 
-            // Assert
-            Assert.False(lamp1.IsOn, "Lamp 0 should remain OFF");
-            Assert.True(lamp2.IsOn, "Lamp 1 should be ON");
+            Assert.False(lamp1.IsOn);
+            Assert.True(lamp2.IsOn);
+            Assert.True(device.Status);
         }
 
+        // Test that index-based methods do not throw on invalid indices
         [Fact]
-        public void IndexMethods_DoNotCrash_WithInvalidIndex()
+        public void IndexMethods_HandleInvalidIndicesWithoutThrowing()
         {
-            // Arrange
             var device = CreateDevice();
-            device.addLamp(CreateStandardLamp());
+            device.AddLamp(CreateStandardLamp());
 
-            // Act & Assert (Should not throw exception)
-            try
+            var ex = Record.Exception(() =>
             {
-                device.turnonlampsatindex(99); // Index out of bounds
-                device.turnofflampsatindex(-1); // Negative index
-                device.RemoveLampAtIndex(99);
-            }
-            catch (Exception)
-            {
-                Assert.Fail("The code should handle invalid indexes gracefully without crashing.");
-            }
+                device.TurnOnLampAtIndex(99);
+                device.TurnOffLampAtIndex(-1);
+                device.SetLuminosityAtIndex(42, 50);
+                device.RemoveLampAtIndex(100);
+            });
+
+            Assert.Null(ex);
         }
 
-
-        // 4. TEST SPECIFICI PER ECOLAMP (DELEGAZIONE)
-
-
+        // Test that UpdateBothEcoLamps delegates Update only to EcoLamp instances
         [Fact]
-        public void UpdateAllEcoLamps_TriggersDimmingOnEcoLamps()
+        public void UpdateBothEcoLamps_AffectsOnlyEcoLamps()
         {
-            // Verify that the container correctly passes the Update command to EcoLamps
-
-            // Arrange
             var device = CreateDevice();
             var ecoLamp = CreateEcoLamp();
             var normalLamp = CreateStandardLamp();
 
-            device.addEcoLamp(ecoLamp);
-            device.addLamp(normalLamp);
+            device.AddLamp(ecoLamp);
+            device.AddLamp(normalLamp);
 
-            device.TurnOnAllLamps();
+            device.TurnOnBothLamps();
 
-            // Act
-            // Simulate 10 minutes passing
-            device.UpdateAllEcoLamps(DateTime.Now.AddMinutes(10));
+            device.UpdateBothEcoLamps(DateTime.UtcNow.AddMinutes(10));
 
-            // Assert
-            Assert.Equal(30, ecoLamp.LuminosityPercentage); // Should dim
-            Assert.Equal(100, normalLamp.LuminosityPercentage); // Standard lamp is ignored by UpdateAllEcoLamps
+            Assert.Equal(30, ecoLamp.LuminosityPercentage);   // EcoLamp should dim
+            Assert.Equal(100, normalLamp.LuminosityPercentage); // Normal lamp unchanged
         }
 
+        // Test that RegisterPresenceBothEcoLamps restores full brightness on EcoLamps
         [Fact]
-        public void RegisterPresenceAllEcoLamps_RestoresBrightness()
+        public void RegisterPresenceBothEcoLamps_RestoresEcoLampBrightness()
         {
-            // Arrange
             var device = CreateDevice();
             var ecoLamp = CreateEcoLamp();
-            device.addEcoLamp(ecoLamp);
-            device.TurnOnAllLamps();
 
-            // Force dimming
-            device.UpdateAllEcoLamps(DateTime.Now.AddMinutes(10));
+            device.AddLamp(ecoLamp);
+            device.TurnOnBothLamps();
+
+            device.UpdateBothEcoLamps(DateTime.UtcNow.AddMinutes(10));
             Assert.Equal(30, ecoLamp.LuminosityPercentage);
 
-            // Act
-            device.RegisterPresenceAllEcoLamps();
+            device.RegisterPresenceBothEcoLamps();
 
-            // Assert
             Assert.Equal(100, ecoLamp.LuminosityPercentage);
         }
 
+        // Test that ScheduleBothEcoLamps forwards schedule to EcoLamps only
+        [Fact]
+        public void ScheduleBothEcoLamps_ForwardsScheduleToEcoLamps()
+        {
+            var device = CreateDevice();
+            var ecoLamp = CreateEcoLamp();
+            var normalLamp = CreateStandardLamp();
+
+            device.AddLamp(ecoLamp);
+            device.AddLamp(normalLamp);
+
+            var now = DateTime.UtcNow;
+            var onTime = now.AddMinutes(1);
+            var offTime = now.AddMinutes(10);
+
+            device.ScheduleBothEcoLamps(onTime, offTime);
+
+            Assert.Equal(onTime, ecoLamp.ScheduledOn);
+            Assert.Equal(offTime, ecoLamp.ScheduledOff);
+        }
     }
 }
-

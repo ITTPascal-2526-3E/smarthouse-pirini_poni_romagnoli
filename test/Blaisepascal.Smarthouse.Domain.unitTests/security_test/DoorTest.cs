@@ -1,53 +1,164 @@
-namespace Blaisepascal.Smarthouse.Domain.unitTests.security_test;
-public class DoorTest
+using System;
+using Xunit;
+using BlaisePascal.SmartHouse.Domain;
+
+namespace Blaisepascal.Smarthouse.Domain.unitTests.security_test
 {
-    //Testing the door opening
-    [Fact]
-    public void doorOpened()
+    public class DoorTest
     {
-        Door door = new Door("Front Door", false);
-        door.OpenDoor();
-        Assert.True(door.Status);
+        // Helper method to create a default door
+        private Door CreateDoor()
+        {
+            return new Door("Front Door", false);
+        }
+
+        // The test verifies that a locked door does NOT open using OpenDoor()
+        [Fact]
+        public void OpenDoor_DoesNotOpen_WhenLocked()
+        {
+            // Arrange
+            var door = CreateDoor();    // Locked by default
+
+            // Act
+            door.OpenDoor();
+
+            // Assert
+            Assert.False(door.Status);  // Still closed
+            Assert.True(door.IsLocked);   // Still locked
+        }
+
+        // The test verifies that OpenDoor works correctly when the door is unlocked
+        [Fact]
+        public void OpenDoor_OpensDoor_WhenUnlocked()
+        {
+            // Arrange
+            var door = CreateDoor();
+            door.UnlockDoor();
+
+            // Act
+            door.OpenDoor();
+
+            // Assert
+            Assert.True(door.Status);
+            Assert.False(door.IsLocked);
+        }
+
+        // The test verifies that CloseDoor closes the door
+        [Fact]
+        public void CloseDoor_ClosesDoor()
+        {
+            // Arrange
+            var door = CreateDoor();
+            door.UnlockDoor();
+            door.OpenDoor();
+
+            // Act
+            door.CloseDoor();
+
+            // Assert
+            Assert.False(door.Status);
+        }
+
+        // The test verifies that LockDoor locks the door
+        [Fact]
+        public void LockDoor_LocksDoor()
+        {
+            // Arrange
+            var door = CreateDoor();
+            door.UnlockDoor();
+
+            // Act
+            door.LockDoor();
+
+            // Assert
+            Assert.True(door.IsLocked);
+        }
+
+        // The test verifies that UnlockDoor unlocks the door
+        [Fact]
+        public void UnlockDoor_UnlocksDoor()
+        {
+            // Arrange
+            var door = CreateDoor();
+
+            // Act
+            door.UnlockDoor();
+
+            // Assert
+            Assert.False(door.IsLocked);
+        }
+
+        // The test verifies that OpenDoorWithKey unlocks AND opens the door
+        [Fact]
+        public void OpenDoorWithKey_UnlocksAndOpensDoor()
+        {
+            // Arrange
+            var door = CreateDoor();
+
+            // Act
+            door.OpenDoorWithKey();
+
+            // Assert
+            Assert.True(door.Status);    // Open
+            Assert.False(door.IsLocked);   // Unlocked
+        }
+
+        // The test verifies that CloseDoorWithKey closes AND locks the door
+        [Fact]
+        public void CloseDoorWithKey_ClosesAndLocksDoor()
+        {
+            // Arrange
+            var door = CreateDoor();
+            door.OpenDoorWithKey();
+
+            // Act
+            door.CloseDoorWithKey();
+
+            // Assert
+            Assert.False(door.Status);   // Closed
+            Assert.True(door.IsLocked);    // Locked
+        }
+
+        // The test verifies that the constructor sets door closed and locked
+        [Fact]
+        public void Constructor_SetsInitialStateCorrectly()
+        {
+            // Arrange & Act
+            var door = CreateDoor();
+
+            // Assert
+            Assert.False(door.Status);   // Closed
+            Assert.True(door.IsLocked);    // Locked
+        }
+
+        // The test verifies that the door name is correctly assigned
+        [Fact]
+        public void Name_IsAssignedCorrectly()
+        {
+            // Arrange
+            string expectedName = "Back Door";
+
+            // Act
+            var door = new Door(expectedName, false);
+
+            // Assert
+            Assert.Equal(expectedName, door.Name);
+        }
+
+        // The test ensures that LastModifiedAtUtc is updated after an action
+        [Fact]
+        public void DoorAction_UpdatesLastModifiedAtUtc()
+        {
+            // Arrange
+            var door = CreateDoor();
+            var before = door.LastModifiedAtUtc;
+
+            // Act
+            System.Threading.Thread.Sleep(20); // To ensure time difference
+            door.UnlockDoor();
+
+            // Assert
+            Assert.True(door.LastModifiedAtUtc > before);
+        }
     }
-    //Testing the door closing
-    [Fact]
-    public void doorClosed()
-    {
-        Door door = new Door("Front Door", false);
-        door.CloseDoor();
-        Assert.False(door.Status);
-    }
-    //Testing the door locking
-    [Fact]
-    public void doorLocked()
-    {
-        Door door = new Door("Front Door", false);
-        door.LockDoor();
-        Assert.True(door.IsLock);
-    }
-    //Testing the door unlocking
-    [Fact]
-    public void doorUnlocked()
-    {
-        Door door = new Door("Front Door", false);
-        door.OpenDoorWithKey();
-        Assert.False(door.IsLock);
-    }
-    //Testing that when door is created, it's closed AND locked
-    [Fact]
-    public void doorInitialState()
-    {
-        Door door = new Door("Front Door", false);
-        Assert.False(door.Status);
-        Assert.True(door.IsLock);
-    }
-    //Testing door's name assignment
-    [Fact]
-    public void doorNameAssignment()
-    {
-        string doorName = "Back Door";
-        Door door = new Door(doorName, false);
-        Assert.Equal(doorName, door.Name);
-    }
-    //Pulga <3
 }

@@ -9,7 +9,7 @@ namespace BlaisePascal.SmartHouse.Domain
         public Guid DeviceId { get; } = Guid.NewGuid();
 
         // Human-readable name of the device
-        public string Name { get; protected set; }
+        public string Name { get; protected set; }// protected means that only this class and derived can modify it
 
         // Indicates whether the device is currently active or ON
         public bool Status { get; protected set; }

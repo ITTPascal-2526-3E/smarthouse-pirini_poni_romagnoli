@@ -154,7 +154,7 @@ namespace BlaisePascal.SmartHouse.Domain
         {
             foreach (var lamp in _lamps)
             {
-                if (lamp is EcoLamp ecoLamp)
+                if (lamp is EcoLamp ecoLamp)// Check if the lamp is an EcoLamp
                 {
                     ecoLamp.RegisterPresence();
                 }
@@ -166,9 +166,9 @@ namespace BlaisePascal.SmartHouse.Domain
         {
             foreach (var lamp in _lamps)
             {
-                if (lamp is EcoLamp ecoLamp)
+                if (lamp is EcoLamp ecoLamp)// Check if the lamp is an EcoLamp
                 {
-                    ecoLamp.Schedule(onTime, offTime);
+                    ecoLamp.Schedule(onTime, offTime);// Schedule ON/OFF times for all EcoLamp instances contained in the row
                 }
             }
         }

@@ -1,60 +1,105 @@
-namespace Blaisepascal.Smarthouse.Domain.unitTests.security_test;
-public class CCTVTest
+using Xunit;
+using BlaisePascal.SmartHouse.Domain;
+
+namespace Blaisepascal.Smarthouse.Domain.unitTests.security_test
 {
-    //Testing if the camera starts recording
-    [Fact]
-    public void cameraStartsRecording()
+    public class CCTVTest
     {
-        CCTV camera = new CCTV("ModelX", "BrandY", "1080p", 10, 1, "FrontDoorCam", false);
-        camera.StartRecording();
-        Assert.True(camera.Status);
-    }
-    //Testing if the camera starts recording and then it stops
-    [Fact]
-    public void cameraStopsRecording()
-    {
-        CCTV camera = new CCTV("ModelX", "BrandY", "1080p", 10, 1, "FrontDoorCam", false);
-        camera.StartRecording();
-        camera.StopRecording();
-        Assert.False(camera.Status);
-    }
-    //Testing if the zoom function works correctly and within the limits
-    [Fact]
-    public void cameraZoomsWithinLimits()
-    {
-        CCTV camera = new CCTV("ModelX", "BrandY", "1080p", 10, 1, "FrontDoorCam", false);
-        camera.StartRecording();
-        camera.zoom(5);
-        int currentZoomLevel = camera.zoomLevel;
-        Assert.Equal(5, currentZoomLevel);
-    }
-    //Testing that that the camera does NOT zoom outside of its limits
-    [Fact]
-    public void cameraDoesNotZoomOutsideLimits()
-    {
-        CCTV camera = new CCTV("ModelX", "BrandY", "1080p", 10, 1, "FrontDoorCam", false);
-        camera.StartRecording();
-        camera.zoom(15);
-        int currentZoomLevel = camera.zoomLevel;
-        Assert.NotEqual(15, currentZoomLevel);
-    }
-    //Testing if the camera does NOT zoom if not recording
-    [Fact]
-    public void cameraZoomsOuRecordingDoesNothing()
-    {
-        CCTV camera = new CCTV("ModelX", "BrandY", "1080p", 10, 1, "FrontDoorCam", false);
-        camera.zoom(5);
-        int currentZoomLevel = camera.zoomLevel;
-        Assert.Equal(0, currentZoomLevel);
-    }
-    //Testing the toggle vision of the camera
-    [Fact]
-    public void cameraTogglesNightVision()
-    {
-        CCTV camera = new CCTV("ModelX", "BrandY", "1080p", 10, 1, "FrontDoorCam", false);
-        camera.ToggleNightVision();
-        Assert.True(camera.IsNightVisionOn);
-        camera.ToggleNightVision();
-        Assert.False(camera.IsNightVisionOn);
+        // The test verifies that the camera starts recording and status becomes ON
+        [Fact]
+        public void CameraStartsRecording()
+        {
+            // Arrange
+            var camera = new CCTV("ModelX", "BrandY", "1080p", 10, 1, "FrontDoorCam", false);
+
+            // Act
+            camera.StartRecording();
+
+            // Assert
+            Assert.True(camera.Status);
+        }
+
+        // The test verifies that the camera can start and then stop recording
+        [Fact]
+        public void CameraStopsRecording()
+        {
+            // Arrange
+            var camera = new CCTV("ModelX", "BrandY", "1080p", 10, 1, "FrontDoorCam", false);
+
+            // Act
+            camera.StartRecording();
+            camera.StopRecording();
+
+            // Assert
+            Assert.False(camera.Status);
+            Assert.Equal(0, camera.ZoomLevel);
+        }
+
+        // The test verifies that zoom works correctly within the defined limits
+        [Fact]
+        public void CameraZoomsWithinLimits()
+        {
+            // Arrange
+            var camera = new CCTV("ModelX", "BrandY", "1080p", 10, 1, "FrontDoorCam", false);
+            camera.StartRecording();
+
+            // Act
+            camera.Zoom(5);
+            int currentZoomLevel = camera.ZoomLevel;
+
+            // Assert
+            Assert.Equal(5, currentZoomLevel);
+        }
+
+        // The test verifies that the camera does not zoom outside its limits
+        [Fact]
+        public void CameraDoesNotZoomOutsideLimits()
+        {
+            // Arrange
+            var camera = new CCTV("ModelX", "BrandY", "1080p", 10, 1, "FrontDoorCam", false);
+            camera.StartRecording();
+            int previousZoom = camera.ZoomLevel;
+
+            // Act
+            camera.Zoom(15);
+            int currentZoomLevel = camera.ZoomLevel;
+
+            // Assert
+            Assert.Equal(previousZoom, currentZoomLevel);
+            Assert.NotEqual(15, currentZoomLevel);
+        }
+
+        // The test verifies that zoom does nothing if the camera is not recording
+        [Fact]
+        public void CameraZoomWithoutRecordingDoesNothing()
+        {
+            // Arrange
+            var camera = new CCTV("ModelX", "BrandY", "1080p", 10, 1, "FrontDoorCam", false);
+
+            // Act
+            camera.Zoom(5);
+            int currentZoomLevel = camera.ZoomLevel;
+
+            // Assert
+            Assert.Equal(0, currentZoomLevel);
+        }
+
+        // The test verifies that night vision toggles correctly ON and OFF
+        [Fact]
+        public void CameraTogglesNightVision()
+        {
+            // Arrange
+            var camera = new CCTV("ModelX", "BrandY", "1080p", 10, 1, "FrontDoorCam", false);
+
+            // Act
+            camera.ToggleNightVision();
+            bool firstState = camera.IsNightVisionOn;
+            camera.ToggleNightVision();
+            bool secondState = camera.IsNightVisionOn;
+
+            // Assert
+            Assert.True(firstState);
+            Assert.False(secondState);
+        }
     }
 }
