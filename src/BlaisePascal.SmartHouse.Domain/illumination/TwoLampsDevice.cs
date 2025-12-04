@@ -1,80 +1,107 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace BlaisePascal.SmartHouse.Domain
 {
-    // Represents a smart device composed of exactly up to two lamps
+    // Represents a smart device composed of up to two lamps
     public class TwoLampsDevice : Device
     {
-        // Maximum number of lamps supported by this device
-        public const int MaxLamps = 2;
+        // First lamp slot (can be a Lamp or EcoLamp)
+        public Lamp? LampA { get; private set; }
 
-        // Internal list of lamps contained in this device
-        private readonly List<Lamp> _lamps = new List<Lamp>(MaxLamps);
+        // Second lamp slot (can be a Lamp or EcoLamp)
+        public Lamp? LampB { get; private set; }
 
         // Constructor initializes the device with a default name and OFF status
-        public TwoLampsDevice() : base("Unnamed TwoLampsDevice", false)
+        public TwoLampsDevice()
+            : base("Unnamed TwoLampsDevice", false)
         {
         }
 
         // Constructor initializes the device with an explicit name and OFF status
-        public TwoLampsDevice(string name) : base(name, false)
+        public TwoLampsDevice(string name)
+            : base(name, false)
         {
         }
 
-        // Adds a lamp to the device if there is free space (up to two lamps)
+        // Adds a lamp to the first free slot (LampA, then LampB). If both are used, nothing happens
         public void AddLamp(Lamp lamp)
         {
-            if (lamp == null) return;
-
-            if (_lamps.Count >= MaxLamps)
+            if (lamp == null)
             {
-                // No more than two lamps are allowed in this device
                 return;
             }
 
-            _lamps.Add(lamp);
+            if (LampA == null)
+            {
+                LampA = lamp;
+            }
+            else if (LampB == null)
+            {
+                LampB = lamp;
+            }
+            else
+            {
+                // Both slots are already taken
+                return;
+            }
+
             Touch();
         }
 
-        // Returns the total number of lamps currently contained in the device
+        // Returns the number of lamps currently assigned (0, 1, or 2)
         public int GetLampsCount()
         {
-            return _lamps.Count;
-        }
-
-        // Returns the number of lamps that are currently ON
-        public int GetOnLampsCount()
-        {
             int count = 0;
-            foreach (var lamp in _lamps)
-            {
-                if (lamp.IsOn) count++;
-            }
+            if (LampA != null) count++;
+            if (LampB != null) count++;
             return count;
         }
 
-        // Returns the lamp at the given index (0 or 1), or null if the index is invalid
-        public Lamp? GetLampAtIndex(int index)
+        // Returns the number of lamps currently ON (0–2)
+        public int GetOnLampsCount()
         {
-            if (index < 0 || index >= _lamps.Count)
+            int count = 0;
+
+            if (LampA != null && LampA.IsOn)
             {
-                return null;
+                count++;
             }
-            return _lamps[index];
+
+            if (LampB != null && LampB.IsOn)
+            {
+                count++;
+            }
+
+            return count;
         }
 
-        // Removes the lamp at the given index (0 or 1), if it exists
+        // Returns the lamp at the given index (0 -> LampA, 1 -> LampB), or null if index invalid or empty
+        public Lamp? GetLampAtIndex(int index)
+        {
+            return index switch
+            {
+                0 => LampA,
+                1 => LampB,
+                _ => null
+            };
+        }
+
+        // Removes the lamp at the given index and updates device status if no lamps remain
         public void RemoveLampAtIndex(int index)
         {
-            if (index < 0 || index >= _lamps.Count)
+            switch (index)
             {
-                return;
+                case 0:
+                    LampA = null;
+                    break;
+                case 1:
+                    LampB = null;
+                    break;
+                default:
+                    return;
             }
 
-            _lamps.RemoveAt(index);
-            // If no lamps remain, we consider the device OFF
-            if (_lamps.Count == 0)
+            if (LampA == null && LampB == null)
             {
                 Status = false;
             }
@@ -82,75 +109,118 @@ namespace BlaisePascal.SmartHouse.Domain
             Touch();
         }
 
-        // Removes all lamps from this device and sets its status to OFF
+        // Removes both lamps and turns the device OFF
         public void ClearAllLamps()
         {
-            _lamps.Clear();
+            LampA = null;
+            LampB = null;
             Status = false;
             Touch();
         }
 
-        // Turns ON both lamps contained in this device (if present) and marks the device as active
+        // Turns ON both lamps (if present) and marks the device as active
         public void TurnOnBothLamps()
         {
-            if (_lamps.Count == 0) return;
+            if (LampA == null && LampB == null)
+            {
+                return;
+            }
+
+            if (LampA != null)
+            {
+                LampA.TurnOn();
+            }
+
+            if (LampB != null)
+            {
+                LampB.TurnOn();
+            }
 
             Status = true;
             Touch();
-
-            foreach (var lamp in _lamps)
-            {
-                lamp.TurnOn();
-            }
         }
 
-        // Turns OFF both lamps contained in this device (if present) and marks the device as OFF
+        // Turns OFF both lamps (if present) and marks the device as OFF
         public void TurnOffBothLamps()
         {
-            if (_lamps.Count == 0) return;
+            if (LampA == null && LampB == null)
+            {
+                return;
+            }
+
+            if (LampA != null)
+            {
+                LampA.TurnOff();
+            }
+
+            if (LampB != null)
+            {
+                LampB.TurnOff();
+            }
 
             Status = false;
             Touch();
-
-            foreach (var lamp in _lamps)
-            {
-                lamp.TurnOff();
-            }
         }
 
-        // Sets luminosity for both lamps and updates device status depending on the requested value
+        // Sets luminosity for both lamps and updates device status if luminosity is greater than zero
         public void SetLuminosityBothLamps(int percentage)
         {
-            if (_lamps.Count == 0) return;
+            if (LampA == null && LampB == null)
+            {
+                return;
+            }
 
-            // If luminosity is set above zero, consider the device as active
             if (percentage > 0 && !Status)
             {
                 Status = true;
                 Touch();
             }
-
-            foreach (var lamp in _lamps)
+            else
             {
-                lamp.SetLuminosity(percentage);
+                Touch();
+            }
+
+            if (LampA != null)
+            {
+                LampA.SetLuminosity(percentage);
+            }
+
+            if (LampB != null)
+            {
+                LampB.SetLuminosity(percentage);
             }
         }
 
         // Turns OFF the lamp at the given index (0 or 1), if it exists
         public void TurnOffLampAtIndex(int index)
         {
-            if (index < 0 || index >= _lamps.Count) return;
+            var lamp = GetLampAtIndex(index);
+            if (lamp == null)
+            {
+                return;
+            }
 
-            _lamps[index].TurnOff();
+            lamp.TurnOff();
+
+            // If both lamps are now OFF (or null), set device status to OFF
+            if (GetOnLampsCount() == 0)
+            {
+                Status = false;
+            }
+
             Touch();
         }
 
         // Turns ON the lamp at the given index (0 or 1), if it exists, and marks the device as active
         public void TurnOnLampAtIndex(int index)
         {
-            if (index < 0 || index >= _lamps.Count) return;
+            var lamp = GetLampAtIndex(index);
+            if (lamp == null)
+            {
+                return;
+            }
 
-            _lamps[index].TurnOn();
+            lamp.TurnOn();
             Status = true;
             Touch();
         }
@@ -158,45 +228,61 @@ namespace BlaisePascal.SmartHouse.Domain
         // Sets luminosity for the lamp at the given index (0 or 1), if it exists
         public void SetLuminosityAtIndex(int index, int percentage)
         {
-            if (index < 0 || index >= _lamps.Count) return;
+            var lamp = GetLampAtIndex(index);
+            if (lamp == null)
+            {
+                return;
+            }
 
-            _lamps[index].SetLuminosity(percentage);
+            lamp.SetLuminosity(percentage);
+
+            if (percentage > 0 && !Status)
+            {
+                Status = true;
+            }
+
             Touch();
         }
 
         // Calls Update on both EcoLamp instances contained in this device
         public void UpdateBothEcoLamps(DateTime now)
         {
-            foreach (var lamp in _lamps)
+            if (LampA is EcoLamp ecoA)
             {
-                if (lamp is EcoLamp ecoLamp)
-                {
-                    ecoLamp.Update(now);
-                }
+                ecoA.Update(now);
+            }
+
+            if (LampB is EcoLamp ecoB)
+            {
+                ecoB.Update(now);
             }
         }
 
         // Calls RegisterPresence on both EcoLamp instances contained in this device
         public void RegisterPresenceBothEcoLamps()
         {
-            foreach (var lamp in _lamps)
+            if (LampA is EcoLamp ecoA)
             {
-                if (lamp is EcoLamp ecoLamp)
-                {
-                    ecoLamp.RegisterPresence();
-                }
+                ecoA.RegisterPresence();
+            }
+
+            if (LampB is EcoLamp ecoB)
+            {
+                ecoB.RegisterPresence();
             }
         }
 
         // Schedules ON/OFF times for both EcoLamp instances contained in this device
         public void ScheduleBothEcoLamps(DateTime? onTime, DateTime? offTime)
         {
-            foreach (var lamp in _lamps)
+            if (LampA is EcoLamp ecoA)
             {
-                if (lamp is EcoLamp ecoLamp)
-                {
-                    ecoLamp.Schedule(onTime, offTime);
-                }
+                ecoA.Schedule(onTime, offTime);
+            }
+
+            if (LampB is EcoLamp ecoB)
+            {
+                ecoB.Schedule(onTime, offTime);
             }
         }
     }
