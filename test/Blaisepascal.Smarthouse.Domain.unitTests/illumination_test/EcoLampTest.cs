@@ -14,7 +14,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
             return new EcoLamp(10, ColorOption.White, "Eco-1", "GreenTech", EnergyClass.A_plus_plus_plus, "My Eco Lamp");
         }
 
-        // The test checks that brightness is lowered after 5 minutes of no presence
+        // The test checks that brightness is lowered after 5 minutes of no presence.
         [Fact]
         public void Update_LowersBrightness_After5MinutesOfNoMovement()
         {
