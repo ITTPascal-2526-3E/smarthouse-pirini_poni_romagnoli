@@ -45,34 +45,32 @@ namespace BlaisePascal.SmartHouse.Domain
         public DateTime? ScheduledOff { get; private set; }
 
         // Minimum allowed temperature
-        private const int MinTemperature = 16;
+        private const int MIN_TEMPERATURE = 16;
 
         // Maximum allowed temperature
-        private const int MaxTemperature = 30;
+        private const int MAX_TEMPERATURE = 30;
 
         // Default temperature used as starting point when needed
-        private const int DefaultTemperature = 20;
+        private const int DEFAULTE_TEMPERATURE = 20;
 
         // Minimum allowed power level
-        private const int MinPower = 0;
+        private const int MIN_POW = 0;
 
         // Maximum allowed power level
-        private const int MaxPower = 100;
+        private const int MAX_POW = 100;
 
         // Default power level
-        private const int DefaultPower = 50;
+        private const int DEFAULTE_POW = 50;
 
         // Minimum airflow angle
-        private const int MinAngle = 1;
+        private const int MIN_ANGLE = 1;
 
         // Maximum airflow angle
-        private const int MaxAngle = 90;
+        private const int MAX_ANGLE = 90;
 
         // Default airflow angle
-        private const int DefaultAngle = 45;
+        private const int DEFAULTE_ANGLE = 45;
 
-        // Default power increase step used for button control
-        private const int DefaultPowerIncreaseStep = 5;
 
         // Constructor initializes a heat pump with basic identification and initial temperature
         public HeatPump(int initialTemperature,string name = "Unnamed HeatPump",string brand = "Generic",string model = "ModelX", EnergyClass energyEfficiency = EnergyClass.A_plus_plus)
@@ -83,8 +81,8 @@ namespace BlaisePascal.SmartHouse.Domain
             Brand = brand;
             Model = model;
             EnergyEfficiency = energyEfficiency;
-            Power = DefaultPower;
-            Angle = DefaultAngle;
+            Power = DEFAULTE_POW;
+            Angle = DEFAULTE_ANGLE;
             Touch();// Initial modification timestamp
         }
 
@@ -153,7 +151,7 @@ namespace BlaisePascal.SmartHouse.Domain
         // Validates and updates the target temperature
         public void ChangeTemperature(int temperature)
         {
-            TargetTemperature = Clamp(temperature, MinTemperature, MaxTemperature);
+            TargetTemperature = Clamp(temperature, MIN_TEMPERATURE, MAX_TEMPERATURE);
             Touch();
         }
 
@@ -166,7 +164,7 @@ namespace BlaisePascal.SmartHouse.Domain
         // Validates and updates the power level
         public void ChangePower(int power)
         {
-            Power = Clamp(power, MinPower, MaxPower);
+            Power = Clamp(power, MIN_POW, MAX_POW);
             Touch();
         }
 
@@ -176,24 +174,19 @@ namespace BlaisePascal.SmartHouse.Domain
             return Power;
         }
 
-        // Increases power by a predefined step, respecting the maximum limit
-        public void IncreasePowerByButtonPerFive()
-        {
-            ChangePower(Power + DefaultPowerIncreaseStep);
-        }
 
         // Activates fixed-angle airflow mode and sets the default angle
         public void SetFixedAngle()
         {
             FixedAngleOn = true;
-            Angle = DefaultAngle;
+            Angle = DEFAULTE_ANGLE;
             Touch();
         }
 
         // Validates and updates the airflow angle
         public void ChangeAngle(int angle)
         {
-            Angle = Clamp(angle, MinAngle, MaxAngle);
+            Angle = Clamp(angle, MIN_ANGLE, MIN_ANGLE);
             Touch();
         }
 
