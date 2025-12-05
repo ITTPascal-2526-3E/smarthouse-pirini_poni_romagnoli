@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlaisePascal.SmartHouse.Domain.@enum
+namespace BlaisePascal.SmartHouse.Domain.illumination
 {
     public enum ColorOption { White, WarmWhite, CoolWhite, Yellow, Blue, Red, Green }//  Lamp color options
 }

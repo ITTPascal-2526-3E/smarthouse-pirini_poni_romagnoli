@@ -1,6 +1,6 @@
 using BlaisePascal.SmartHouse.Domain;
 using BlaisePascal.SmartHouse.Domain.@enum;
-
+using BlaisePascal.SmartHouse.Domain.heating;
 using System;
 using Xunit;
 
@@ -13,7 +13,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
         {
             return new Thermostat(20, ModeOptionThermostat.Off, 22);
         }
-
+        +
         // Helper method to create a default heat pump
         private HeatPump CreateDefaultHeatPump(string name = "DemoHeatPump")
         {

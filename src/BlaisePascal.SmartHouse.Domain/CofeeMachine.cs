@@ -35,13 +35,11 @@ public class CofeeMachine
     public void turnOff()
     { 
         IsOn = false;
-
     }
 
     public void changeName(string name)
     { 
         Name = name;
-        
     }
 
     public void IsReadyToUse()

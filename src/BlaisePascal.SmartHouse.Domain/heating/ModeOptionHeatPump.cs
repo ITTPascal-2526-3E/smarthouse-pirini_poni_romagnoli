@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlaisePascal.SmartHouse.Domain.@enum
+namespace BlaisePascal.SmartHouse.Domain.heating
 {
     public enum ModeOptionHeatPump { Heating, Cooling, Fan, Dry, Off } // HeatPump mode options
 }
