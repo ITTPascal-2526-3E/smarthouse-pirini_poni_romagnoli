@@ -12,6 +12,25 @@ namespace BlaisePascal.SmartHouse.Domain
         private string Model { get; set; }
         public bool Signal { get; private set; }
 
-         
+        public AllarmSistem( string barand, string model)
+        {
+            Barand = barand;
+            Model = model;
+            Signal = false;
+        }
+
+        public void ActivateSignal()
+        {
+            Signal = true;
+        }
+
+        public void DeactivateSignal()
+        {
+            Signal = false;
+        }
+        
+
+
+
     }
 }
