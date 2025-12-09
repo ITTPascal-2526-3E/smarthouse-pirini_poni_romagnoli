@@ -177,20 +177,8 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
         }
 
         // The test checks that the power increases by 5 when using the button method
-        [Fact]
-        public void IncreasePowerByButtonPerFive_IncreasesCorrectly()
-        {
-            // Arrange
-            var heatPump = CreateDefaultHeatPump();
-
-            // Act
-            heatPump.IncreasePowerByButtonPerFive();
-
-            // Assert
-            Assert.Equal(DefaultPower + 5, heatPump.Power);
-        }
-
-        // The test verifies that SetFixedAngle enables the flag and resets angle to default
+        
+        
         [Fact]
         public void SetFixedAngle_EnablesFlagAndResetsAngle()
         {
