@@ -1,5 +1,5 @@
 ﻿using BlaisePascal.SmartHouse.Domain;
-using BlaisePascal.SmartHouse.Domain.@enum;
+using BlaisePascal.SmartHouse.Domain.heating;
 using BlaisePascal.SmartHouse.Domain.illumination;
 using System;
 
