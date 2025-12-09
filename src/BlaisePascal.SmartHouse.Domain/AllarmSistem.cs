@@ -28,7 +28,11 @@ namespace BlaisePascal.SmartHouse.Domain
         {
             Signal = false;
         }
-        
+
+        public void Indicateoff()
+        { 
+            
+        }
         
 
 
