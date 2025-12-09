@@ -1,7 +1,6 @@
 using System;
 using Xunit;
 using BlaisePascal.SmartHouse.Domain;
-using BlaisePascal.SmartHouse.Domain.@enum;
 using BlaisePascal.SmartHouse.Domain.heating;
 
 namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test

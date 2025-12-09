@@ -1,142 +1,130 @@
-﻿using BlaisePascal.SmartHouse.Domain;
-using BlaisePascal.SmartHouse.Domain.@enum;
-using BlaisePascal.SmartHouse.Domain.heating;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using BlaisePascal.SmartHouse.Domain;
+using BlaisePascal.SmartHouse.Domain.heating;
 
-namespace BlaisePascal.SmartHouse.Domain
+
+
+public class Thermostat : Device
 {
-    // Represents a thermostat that controls one or more heat pumps
-    public class Thermostat : Device
+    
+
+    public int CurrentTemperature { get; private set; }
+    public ModeOptionThermostat Mode { get; private set; }
+    public int TargetTemperature { get; private set; }
+
+    // List of  heat pumps
+    public List<HeatPump> _heatPumps = new List<HeatPump>();
+
+
+    // RIMOSSO: private string name... -> Ora usa base.Name ereditato da Device
+
+    // Costruttore
+    public Thermostat(int currtemp, ModeOptionThermostat mod, int targtemp)
+        : base("Unnamed Thermostat", mod != ModeOptionThermostat.Off) // Se mod non è Off, lo Status è true
     {
-        // Current measured room temperature
-        public int CurrentTemperature { get; private set; }
+        CurrentTemperature = currtemp;
+        Mode = mod;
+        TargetTemperature = targtemp;
+        LastModifiedAtUtc = DateTime.Now;
+    }
 
-        // Current operating mode of the thermostat
-        public ModeOptionThermostat Mode { get; private set; }
 
-        // Target temperature set on the thermostat
-        public int TargetTemperature { get; private set; }
+    public void AddHeatPump(HeatPump pump)
+    {
+        if (pump == null) return;
 
-        // List of controlled heat pumps
-        private readonly List<HeatPump> _heatPumps = new List<HeatPump>();
-
-        // Constructor initializes the thermostat with initial temperature, mode and target
-        public Thermostat(int currentTemperature, ModeOptionThermostat mode, int targetTemperature)
-            : base("Unnamed Thermostat", mode != ModeOptionThermostat.Off) // If mode is not Off, Status is true
+        if (!_heatPumps.Contains(pump))
         {
-            CurrentTemperature = currentTemperature;
-            Mode = mode;
-            TargetTemperature = targetTemperature;
-            Touch();
+            _heatPumps.Add(pump);
+            LastModifiedAtUtc = DateTime.Now; // Modifica strutturale rilevante
+        }
+    }
+
+
+    public void RemoveHeatPump(HeatPump pump)
+    {
+        if (pump == null) return;
+
+        if (_heatPumps.Remove(pump))
+        {
+            LastModifiedAtUtc = DateTime.Now;
+        }
+    }
+
+    // Update current measured temperature
+    public void updateCurrentTemp(int temp)
+    {
+        CurrentTemperature = temp;
+        // LastmodifiedAtUtc viene aggiornato implicitamente da ControlMode -> SetMode
+        // Re-evaluate mode whenever the measured temperature changes
+        ControlMode();
+    }
+
+    // Manually set thermostat mode (used internally by ControlMode)
+    public void SetMode(ModeOptionThermostat mode)
+    {
+        Mode = mode;
+
+        // Sincronizziamo lo stato del Device genitore
+        Status = (mode != ModeOptionThermostat.Off);
+        LastModifiedAtUtc = DateTime.Now;
+
+        // Map thermostat mode -> heat pump mode
+        ModeOptionHeatPump hpMode = ModeOptionHeatPump.Off;
+
+        switch (mode)
+        {
+            case ModeOptionThermostat.Heating:
+                hpMode = ModeOptionHeatPump.Heating;
+                break;
+
+            case ModeOptionThermostat.Cooling:
+                hpMode = ModeOptionHeatPump.Cooling;
+                break;
+
+            case ModeOptionThermostat.Off:
+                hpMode = ModeOptionHeatPump.Off;
+                break;
         }
 
-        // Adds a heat pump to the list of controlled devices if not already present
-        public void AddHeatPump(HeatPump pump)
+        // Propagate mode to all connected heat pumps
+        foreach (var pump in _heatPumps)
         {
-            if (pump == null) return;
+            pump.SetMode(hpMode);
+        }
+    }
 
-            if (!_heatPumps.Contains(pump))
-            {
-                _heatPumps.Add(pump);
-                Touch();
-            }
+    // Set target temperature and propagate to heat pumps
+    public void SetTargetTemperature(int temperature)
+    {
+        TargetTemperature = temperature;
+        LastModifiedAtUtc = DateTime.Now;
+
+        // Propagate desired temperature to all pumps (simple direct call)
+        foreach (var pump in _heatPumps)
+        {
+            pump.SetTargetTemperature(temperature);
         }
 
-        // Removes a heat pump from the list of controlled devices
-        public void RemoveHeatPump(HeatPump pump)
-        {
-            if (pump == null) return;
+        // Re-evaluate the mode after changing the target
+        ControlMode();
+    }
 
-            if (_heatPumps.Remove(pump))
-            {
-                Touch();
-            }
+    // simple control method to set mode based on current and target temperatures
+    private void ControlMode()
+    {
+        if (CurrentTemperature < TargetTemperature)// If CurrentTemperature < TargetTemperature  -> Heating
+        {
+            SetMode(ModeOptionThermostat.Heating);
         }
-
-        // Updates the current measured temperature and re-evaluates control mode
-        public void UpdateCurrentTemperature(int temperature)
+        else if (CurrentTemperature > TargetTemperature)// If CurrentTemperature > TargetTemperature  -> Cooling
         {
-            CurrentTemperature = temperature;
-            ControlMode();
+            SetMode(ModeOptionThermostat.Cooling);
         }
-
-        // Sets the thermostat mode and propagates it to all connected heat pumps
-        public void SetMode(ModeOptionThermostat mode)
+        else
         {
-            Mode = mode;
-
-            // Synchronize the parent Device status with the mode
-            if (mode == ModeOptionThermostat.Off)
-            {
-                Status = false;
-            }
-            else
-            {
-                Status = true;
-            }
-
-            // Map thermostat mode to heat pump mode
-            ModeOptionHeatPump hpMode = ModeOptionHeatPump.Off;
-
-            switch (mode)
-            {
-                case ModeOptionThermostat.Heating:
-                    hpMode = ModeOptionHeatPump.Heating;
-                    break;
-
-                case ModeOptionThermostat.Cooling:
-                    hpMode = ModeOptionHeatPump.Cooling;
-                    break;
-
-                case ModeOptionThermostat.Off:
-                    hpMode = ModeOptionHeatPump.Off;
-                    break;
-            }
-
-            // Propagate mode to all connected heat pumps
-            foreach (var pump in _heatPumps)
-            {
-                pump.SetMode(hpMode);
-            }
-
-            Touch();
-        }
-
-        // Sets target temperature and propagates it to all controlled heat pumps
-        public void SetTargetTemperature(int temperature)
-        {
-            TargetTemperature = temperature;
-            Touch();
-
-            // Propagate desired temperature to all pumps
-            foreach (var pump in _heatPumps)
-            {
-                pump.SetTargetTemperature(temperature);
-            }
-
-            // Re-evaluate the mode after changing the target
-            ControlMode();
-        }
-
-        // Internal control method that sets mode based on current and target temperatures
-        private void ControlMode()
-        {
-            if (CurrentTemperature < TargetTemperature)
-            {
-                // If CurrentTemperature < TargetTemperature -> Heating mode
-                SetMode(ModeOptionThermostat.Heating);
-            }
-            else if (CurrentTemperature > TargetTemperature)
-            {
-                // If CurrentTemperature > TargetTemperature -> Cooling mode
-                SetMode(ModeOptionThermostat.Cooling);
-            }
-            else
-            {
-                // If CurrentTemperature == TargetTemperature -> Off
-                SetMode(ModeOptionThermostat.Off);
-            }
+            SetMode(ModeOptionThermostat.Off);// If CurrentTemperature == TargetTemperature -> Off
         }
     }
 }
