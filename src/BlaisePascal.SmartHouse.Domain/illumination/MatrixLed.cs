@@ -77,4 +77,26 @@ public class MatrixLed : Device
     {
         return matrix[x][y];
     }
+
+
+
+    public Led[] GetLedsInRow(int row)
+    {
+        if (row < 0 || row >= height)
+            return null;
+        return matrix[row];
+    }
+
+    public Led[] GetLampInColumn(int column)
+    {
+        if (column < 0 || column >= width)
+            return null;
+
+        Led[] columnLeds = new Led[height];// Create an array to hold the column LEDs
+        for (int i = 0; i < height; i++)
+        {
+            columnLeds[i] = matrix[i][column];
+        }
+        return columnLeds;
+    }
 }
