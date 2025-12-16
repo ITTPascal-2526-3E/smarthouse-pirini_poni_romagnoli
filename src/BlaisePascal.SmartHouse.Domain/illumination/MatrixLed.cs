@@ -1,4 +1,5 @@
 ﻿using BlaisePascal.SmartHouse.Domain;
+using BlaisePascal.SmartHouse.Domain.illumination;
 using System;
 
 // NO PATTERN CHECKBOARD
@@ -83,7 +84,9 @@ public class MatrixLed : Device
     public Led[] GetLedsInRow(int row)
     {
         if (row < 0 || row >= height)
+        {
             return null;
+        }
         return matrix[row];
     }
 
