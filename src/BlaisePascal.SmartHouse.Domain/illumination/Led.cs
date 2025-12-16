@@ -5,7 +5,7 @@ using BlaisePascal.SmartHouse.Domain.illumination;
 public class Led: Device
 {
 	public ColorOption colorOption {get; private set;}
-	public int LightIntensty { get; private set; } = DEFAULT_INTENSITY ;
+	public int LightIntensity { get; private set; } = DEFAULT_INTENSITY ;
 
 
 	private const int DEFAULT_INTENSITY = 70;
@@ -14,7 +14,7 @@ public class Led: Device
     public Led(string name, bool status, ColorOption color)
 		:base(name, status)
 	{
-		colorOption = color;
+        colorOption = color;
 	}
 
 	public void ChangeColor(ColorOption colOption)
@@ -24,7 +24,7 @@ public class Led: Device
 
 	public void SetLightIntensity(int intensity)
 	{
-		LightIntensty = intensity;
+		LightIntensity = intensity;
     }
 
 	

@@ -6,10 +6,10 @@ using System;
 // REVERSE COLUMS
 public class MatrixLed : Device
 {
-    private Led[][] matrix; // Declare the matrix field
+    public Led[][] matrix { get; private set; } // Declare the matrix field
 
-    private int width;
-    private int height;
+    public int width { get; private set; }
+    public int height { get; private set; }
 
     public MatrixLed(string name, bool status, int wid, int hei)
         : base(name, status)

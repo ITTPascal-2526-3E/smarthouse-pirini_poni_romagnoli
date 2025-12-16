@@ -1,5 +1,3 @@
-using System;
-using Xunit;
 using BlaisePascal.SmartHouse.Domain;
 using BlaisePascal.SmartHouse.Domain.illumination;
 
