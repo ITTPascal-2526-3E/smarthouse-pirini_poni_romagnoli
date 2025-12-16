@@ -7,8 +7,8 @@ namespace BlaisePascal.SmartHouse.Domain.security
 {
      public class AllarmSistem : Device
     {
-        private string Brand { get; set; }
-        private string Model { get; set; }
+        public string Brand { get; set; }
+        public string Model { get; set; }
 
         public bool Irruption { get; private set; }
         public bool Signal { get; private set; }
@@ -68,7 +68,7 @@ namespace BlaisePascal.SmartHouse.Domain.security
             }
         }
 
-        public void Indicateoff()
+        public void IndicateOff()
         {
             if (base.Status == false)
             { 
@@ -76,7 +76,7 @@ namespace BlaisePascal.SmartHouse.Domain.security
             }
         }
 
-        public void Indicateon()
+        public void IndicateOn()
         {
             if (base.Status == true)
             {
