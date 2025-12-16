@@ -36,7 +36,8 @@ public class MatrixLedTest
     public void allLedsTurnedOffWithIntensity()
     {
         MatrixLed matrixDemo = new MatrixLed("TestMatrix", true, 3, 3);
-        matrixDemo.TurnallOff(50);
+        matrixDemo.TurnallOff();
+        matrixDemo.SetAllIntensity(50);
         for (int i = 0; i < matrixDemo.height; i++)
         {
             for (int j = 0; j < matrixDemo.width; j++)
