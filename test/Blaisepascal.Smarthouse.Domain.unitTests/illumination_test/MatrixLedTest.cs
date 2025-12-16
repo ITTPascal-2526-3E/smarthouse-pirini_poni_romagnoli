@@ -1,6 +1,6 @@
 namespace Blaisepascal.Smarthouse.Domain.unitTests;
 
-public class Test1
+public class MatrixLedTest
 {
     // All leds in the matrix should be turned on
     [Fact]
