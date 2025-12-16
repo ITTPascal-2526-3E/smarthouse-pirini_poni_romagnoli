@@ -151,15 +151,15 @@ internal class Program
         thermostat.SetTargetTemperature(22);
         Console.WriteLine("Thermostat: set target=22°C");
 
-        thermostat.UpdateCurrentTemperature(19);
+        thermostat.updateCurrentTemp(19);
         Console.WriteLine($"Thermostat: temp=19 -> mode={thermostat.Mode}");
         Console.WriteLine($"HeatPumps: pump1={pump1.Mode}, pump2={pump2.Mode}");
 
-        thermostat.UpdateCurrentTemperature(24);
+        thermostat.updateCurrentTemp(24);
         Console.WriteLine($"Thermostat: temp=24 -> mode={thermostat.Mode}");
         Console.WriteLine($"HeatPumps: pump1={pump1.Mode}, pump2={pump2.Mode}");
 
-        thermostat.UpdateCurrentTemperature(22);
+        thermostat.updateCurrentTemp(22);
         Console.WriteLine($"Thermostat: temp=22 -> mode={thermostat.Mode}");
         Console.WriteLine($"HeatPumps: pump1={pump1.Mode}, pump2={pump2.Mode}");
 

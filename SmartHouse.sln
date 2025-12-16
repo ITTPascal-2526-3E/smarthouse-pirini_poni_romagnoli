@@ -13,6 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{ED5A7ADE-9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blaisepascal.Smarthouse.Domain.unitTests", "test\Blaisepascal.Smarthouse.Domain.unitTests\Blaisepascal.Smarthouse.Domain.unitTests.csproj", "{D8E76780-498F-7E27-E580-C5D95899ADFD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{9DF70304-0A22-CE1E-AA12-D5904EE55694}"
+	ProjectSection(SolutionItems) = preProject
+		docs\CODE REVIEW.docx = docs\CODE REVIEW.docx
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
