@@ -1,7 +1,8 @@
 ﻿using BlaisePascal.SmartHouse.Domain;
+using BlaisePascal.SmartHouse.Domain.illumination;
 using System;
 
-// NO PATTERN CHECBOARD
+// NO PATTERN CHECKBOARD
 // FINO A 
 // REVERSE COLUMS
 public class MatrixLed : Device
@@ -22,10 +23,13 @@ public class MatrixLed : Device
         for (int i = 0; i < height; i++)
         {
             matrix[i] = new Led[width];
+            for (int j = 0; j < width; j++)
+            {
+                // Corretto uso della concatenazione/interpolazione: includo le coordinate i,j nel nome
+                matrix[i][j] = new Led($"led {i},{j}", false, ColorOption.White);
+            }
         }
     }
-
-
 
     public void TurnallOn()
     {
@@ -40,6 +44,7 @@ public class MatrixLed : Device
             }
         }
     }
+
     public void TurnallOff()
     {
         for (int i = 0; i < height; i++)
@@ -53,7 +58,8 @@ public class MatrixLed : Device
             }
         }
     }
-    public void TurnallOff(int intensity)
+
+    public void SetAllIntensity(int intensity)
     {
         for (int i = 0; i < height; i++)
         {
@@ -78,7 +84,9 @@ public class MatrixLed : Device
     public Led[] GetLedsInRow(int row)
     {
         if (row < 0 || row >= height)
+        {
             return null;
+        }
         return matrix[row];
     }
 
