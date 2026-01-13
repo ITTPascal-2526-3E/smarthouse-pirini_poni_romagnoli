@@ -128,7 +128,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
             // Arrange
             var device = CreateDevice();
             var normalLamp = CreateStandardLamp();
-            normalLamp.TurnOn();
+            normalLamp.ToggleOn();
 
             device.AddLamp(normalLamp);
 

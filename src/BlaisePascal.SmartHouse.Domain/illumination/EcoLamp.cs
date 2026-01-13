@@ -63,14 +63,14 @@ namespace BlaisePascal.SmartHouse.Domain
             // Execute ON schedule when the scheduled time is reached
             if (ScheduledOn.HasValue && now >= ScheduledOn.Value)
             {
-                TurnOn();
+                ToggleOn();
                 ScheduledOn = null;
             }
 
             // Execute OFF schedule when the scheduled time is reached
             if (ScheduledOff.HasValue && now >= ScheduledOff.Value)
             {
-                TurnOff();
+                ToggleOff();
                 ScheduledOff = null;
             }
 
@@ -89,7 +89,7 @@ namespace BlaisePascal.SmartHouse.Domain
         }
 
         // Turns the lamp ON, records the ON time and updates last modified timestamp
-        public override void TurnOn()
+        public override void ToggleOn()
         {
             // If it was OFF, record the moment it gets turned ON
             if (!IsOn)
@@ -97,12 +97,12 @@ namespace BlaisePascal.SmartHouse.Domain
                 lastTurnOnTime = DateTime.UtcNow;
             }
 
-            base.TurnOn();
+            base.ToggleOn();
             // base.TurnOn already calls Touch via the overridden method in Lamp
         }
 
         // Turns the lamp OFF, accumulates ON time and updates last modified timestamp
-        public override void TurnOff()
+        public override void ToggleOff()
         {
             // If it was ON, accumulate elapsed time since lastTurnOnTime
             if (IsOn && lastTurnOnTime.HasValue)
@@ -111,7 +111,7 @@ namespace BlaisePascal.SmartHouse.Domain
                 lastTurnOnTime = null; // Reset: not ON anymore
             }
 
-            base.TurnOff();
+            base.ToggleOff();
             // base.TurnOff already calls Touch via the overridden method in Lamp
         }
     }

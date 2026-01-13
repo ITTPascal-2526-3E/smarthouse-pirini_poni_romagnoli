@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BlaisePascal.SmartHouse.Domain;
+using BlaisePascal.SmartHouse.Domain.Abstraction;
 using BlaisePascal.SmartHouse.Domain.heating;
 
 

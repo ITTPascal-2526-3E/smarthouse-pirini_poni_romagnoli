@@ -2,6 +2,7 @@ using System;
 using Xunit;
 using BlaisePascal.SmartHouse.Domain;
 using BlaisePascal.SmartHouse.Domain.heating;
+using BlaisePascal.SmartHouse.Domain.illumination;
 
 namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
 {

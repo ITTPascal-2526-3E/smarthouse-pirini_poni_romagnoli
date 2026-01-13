@@ -1,5 +1,5 @@
 ﻿using System;
-using BlaisePascal.SmartHouse.Domain;
+using BlaisePascal.SmartHouse.Domain.Abstraction;
 
 namespace BlaisePascal.SmartHouse.Domain
 {

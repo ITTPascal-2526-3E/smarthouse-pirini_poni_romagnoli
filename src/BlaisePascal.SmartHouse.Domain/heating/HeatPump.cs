@@ -1,4 +1,6 @@
-﻿using BlaisePascal.SmartHouse.Domain.heating;
+﻿using BlaisePascal.SmartHouse.Domain.Abstraction;
+using BlaisePascal.SmartHouse.Domain.heating;
+using BlaisePascal.SmartHouse.Domain.illumination;
 using System;
 
 namespace BlaisePascal.SmartHouse.Domain
@@ -91,11 +93,11 @@ namespace BlaisePascal.SmartHouse.Domain
 
             if (mode == ModeOptionHeatPump.Off)
             {
-                TurnOff();
+                ToggleOff();
             }
             else
             {
-                TurnOn();
+                ToggleOn();
             }
 
             Touch();
@@ -127,16 +129,16 @@ namespace BlaisePascal.SmartHouse.Domain
         }
 
         // Turns the heat pump ON and updates the last modified timestamp
-        public override void TurnOn()
+        public override void ToggleOn()
         {
-            base.TurnOn();
+            base.ToggleOn();
             Touch();
         }
 
         // Turns the heat pump OFF and updates the last modified timestamp
-        public override void TurnOff()
+        public override void ToggleOff()
         {
-            base.TurnOff();
+            base.ToggleOn();
             Touch();
         }
 
@@ -201,13 +203,13 @@ namespace BlaisePascal.SmartHouse.Domain
         {
             if (ScheduledOn.HasValue && now >= ScheduledOn.Value)
             {
-                TurnOn();
+                ToggleOn();
                 ScheduledOn = null;
             }
 
             if (ScheduledOff.HasValue && now >= ScheduledOff.Value)
             {
-                TurnOff();
+                ToggleOff();
                 ScheduledOff = null;
             }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BlaisePascal.SmartHouse.Domain.Abstraction;
+using System;
 
 namespace BlaisePascal.SmartHouse.Domain
 {
@@ -128,12 +129,12 @@ namespace BlaisePascal.SmartHouse.Domain
 
             if (LampA != null)
             {
-                LampA.TurnOn();
+                LampA.ToggleOn();
             }
 
             if (LampB != null)
             {
-                LampB.TurnOn();
+                LampB.ToggleOn();
             }
 
             Status = true;
@@ -150,12 +151,12 @@ namespace BlaisePascal.SmartHouse.Domain
 
             if (LampA != null)
             {
-                LampA.TurnOff();
+                LampA.ToggleOff();
             }
 
             if (LampB != null)
             {
-                LampB.TurnOff();
+                LampB.ToggleOff();
             }
 
             Status = false;
@@ -200,7 +201,7 @@ namespace BlaisePascal.SmartHouse.Domain
                 return;
             }
 
-            lamp.TurnOff();
+            lamp.ToggleOff();
 
             // If both lamps are now OFF (or null), set device status to OFF
             if (GetOnLampsCount() == 0)
@@ -220,7 +221,7 @@ namespace BlaisePascal.SmartHouse.Domain
                 return;
             }
 
-            lamp.TurnOn();
+            lamp.ToggleOn();
             Status = true;
             Touch();
         }

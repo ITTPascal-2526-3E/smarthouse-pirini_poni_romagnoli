@@ -1,4 +1,4 @@
-﻿using BlaisePascal.SmartHouse.Domain;
+﻿using BlaisePascal.SmartHouse.Domain.Abstraction;
 using BlaisePascal.SmartHouse.Domain.illumination;
 using System;
 
@@ -39,7 +39,7 @@ public class MatrixLed : Device
             {
                 if (matrix[i][j] != null) // check if led is not absent
                 {
-                    matrix[i][j].TurnOn();
+                    matrix[i][j].ToggleOn();
                 }
             }
         }
@@ -53,7 +53,7 @@ public class MatrixLed : Device
             {
                 if (matrix[i][j] != null) // check if led is not absent
                 {
-                    matrix[i][j].TurnOff();
+                    matrix[i][j].ToggleOff();
                 }
             }
         }

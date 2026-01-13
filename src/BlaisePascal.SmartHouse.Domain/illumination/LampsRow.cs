@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BlaisePascal.SmartHouse.Domain.Abstraction;
+using System;
 using System.Collections.Generic;
 
 namespace BlaisePascal.SmartHouse.Domain
@@ -31,7 +32,7 @@ namespace BlaisePascal.SmartHouse.Domain
 
             foreach (var lamp in _lamps)
             {
-                lamp.TurnOn();
+                lamp.ToggleOn();
             }
         }
 
@@ -43,7 +44,7 @@ namespace BlaisePascal.SmartHouse.Domain
 
             foreach (var lamp in _lamps)
             {
-                lamp.TurnOff();
+                lamp.ToggleOff();
             }
         }
 
@@ -68,7 +69,7 @@ namespace BlaisePascal.SmartHouse.Domain
         {
             if (index < 0 || index >= _lamps.Count) return;
 
-            _lamps[index].TurnOff();
+            _lamps[index].ToggleOff();
             Touch();
         }
 
@@ -77,7 +78,7 @@ namespace BlaisePascal.SmartHouse.Domain
         {
             if (index < 0 || index >= _lamps.Count) return;
 
-            _lamps[index].TurnOn();
+            _lamps[index].ToggleOn();
             Status = true;
             Touch();
         }

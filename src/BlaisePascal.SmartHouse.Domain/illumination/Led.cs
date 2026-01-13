@@ -1,6 +1,6 @@
-﻿using BlaisePascal.SmartHouse.Domain;
-using System;
+﻿using System;
 using BlaisePascal.SmartHouse.Domain.illumination;
+using BlaisePascal.SmartHouse.Domain.Abstraction;
 
 public class Led: Device
 {

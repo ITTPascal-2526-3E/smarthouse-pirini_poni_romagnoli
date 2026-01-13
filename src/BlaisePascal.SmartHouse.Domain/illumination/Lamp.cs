@@ -1,4 +1,5 @@
-﻿using BlaisePascal.SmartHouse.Domain.illumination;
+﻿using BlaisePascal.SmartHouse.Domain.Abstraction;
+using BlaisePascal.SmartHouse.Domain.illumination;
 using System;
 
 namespace BlaisePascal.SmartHouse.Domain
@@ -14,6 +15,7 @@ namespace BlaisePascal.SmartHouse.Domain
 
         // Lamp power in watts
         public int Power { get; }
+
 
         // Lamp color chosen from predefined options
         public ColorOption Color { get; set; }
@@ -47,17 +49,17 @@ namespace BlaisePascal.SmartHouse.Domain
         }
 
         // Turns the lamp ON, sets full brightness and updates the last modified timestamp
-        public override void TurnOn()
+        public override void ToggleOn()
         {
-            base.TurnOn();
+            base.ToggleOn();
             LuminosityPercentage = MaxLuminosity;
             Touch();
         }
 
         // Turns the lamp OFF, sets brightness to zero and updates the last modified timestamp
-        public override void TurnOff()
+        public override void ToggleOff()
         {
-            base.TurnOff();
+            base.ToggleOff();
             LuminosityPercentage = MinLuminosity;
             Touch();
         }

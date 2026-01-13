@@ -1,9 +1,8 @@
 ﻿using System;
-
-namespace BlaisePascal.SmartHouse.Domain
+namespace BlaisePascal.SmartHouse.Domain.Abstraction
 {
     // Base class for all smart devices in the smart house
-    public abstract class Device
+    public abstract class Device : ISwitch
     {
         // Unique identifier for the device
         public Guid DeviceId { get; } = Guid.NewGuid();
@@ -36,14 +35,14 @@ namespace BlaisePascal.SmartHouse.Domain
         }
 
         // Turns the device ON and updates the last modified timestamp
-        public virtual void TurnOn()
+        public virtual void ToggleOn()
         {
             Status = true;
             Touch();
         }
 
         // Turns the device OFF and updates the last modified timestamp
-        public virtual void TurnOff()
+        public virtual void ToggleOff()
         {
             Status = false;
             Touch();
