@@ -24,7 +24,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
         private const int DefaultAngle = 45;
 
         // Helper method to create a default heat pump
-        private HeatPump CreateDefaultHeatPump()
+        private static HeatPump CreateDefaultHeatPump()
         {
             return new HeatPump(InitialTemp, Name, Brand, Model, EnergyRating);
         }
@@ -91,7 +91,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
         {
             // Arrange
             var heatPump = CreateDefaultHeatPump();
-            heatPump.TurnOn();
+            heatPump.ToggleOn();
 
             // Act
             heatPump.SetMode(ModeOptionHeatPump.Off);
@@ -246,7 +246,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
         {
             // Arrange
             var heatPump = CreateDefaultHeatPump();
-            heatPump.TurnOff();
+            heatPump.ToggleOff();
 
             // Act
             heatPump.Update();
@@ -278,7 +278,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
         {
             // Arrange
             var heatPump = CreateDefaultHeatPump();
-            heatPump.TurnOn();
+            heatPump.ToggleOn();
             DateTime now = DateTime.Now;
             heatPump.Schedule(null, now.AddMinutes(-1));
 

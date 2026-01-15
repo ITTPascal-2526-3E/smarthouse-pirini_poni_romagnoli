@@ -16,7 +16,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
         private const string Name = "Desk Lamp";
 
         // Helper to create a default lamp
-        private Lamp CreateDefaultLamp()
+        private static Lamp CreateDefaultLamp()
         {
             return new Lamp(Power, Color, Model, Brand, EnergyClassValue, Name);
         }
@@ -56,7 +56,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
             var lamp = CreateDefaultLamp();
 
             // Act
-            lamp.TurnOn();
+            lamp.ToggleOn();
 
             // Assert
             Assert.True(lamp.IsOn);
@@ -69,10 +69,10 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
         {
             // Arrange
             var lamp = CreateDefaultLamp();
-            lamp.TurnOn();
+            lamp.ToggleOn();
 
             // Act
-            lamp.TurnOff();
+            lamp.ToggleOff();
 
             // Assert
             Assert.False(lamp.IsOn);
@@ -85,7 +85,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
         {
             // Arrange
             var lamp = CreateDefaultLamp();
-            lamp.TurnOn();
+            lamp.ToggleOn();
 
             // Act
             lamp.SetLuminosity(50);
@@ -114,7 +114,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
         {
             // Arrange
             var lamp = CreateDefaultLamp();
-            lamp.TurnOn();
+            lamp.ToggleOn();
 
             // Act
             lamp.SetLuminosity(-10);
@@ -129,7 +129,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
         {
             // Arrange
             var lamp = CreateDefaultLamp();
-            lamp.TurnOn();
+            lamp.ToggleOn();
             lamp.SetLuminosity(50);
 
             // Act
@@ -145,7 +145,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
         {
             // Arrange
             var lamp = CreateDefaultLamp();
-            lamp.TurnOn();
+            lamp.ToggleOn();
 
             // Act
             lamp.SetLuminosity(0);
@@ -166,11 +166,11 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
         {
             // Arrange
             var lamp = CreateDefaultLamp();
-            lamp.TurnOn();
+            lamp.ToggleOn();
             lamp.SetLuminosity(30);
 
             // Act
-            lamp.TurnOn();
+            lamp.ToggleOn();
 
             // Assert
             Assert.Equal(100, lamp.LuminosityPercentage);

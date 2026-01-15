@@ -1,7 +1,7 @@
 ﻿using System;
 using BlaisePascal.SmartHouse.Domain.Abstraction;
 
-namespace BlaisePascal.SmartHouse.Domain
+namespace BlaisePascal.SmartHouse.Domain.security
 {
     // Represents a smart door that can be opened, closed, locked and unlocked
     public class Door : Device
@@ -24,7 +24,7 @@ namespace BlaisePascal.SmartHouse.Domain
             if (!IsLocked)
             {
                 // Status = true means the door is open
-                TurnOn();
+                ToggleOn();
                 Touch();
             }
         }
@@ -33,7 +33,7 @@ namespace BlaisePascal.SmartHouse.Domain
         public void CloseDoor()
         {
             // Status = false means the door is closed
-            TurnOff();
+            ToggleOff();
             Touch();
         }
 
@@ -57,7 +57,7 @@ namespace BlaisePascal.SmartHouse.Domain
             // Unlock the door first
             IsLocked = false;
             // Then open the door
-            TurnOn();
+            ToggleOn();
             Touch();
         }
 
@@ -65,7 +65,7 @@ namespace BlaisePascal.SmartHouse.Domain
         public void CloseDoorWithKey()
         {
             // Close the door
-            TurnOff();
+            ToggleOff();
             // Lock the door after closing
             IsLocked = true;
             Touch();

@@ -1,6 +1,7 @@
 ﻿using BlaisePascal.SmartHouse.Domain;
 using BlaisePascal.SmartHouse.Domain.heating;
 using BlaisePascal.SmartHouse.Domain.illumination;
+using BlaisePascal.SmartHouse.Domain.security;
 using System;
 
 internal class Program

@@ -3,7 +3,7 @@ using BlaisePascal.SmartHouse.Domain.heating;
 using BlaisePascal.SmartHouse.Domain.illumination;
 using System;
 
-namespace BlaisePascal.SmartHouse.Domain
+namespace BlaisePascal.SmartHouse.Domain.heating
 {
     // Represents a smart heat pump device controlled by a thermostat
     public class HeatPump : Device
@@ -138,7 +138,7 @@ namespace BlaisePascal.SmartHouse.Domain
         // Turns the heat pump OFF and updates the last modified timestamp
         public override void ToggleOff()
         {
-            base.ToggleOn();
+            base.ToggleOff();
             Touch();
         }
 
@@ -186,7 +186,7 @@ namespace BlaisePascal.SmartHouse.Domain
         // Validates and updates the airflow angle
         public void ChangeAngle(int angle)
         {
-            Angle = Clamp(angle, MIN_ANGLE, MIN_ANGLE);
+            Angle = Clamp(angle, MIN_ANGLE, MAX_ANGLE);
             Touch();
         }
 

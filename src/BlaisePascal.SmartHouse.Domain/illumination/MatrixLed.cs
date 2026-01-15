@@ -2,104 +2,107 @@
 using BlaisePascal.SmartHouse.Domain.illumination;
 using System;
 
-// NO PATTERN CHECKBOARD
-// FINO A 
-// REVERSE COLUMS
-public class MatrixLed : Device
+namespace BlaisePascal.SmartHouse.Domain.illumination
 {
-    public Led[][] matrix { get; private set; } // Declare the matrix field
-
-    public int width { get; private set; }
-    public int height { get; private set; }
-
-    public MatrixLed(string name, bool status, int wid, int hei)
-        : base(name, status)
+    // NO PATTERN CHECKBOARD
+    // FINO A 
+    // REVERSE COLUMS
+    public class MatrixLed : Device
     {
-        width = wid;
-        height = hei;
+        public Led[][] Matrix { get; private set; } // Declare the matrix field
 
-        // Initialize the matrix with the correct dimensions
-        matrix = new Led[height][];
-        for (int i = 0; i < height; i++)
-        {
-            matrix[i] = new Led[width];
-            for (int j = 0; j < width; j++)
-            {
-                // Corretto uso della concatenazione/interpolazione: includo le coordinate i,j nel nome
-                matrix[i][j] = new Led($"led {i},{j}", false, ColorOption.White);
-            }
-        }
-    }
+        public int Width { get; private set; }
+        public int Height { get; private set; }
 
-    public void TurnallOn()
-    {
-        for (int i = 0; i < height; i++)
+        public MatrixLed(string name, bool status, int wid, int hei)
+            : base(name, status)
         {
-            for (int j = 0; j < width; j++)
+            Width = wid;
+            Height = hei;
+
+            // Initialize the matrix with the correct dimensions
+            Matrix = new Led[Height][];
+            for (int i = 0; i < Height; i++)
             {
-                if (matrix[i][j] != null) // check if led is not absent
+                Matrix[i] = new Led[Width];
+                for (int j = 0; j < Width; j++)
                 {
-                    matrix[i][j].ToggleOn();
+                    // Corretto uso della concatenazione/interpolazione: includo le coordinate i,j nel nome
+                    Matrix[i][j] = new Led($"led {i},{j}", false, ColorOption.White);
                 }
             }
         }
-    }
 
-    public void TurnallOff()
-    {
-        for (int i = 0; i < height; i++)
+        public void TurnallOn()
         {
-            for (int j = 0; j < width; j++)
+            for (int i = 0; i < Height; i++)
             {
-                if (matrix[i][j] != null) // check if led is not absent
+                for (int j = 0; j < Width; j++)
                 {
-                    matrix[i][j].ToggleOff();
+                    if (Matrix[i][j] is not null) // check if led is not absent
+                    {
+                        Matrix[i][j].ToggleOn();
+                    }
                 }
             }
         }
-    }
 
-    public void SetAllIntensity(int intensity)
-    {
-        for (int i = 0; i < height; i++)
+        public void TurnallOff()
         {
-            for (int j = 0; j < width; j++)
+            for (int i = 0; i < Height; i++)
             {
-                if (matrix[i][j] != null) // check if led is not absent
+                for (int j = 0; j < Width; j++)
                 {
-                    matrix[i][j].SetLightIntensity(intensity);
+                    if (Matrix[i][j] is not null) // check if led is not absent
+                    {
+                        Matrix[i][j].ToggleOff();
+                    }
                 }
             }
         }
-    }
 
-
-    public Led GetLamp(int x, int y)
-    {
-        return matrix[x][y];
-    }
-
-
-
-    public Led[] GetLedsInRow(int row)
-    {
-        if (row < 0 || row >= height)
+        public void SetAllIntensity(int intensity)
         {
-            return null;
+            for (int i = 0; i < Height; i++)
+            {
+                for (int j = 0; j < Width; j++)
+                {
+                    if (Matrix[i][j] is not null) // check if led is not absent
+                    {
+                        Matrix[i][j].SetLightIntensity(intensity);
+                    }
+                }
+            }
         }
-        return matrix[row];
-    }
 
-    public Led[] GetLampInColumn(int column)
-    {
-        if (column < 0 || column >= width)
-            return null;
 
-        Led[] columnLeds = new Led[height];// Create an array to hold the column LEDs
-        for (int i = 0; i < height; i++)
+        public Led GetLamp(int x, int y)
         {
-            columnLeds[i] = matrix[i][column];
+            return Matrix[x][y];
         }
-        return columnLeds;
+
+
+
+        public Led[]? GetLedsInRow(int row)
+        {
+            if (row < 0 || row >= Height)
+            {
+                return null;
+            }
+            return Matrix[row];
+        }
+
+        public Led[]? GetLampInColumn(int column)
+        {
+            if (column < 0 || column >= Width)
+                return null;
+
+            Led[] columnLeds = new Led[Height];// Create an array to hold the column LEDs
+            for (int i = 0; i < Height; i++)
+            {
+                columnLeds[i] = Matrix[i][column];
+            }
+            return columnLeds;
+        }
     }
 }

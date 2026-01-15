@@ -7,40 +7,29 @@ using System.Threading.Tasks;
 
 namespace BlaisePascal.SmartHouse.Domain.security
 {
-     public class AllarmSistem : Device
+    public class AlarmSystem(string brand, string model) : Device("System1SmartHouse", true)
     {
-        public string Brand { get; set; }
-        public string Model { get; set; }
+        public string Brand { get; set; } = brand;
+        public string Model { get; set; } = model;
 
-        public bool Irruption { get; private set; }
+        public bool Intrusion { get; private set; }
         public bool Signal { get; private set; }
 
         public bool Notification { get; private set; }
 
-        public bool IrruptionNotification { get; private set; }
+        public bool IntrusionNotification { get; private set; }
 
-
-        public AllarmSistem( string barand, string model) : base("Sistem1Smarthouse", true )
+        public void DetectIntrusion()
         {
-            Brand = barand;
-            Model = model;
-            Irruption = false;
-            Signal = false;
-            Notification = false;
-            IrruptionNotification = false;
-        }
-
-        public void DetectIrruption()
-        {
-            Irruption = true;
-            IrruptionNotification = true;
+            Intrusion = true;
+            IntrusionNotification = true;
             Signal = true;
         }
 
-        public void ResetIrruption()
+        public void ResetIntrusion()
         {
-            Irruption = false;
-            IrruptionNotification = false;
+            Intrusion = false;
+            IntrusionNotification = false;
             Signal = false;
         }
 

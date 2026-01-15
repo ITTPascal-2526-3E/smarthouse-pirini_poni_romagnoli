@@ -1,13 +1,13 @@
 using System;
 using Xunit;
-using BlaisePascal.SmartHouse.Domain;
+using BlaisePascal.SmartHouse.Domain.security;
 
 namespace Blaisepascal.Smarthouse.Domain.unitTests.security_test
 {
     public class DoorTest
     {
         // Helper method to create a default door
-        private Door CreateDoor()
+        private static Door CreateDoor()
         {
             return new Door("Front Door", false);
         }

@@ -9,7 +9,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
     public class EcoLampTest
     {
         // Helper to create a new EcoLamp
-        private EcoLamp CreateDefaultEcoLamp()
+        private static EcoLamp CreateDefaultEcoLamp()
         {
             return new EcoLamp(10, ColorOption.White, "Eco-1", "GreenTech", EnergyClass.A_plus_plus_plus, "My Eco Lamp");
         }
@@ -20,7 +20,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
         {
             // Arrange
             var lamp = CreateDefaultEcoLamp();
-            lamp.TurnOn();
+            lamp.ToggleOn();
 
             var timeInFuture = DateTime.UtcNow.AddMinutes(6);
 
@@ -37,7 +37,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
         {
             // Arrange
             var lamp = CreateDefaultEcoLamp();
-            lamp.TurnOn();
+            lamp.ToggleOn();
 
             var timeInFuture = DateTime.UtcNow.AddMinutes(4);
 
@@ -54,7 +54,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
         {
             // Arrange
             var lamp = CreateDefaultEcoLamp();
-            lamp.TurnOn();
+            lamp.ToggleOn();
 
             lamp.Update(DateTime.UtcNow.AddMinutes(10));
             Assert.Equal(30, lamp.LuminosityPercentage);
@@ -91,7 +91,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
         {
             // Arrange
             var lamp = CreateDefaultEcoLamp();
-            lamp.TurnOn();
+            lamp.ToggleOn();
             var now = DateTime.UtcNow;
             var timeToTurnOff = now.AddHours(1);
 
@@ -114,9 +114,9 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
             Assert.Equal(TimeSpan.Zero, lamp.TotalOnTime);
 
             // Act: first run
-            lamp.TurnOn();
+            lamp.ToggleOn();
             await Task.Delay(100);
-            lamp.TurnOff();
+            lamp.ToggleOff();
 
             // Assert: some time should be accumulated
             Assert.True(lamp.TotalOnTime.TotalMilliseconds >= 80);
@@ -124,9 +124,9 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
             var timeAfterFirstRun = lamp.TotalOnTime;
 
             // Act: second run
-            lamp.TurnOn();
+            lamp.ToggleOn();
             await Task.Delay(100);
-            lamp.TurnOff();
+            lamp.ToggleOff();
 
             // Assert: total time should be greater than after first run
             Assert.True(lamp.TotalOnTime > timeAfterFirstRun);

@@ -8,13 +8,13 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
     public class ThermostatTest
     {
         // Helper method to create a default thermostat
-        private Thermostat CreateDefaultThermostat()
+        private static Thermostat CreateDefaultThermostat()
         {
             return new Thermostat(20, ModeOptionThermostat.Off, 22);
         }
-        +
+        
         // Helper method to create a default heat pump
-        private HeatPump CreateDefaultHeatPump(string name = "DemoHeatPump")
+        private static HeatPump CreateDefaultHeatPump(string name = "DemoHeatPump")
         {
             return new HeatPump(20, name);
         }
@@ -89,7 +89,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
             thermostat.AddHeatPump(pump2);
 
             thermostat.SetTargetTemperature(22);
-            thermostat.UpdateCurrentTemperature(19);
+            thermostat.updateCurrentTemp(19);
 
             Assert.Equal(ModeOptionThermostat.Heating, thermostat.Mode);
             Assert.Equal(ModeOptionHeatPump.Heating, pump1.Mode);
@@ -107,7 +107,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
             thermostat.AddHeatPump(pump);
 
             thermostat.SetTargetTemperature(22);
-            thermostat.UpdateCurrentTemperature(24);
+            thermostat.updateCurrentTemp(24);
 
             Assert.Equal(ModeOptionThermostat.Cooling, thermostat.Mode);
             Assert.Equal(ModeOptionHeatPump.Cooling, pump.Mode);
@@ -124,7 +124,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
             thermostat.AddHeatPump(pump);
 
             thermostat.SetTargetTemperature(22);
-            thermostat.UpdateCurrentTemperature(22);
+            thermostat.updateCurrentTemp(22);
 
             Assert.Equal(ModeOptionThermostat.Off, thermostat.Mode);
             Assert.Equal(ModeOptionHeatPump.Off, pump.Mode);

@@ -1,4 +1,5 @@
 using Xunit;
+using BlaisePascal.SmartHouse.Domain.security;
 using BlaisePascal.SmartHouse.Domain;
 
 namespace Blaisepascal.Smarthouse.Domain.unitTests.security_test

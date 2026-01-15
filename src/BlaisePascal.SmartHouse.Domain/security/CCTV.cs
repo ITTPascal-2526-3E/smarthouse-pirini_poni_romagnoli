@@ -1,7 +1,7 @@
 ﻿using System;
 using BlaisePascal.SmartHouse.Domain.Abstraction;
 
-namespace BlaisePascal.SmartHouse.Domain
+namespace BlaisePascal.SmartHouse.Domain.security
 {
     // Represents a CCTV camera device with zoom and night vision capabilities
     public class CCTV : Device
@@ -47,14 +47,14 @@ namespace BlaisePascal.SmartHouse.Domain
         public void StartRecording()
         {
             ZoomLevel = WideAngleLevel;
-            TurnOn();
+            ToggleOn();
             Touch();
         }
 
         // Stops recording by turning the camera OFF and resetting the zoom level
         public void StopRecording()
         {
-            TurnOff();
+            ToggleOff();
             ZoomLevel = 0;
             Touch();
         }
