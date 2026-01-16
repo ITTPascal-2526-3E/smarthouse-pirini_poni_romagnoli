@@ -6,7 +6,7 @@ using System;
 namespace BlaisePascal.SmartHouse.Domain.heating
 {
     // Represents a smart heat pump device controlled by a thermostat
-    public class HeatPump : Device, ITemperatureControl, IProgrammable
+    public sealed class HeatPump : Device, ITemperatureControl, IProgrammable
     {
         // Current measured temperature
         public int CurrentTemperature { get; private set; }

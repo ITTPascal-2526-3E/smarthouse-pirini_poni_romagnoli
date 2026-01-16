@@ -1,6 +1,6 @@
 ﻿using System;
 
-public class CofeeMachine
+public sealed class CofeeMachine
 {
     private Guid Id { get; } // Unique identifier for the cofee machine
     public string Name { get; set; } // Name assigned by the user

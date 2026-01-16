@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace BlaisePascal.SmartHouse.Domain
 {
     // Represents a row of lamps that can be controlled as a group
-    public class LampsRow : Device
+    public sealed class LampsRow : Device
     {
         // Internal list of lamps in this row
         private readonly List<Lamp> _lamps = new List<Lamp>();

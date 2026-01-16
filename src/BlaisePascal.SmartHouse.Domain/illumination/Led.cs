@@ -2,7 +2,7 @@
 using BlaisePascal.SmartHouse.Domain.illumination;
 using BlaisePascal.SmartHouse.Domain.Abstraction;
 
-public class Led: Device
+public sealed class Led: Device
 {
 	public ColorOption colorOption {get; private set;}
 	public int LightIntensity { get; private set; } = DEFAULT_INTENSITY ;

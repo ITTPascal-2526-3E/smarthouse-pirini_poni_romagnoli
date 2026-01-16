@@ -48,7 +48,7 @@ namespace BlaisePascal.SmartHouse.Domain.Food
         }
 
         // Opens the fridge door
-        public void OpenDoor() // Fixed typo
+        public override void ToggleOn() // Fixed typo
         {
             IsFridgeDoorOpen = true;
             LightOn = true;
@@ -56,7 +56,7 @@ namespace BlaisePascal.SmartHouse.Domain.Food
         }
 
         // Closes the fridge door
-        public void CloseDoor() // Fixed typo (implied standardization)
+        public override void ToggleOff() // Fixed typo (implied standardization)
         {
             IsFridgeDoorOpen = false;
             LightOn = false;

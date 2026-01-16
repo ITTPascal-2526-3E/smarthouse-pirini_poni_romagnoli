@@ -5,7 +5,7 @@ using BlaisePascal.SmartHouse.Domain.Abstraction;
 
 namespace BlaisePascal.SmartHouse.Domain.heating
 {
-    public class Thermostat : Device, ITemperatureControl
+    public sealed class Thermostat : Device, ITemperatureControl
     {
         public int CurrentTemperature { get; private set; }
         public ModeOptionThermostat Mode { get; private set; }

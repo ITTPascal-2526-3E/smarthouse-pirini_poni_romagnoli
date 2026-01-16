@@ -2,10 +2,10 @@
 using BlaisePascal.SmartHouse.Domain.Abstraction;
 using System;
 
-namespace BlaisePascal.SmartHouse.Domain
+namespace  BlaisePascal.SmartHouse.Domain
 {
     // Represents a smart eco-friendly lamp with presence detection and scheduling
-    public class EcoLamp : Lamp, IProgrammable
+    public sealed class EcoLamp : Lamp, IProgrammable
     {
         // Stores the last time presence was detected in the room
         private DateTime lastPresenceTime;

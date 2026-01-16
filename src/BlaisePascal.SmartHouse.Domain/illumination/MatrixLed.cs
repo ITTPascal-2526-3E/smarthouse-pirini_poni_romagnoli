@@ -7,7 +7,7 @@ namespace BlaisePascal.SmartHouse.Domain.illumination
     // NO PATTERN CHECKBOARD
     // FINO A 
     // REVERSE COLUMS
-    public class MatrixLed : Device, IDimmable
+    public sealed class MatrixLed : Device, IDimmable
     {
         public Led[][] Matrix { get; private set; } // Declare the matrix field
 

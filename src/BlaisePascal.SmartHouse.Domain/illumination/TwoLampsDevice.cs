@@ -4,7 +4,7 @@ using System;
 namespace BlaisePascal.SmartHouse.Domain
 {
     // Represents a smart device composed of up to two lamps
-    public class TwoLampsDevice : Device
+    public sealed class TwoLampsDevice : Device
     {
         // First lamp slot (can be a Lamp or EcoLamp)
         public Lamp? LampA { get; private set; }
