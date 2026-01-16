@@ -1,4 +1,5 @@
-Title: SmartHouse\n
+Title: SmartHouse  
+
 Overview: Description of the C# console application simulating a smart home.\n
 Features:
 Illumination: Control Lamps and EcoLamps (On/Off, Luminosity).
@@ -7,4 +8,5 @@ Heating: Thermostat, HeatPumps (Heating/Cooling modes).
 Food: Fridge and Freezer management.
 Interactive Console: User-friendly CLI to control everything.
 Prerequisites: .NET 9.0 SDK.
+
 
