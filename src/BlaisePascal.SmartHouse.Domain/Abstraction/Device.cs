@@ -54,5 +54,11 @@ namespace BlaisePascal.SmartHouse.Domain.Abstraction
             Name = newName;
             Touch();
         }
+
+        // Returns a string representation of the device, Status can be null beacause not every device has necessarly one
+        public override string ToString()
+        {
+            return $"[{GetType().Name}] Name: {Name}, Status: {(Status ? "ON" : "OFF")}";
+        }
     }
 }

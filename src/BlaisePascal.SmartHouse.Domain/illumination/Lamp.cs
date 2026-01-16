@@ -85,5 +85,9 @@ namespace BlaisePascal.SmartHouse.Domain
             LuminosityPercentage = percentage;
             Touch();
         }
+        public override string ToString()
+        {
+             return $"{base.ToString()}, Model: {Model}, Brightness: {LuminosityPercentage}%";
+        }
     }
 }

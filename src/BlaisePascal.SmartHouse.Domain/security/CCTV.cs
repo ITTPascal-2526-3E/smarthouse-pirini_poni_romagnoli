@@ -4,7 +4,7 @@ using BlaisePascal.SmartHouse.Domain.Abstraction;
 namespace BlaisePascal.SmartHouse.Domain.security
 {
     // Represents a CCTV camera device with zoom and night vision capabilities
-    public class CCTV : Device
+    public class CCTV : SecurityDevice
     {
         // CCTV model name
         public string Model { get; private set; }
@@ -26,6 +26,9 @@ namespace BlaisePascal.SmartHouse.Domain.security
 
         // Indicates whether night vision mode is active
         public bool IsNightVisionOn { get; private set; }
+        
+        // Indicates if recording is active (mapped to Status)
+        public bool IsRecording => Status;
 
         // Constructor initializes the CCTV camera with model, brand, resolution and zoom levels
         public CCTV(string model,string brand,string resolution,int cameraTelephotoLevel,int cameraWideAngleLevel,string name,bool status)
@@ -81,6 +84,16 @@ namespace BlaisePascal.SmartHouse.Domain.security
         {
             IsNightVisionOn = !IsNightVisionOn;
             Touch();
+        }
+        public override void TriggerAlarm()
+        {
+            StartRecording();
+            Console.WriteLine($"ALARM: CCTV '{Name}' recording started due to trigger!");
+        }
+
+        public override string ToString()
+        {
+            return $"{base.ToString()}, Zoom: {ZoomLevel}, Rec: {(Status && ZoomLevel > 0 ? "YES" : "NO")}";
         }
     }
 }

@@ -4,7 +4,7 @@ using BlaisePascal.SmartHouse.Domain.Abstraction;
 namespace BlaisePascal.SmartHouse.Domain.security
 {
     // Represents a smart door that can be opened, closed, locked and unlocked
-    public class Door : Device
+    public class Door : SecurityDevice
     {
         // Indicates whether the door is locked
         public bool IsLocked { get; private set; }
@@ -69,6 +69,16 @@ namespace BlaisePascal.SmartHouse.Domain.security
             // Lock the door after closing
             IsLocked = true;
             Touch();
+        }
+        public override void TriggerAlarm()
+        {
+            // Implementation specific to Door (e.g. log intrusion)
+            Console.WriteLine($"ALARM: Door '{Name}' breached!");
+        }
+
+        public override string ToString()
+        {
+            return $"{base.ToString()}, Locked: {IsLocked}";
         }
     }
 }

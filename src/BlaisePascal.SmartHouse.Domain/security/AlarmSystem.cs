@@ -7,10 +7,16 @@ using System.Threading.Tasks;
 
 namespace BlaisePascal.SmartHouse.Domain.security
 {
-    public class AlarmSystem(string brand, string model) : Device("System1SmartHouse", true)
+    public class AlarmSystem : SecurityDevice
     {
-        public string Brand { get; set; } = brand;
-        public string Model { get; set; } = model;
+        public string Brand { get; set; }
+        public string Model { get; set; }
+
+        public AlarmSystem(string brand, string model) : base("System1SmartHouse", true)
+        {
+            Brand = brand;
+            Model = model;
+        }
 
         public bool Intrusion { get; private set; }
         public bool Signal { get; private set; }
@@ -73,6 +79,10 @@ namespace BlaisePascal.SmartHouse.Domain.security
             {
                 Notification = false;
             }
+        }
+        public override void TriggerAlarm()
+        {
+             Console.WriteLine($"ALARM: System '{Name}' SIREN BLARING!");
         }
      }
 }
