@@ -130,12 +130,12 @@ internal class Program
 
                 // --- Fridge ---
                 case ConsoleKey.F:
-                    if (fridge.IsFridgeDoorOpen) fridge.CloseDoor();
-                    else fridge.OpenDoor();
+                    if (fridge.IsFridgeDoorOpen) fridge.ToggleOn();
+                    else fridge.ToggleOn();
                     break;
                 case ConsoleKey.G:
-                    if (fridge.IsFreezerDoorOpen) fridge.CloseFreezerDoor();
-                    else fridge.OpenFreezerDoor();
+                    if (fridge.IsFreezerDoorOpen) fridge.ToggleOff();
+                    else fridge.ToggleOff();
                     break;
 
                 // --- System ---
