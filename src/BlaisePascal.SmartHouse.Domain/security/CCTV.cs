@@ -4,7 +4,7 @@ using BlaisePascal.SmartHouse.Domain.Abstraction;
 namespace BlaisePascal.SmartHouse.Domain.security
 {
     // Represents a CCTV camera device with zoom and night vision capabilities
-    public class CCTV : SecurityDevice
+    public sealed class CCTV : SecurityDevice
     {
         // CCTV model name
         public string Model { get; private set; }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BlaisePascal.SmartHouse.Domain.security
 {
-    public class AlarmSystem : SecurityDevice
+    public sealed class AlarmSystem : SecurityDevice
     {
         public string Brand { get; set; }
         public string Model { get; set; }

@@ -3,7 +3,7 @@ using System;
 
 namespace BlaisePascal.SmartHouse.Domain.Food
 {
-    public class Fridge : Device
+    public sealed class Fridge : Device
     {
         // Manufacturer brand
         public string Brand { get; }

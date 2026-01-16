@@ -7,7 +7,7 @@ using BlaisePascal.SmartHouse.Domain.Food;
 using System;
 using System.Collections.Generic;
 
-internal class Program
+internal sealed class Program
 {
     static void Main(string[] args)
     {
@@ -54,7 +54,7 @@ internal class Program
             Console.WriteLine("[F] Open/Close Fridge | [G] Open/Close Freezer");
             Console.WriteLine("[S] Show Full Status  | [Q] Quit");
 
-            
+
             // Show brief status summary
             Console.WriteLine($"Lamps: {lampsRow.GetOnLampsCount()} ON | Door: {(frontDoor.Status ? "OPEN" : "CLOSED")} ({(frontDoor.IsLocked ? "LOCKED" : "UNLOCKED")})");
             Console.WriteLine($"CCTV: {(camera.IsRecording ? "REC" : "IDLE")} | Alarm: {(alarm.IsArmed ? "ARMED" : "DISARMED")}");
@@ -73,7 +73,7 @@ internal class Program
                     break;
                 case ConsoleKey.OemPlus:
                 case ConsoleKey.Add:
-                    lampsRow.SetLuminosityAllLamps(100); 
+                    lampsRow.SetLuminosityAllLamps(100);
                     break;
                 case ConsoleKey.OemMinus:
                 case ConsoleKey.Subtract:
@@ -100,15 +100,15 @@ internal class Program
                     break;
                 case ConsoleKey.Z:
                     int newZoom = camera.ZoomLevel + 1;
-                    if (newZoom > camera.TelephotoLevel) newZoom = 0; 
+                    if (newZoom > camera.TelephotoLevel) newZoom = 0;
                     camera.Zoom(newZoom);
                     break;
 
                 // --- Heating ---
                 case ConsoleKey.H:
                     // Cycle modes: Off -> Heating -> Cooling -> Off
-                    if (thermostat.Mode == ModeOptionThermostat.Off) thermostat.SetMode(ModeOptionThermostat.Heating); 
-                    else if (thermostat.Mode == ModeOptionThermostat.Heating) thermostat.SetMode(ModeOptionThermostat.Cooling); 
+                    if (thermostat.Mode == ModeOptionThermostat.Off) thermostat.SetMode(ModeOptionThermostat.Heating);
+                    else if (thermostat.Mode == ModeOptionThermostat.Heating) thermostat.SetMode(ModeOptionThermostat.Cooling);
                     else thermostat.SetMode(ModeOptionThermostat.Off);
                     break;
                 case ConsoleKey.T:
@@ -123,7 +123,7 @@ internal class Program
                     if (alarm.IsArmed) alarm.Disarm();
                     else alarm.Arm();
                     break;
-                case ConsoleKey.Divide: 
+                case ConsoleKey.Divide:
                 case ConsoleKey.Oem2: // Forward slash usually
                     if (alarm.IsArmed) alarm.TriggerAlarm();
                     break;
