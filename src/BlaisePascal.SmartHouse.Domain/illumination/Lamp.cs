@@ -5,7 +5,7 @@ using System;
 namespace BlaisePascal.SmartHouse.Domain
 {
     // Represents a basic smart lamp device
-    public class Lamp : Device
+    public class Lamp : Device, IDimmable
     {
         // Minimum allowed luminosity percentage
         public const int MinLuminosity = 0;
@@ -14,7 +14,10 @@ namespace BlaisePascal.SmartHouse.Domain
         public const int MaxLuminosity = 100;
 
         // Lamp power in watts
-        public int Power { get; }
+        public int Power { get; } 
+        
+        // Luminosity property from IDimmable
+        public int Luminosity => LuminosityPercentage;
 
 
         // Lamp color chosen from predefined options

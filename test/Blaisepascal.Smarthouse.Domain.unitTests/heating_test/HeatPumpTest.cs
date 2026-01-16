@@ -265,16 +265,16 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
             heatPump.Schedule(now.AddMinutes(-1), null);
 
             // Act
-            heatPump.UpdateSchedule(now);
+            heatPump.Update(now);
 
             // Assert
             Assert.True(heatPump.IsOn);
             Assert.Null(heatPump.ScheduledOn);
         }
 
-        // The test verifies that UpdateSchedule turns the heat pump OFF at the scheduled OFF time
+        // The test verifies that Update turns the heat pump OFF at the scheduled OFF time
         [Fact]
-        public void UpdateSchedule_TurnsOff_AtScheduledTime()
+        public void Update_TurnsOff_AtScheduledTime()
         {
             // Arrange
             var heatPump = CreateDefaultHeatPump();
@@ -282,12 +282,14 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
             DateTime now = DateTime.Now;
             heatPump.Schedule(null, now.AddMinutes(-1));
 
-            // Act
-            heatPump.UpdateSchedule(now);
+            // Advance time to OFF schedule
+            DateTime offTime = now.AddMinutes(-1); // Assuming offTime is defined elsewhere or needs to be defined here
+            now = offTime;
+            heatPump.Update(now);
 
             // Assert
-            Assert.False(heatPump.IsOn);
-            Assert.Null(heatPump.ScheduledOff);
+            Assert.False(heatPump.IsOn); // Should be OFF
+            Assert.Null(heatPump.ScheduledOff); // Schedule cleared
         }
 
         // The test verifies that ChangeName updates the Name property

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace BlaisePascal.SmartHouse.Domain.Abstraction
 {
     // Device interfaces
-    public interface ISwitch
+    public interface IToggable
     {
         void ToggleOn();
         void ToggleOff();

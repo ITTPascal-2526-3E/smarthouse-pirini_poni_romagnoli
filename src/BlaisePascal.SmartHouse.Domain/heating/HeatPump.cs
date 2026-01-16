@@ -6,7 +6,7 @@ using System;
 namespace BlaisePascal.SmartHouse.Domain.heating
 {
     // Represents a smart heat pump device controlled by a thermostat
-    public class HeatPump : Device
+    public class HeatPump : Device, ITemperatureControl, IProgrammable
     {
         // Current measured temperature
         public int CurrentTemperature { get; private set; }
@@ -199,7 +199,7 @@ namespace BlaisePascal.SmartHouse.Domain.heating
         }
 
         // Verifies if scheduled events should trigger and updates device state
-        public void UpdateSchedule(DateTime now)
+        public void Update(DateTime now)
         {
             if (ScheduledOn.HasValue && now >= ScheduledOn.Value)
             {

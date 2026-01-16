@@ -2,7 +2,7 @@
 namespace BlaisePascal.SmartHouse.Domain.Abstraction
 {
     // Base class for all smart devices in the smart house
-    public abstract class Device : ISwitch
+    public abstract class Device : IToggable
     {
         // Unique identifier for the device
         public Guid DeviceId { get; } = Guid.NewGuid();

@@ -7,12 +7,15 @@ namespace BlaisePascal.SmartHouse.Domain.illumination
     // NO PATTERN CHECKBOARD
     // FINO A 
     // REVERSE COLUMS
-    public class MatrixLed : Device
+    public class MatrixLed : Device, IDimmable
     {
         public Led[][] Matrix { get; private set; } // Declare the matrix field
 
         public int Width { get; private set; }
         public int Height { get; private set; }
+
+        public int Luminosity => 0; // Matrix doesn't have a single luminosity value, returning 0 or derived
+        public void SetLuminosity(int value) => SetAllIntensity(value);
 
         public MatrixLed(string name, bool status, int wid, int hei)
             : base(name, status)
