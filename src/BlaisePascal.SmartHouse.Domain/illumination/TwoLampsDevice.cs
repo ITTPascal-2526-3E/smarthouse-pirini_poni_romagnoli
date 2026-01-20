@@ -173,7 +173,7 @@ namespace BlaisePascal.SmartHouse.Domain
 
             if (percentage > 0 && !Status)
             {
-                Status = true;
+                ToggleOn();
                 Touch();
             }
             else
@@ -206,7 +206,7 @@ namespace BlaisePascal.SmartHouse.Domain
             // If both lamps are now OFF (or null), set device status to OFF
             if (GetOnLampsCount() == 0)
             {
-                Status = false;
+                ToggleOff();
             }
 
             Touch();
