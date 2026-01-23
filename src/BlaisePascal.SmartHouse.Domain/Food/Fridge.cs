@@ -48,7 +48,7 @@ namespace BlaisePascal.SmartHouse.Domain.Food
         }
 
         // Opens the fridge door
-        public override void ToggleOn() // Fixed typo
+        public override void ToggleOn() 
         {
             IsFridgeDoorOpen = true;
             LightOn = true;
@@ -56,7 +56,7 @@ namespace BlaisePascal.SmartHouse.Domain.Food
         }
 
         // Closes the fridge door
-        public override void ToggleOff() // Fixed typo (implied standardization)
+        public override void ToggleOff() 
         {
             IsFridgeDoorOpen = false;
             LightOn = false;
@@ -66,15 +66,13 @@ namespace BlaisePascal.SmartHouse.Domain.Food
         // Opens the freezer door
         public void OpenFreezerDoor()
         {
-            IsFreezerDoorOpen = true;
-            Touch();
+            ToggleOn();
         }
 
         // Closes the freezer door
         public void CloseFreezerDoor()
         {
-            IsFreezerDoorOpen = false;
-            Touch();
+            ToggleOff();
         }
 
         // Sets current fridge's temperature to the one wanted
