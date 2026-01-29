@@ -10,7 +10,7 @@ namespace BlaisePascal.SmartHouse.Domain.Abstraction
         // Human-readable name of the device
         public string Name { get; protected set; }// protected means that only this class and derived can modify it
 
-        // Indicates whether the device is currently active or ON
+        // Indicates whether the device is currently ON or OFF
         public bool Status { get; protected set; }
 
         // Timestamp of device creation in UTC
