@@ -6,11 +6,11 @@ namespace BlaisePascal.SmartHouse.Domain.Food
     public sealed class Fridge : Device
     {
         // Manufacturer brand
-        public string Brand { get; }
+        public string Brand { get; private set; }
         // Fridge model name or number
-        public string Model { get; }
+        public string Model { get; private set; }
         // Capacity in liters
-        public int CapacityLiters { get; }
+        public int CapacityLiters { get; private set; }
         
         // Indicates if the fridge light is on
         public bool LightOn { get; private set; } // Renamed to PascalCase
