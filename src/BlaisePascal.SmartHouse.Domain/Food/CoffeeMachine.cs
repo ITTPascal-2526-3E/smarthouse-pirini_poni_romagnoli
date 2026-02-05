@@ -1,40 +1,38 @@
 ﻿using BlaisePascal.SmartHouse.Domain.Abstraction;
-using System;
 using BlaisePascal.SmartHouse.Domain.illumination;
+
 namespace BlaisePascal.SmartHouse.Domain.Food
 {
-    public sealed class CofeeMachine : Device, IProgrammable
+    public sealed class CoffeeMachine : Device, IProgrammable
     {
-        private Guid Id { get; } // Unique identifier for the cofee machine
-        public string Brand { get; set; } // The brand of the air conditioner
-        public string Model { get; set; } // The model of the air conditioner
-        public EnergyClass EnergyEfficency; // The energy efficiency class of the air conditioner
-        public bool IsReady { get; set; } // True if the cofee machine is ready to use
+        public string Brand { get; set; }
+        public string Model { get; set; }
+        public EnergyClass EnergyEfficiency; // Fixed spelling
+        public bool IsReady { get; set; } // True if the coffee machine is ready to use
         public DateTime IgnitionTime { get; set; } // Time of ignition
         public DateTime ShutdownTime { get; set; } // Time of shutdown
         public DateTime? ScheduledOn { get; private set; } // Scheduled time to turn ON
         public DateTime? ScheduledOff { get; private set; } // Scheduled time to turn OFF       
 
-        public CofeeMachine(Guid id, string name, string brand, string model, EnergyClass energyEfficency, bool status) : base(name, true)
+        public CoffeeMachine(string name, string brand, string model, EnergyClass energyEfficiency, bool status) : base(name, true)
         {
-            Id = id;
             Brand = brand;
             Model = model;
-            EnergyEfficency = energyEfficency;
+            EnergyEfficiency = energyEfficiency;
             IsReady = false;
         }
 
         //Turns on the machine
         public override void ToggleOn()
         {
-            Status = true;
+            base.ToggleOn();
             IsReady = true;
             IgnitionTime = DateTime.UtcNow;
         }
         //Turns off the machine
         public override void ToggleOff()
         {
-            Status = false;
+            base.ToggleOff();
             IsReady = false;
             ShutdownTime = DateTime.UtcNow;
         }
@@ -44,6 +42,7 @@ namespace BlaisePascal.SmartHouse.Domain.Food
         {
             ScheduledOn = onTime;
             ScheduledOff = offTime;
+            Touch();
         }
 
         // Checks the current time against scheduled times and updates the machine's status accordingly

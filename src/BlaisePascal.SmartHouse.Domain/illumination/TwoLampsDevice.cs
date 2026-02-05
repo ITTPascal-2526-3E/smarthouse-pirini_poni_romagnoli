@@ -1,7 +1,7 @@
 ﻿using BlaisePascal.SmartHouse.Domain.Abstraction;
 using System;
 
-namespace BlaisePascal.SmartHouse.Domain
+namespace BlaisePascal.SmartHouse.Domain.illumination
 {
     // Represents a smart device composed of up to two lamps
     public sealed class TwoLampsDevice : Device

@@ -2,7 +2,7 @@
 using BlaisePascal.SmartHouse.Domain.Abstraction;
 using System;
 
-namespace  BlaisePascal.SmartHouse.Domain
+namespace BlaisePascal.SmartHouse.Domain.illumination
 {
     // Represents a smart eco-friendly lamp with presence detection and scheduling
     public sealed class EcoLamp : Lamp, IProgrammable

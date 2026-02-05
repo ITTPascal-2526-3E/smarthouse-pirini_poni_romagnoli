@@ -24,7 +24,7 @@ namespace BlaisePascal.SmartHouse.Domain.heating
             CurrentTemperature = currtemp;
             Mode = mod;
             TargetTemperature = targtemp;
-            LastModifiedAtUtc = DateTime.Now;
+            LastModifiedAtUtc = DateTime.UtcNow;
         }
 
 
@@ -35,7 +35,7 @@ namespace BlaisePascal.SmartHouse.Domain.heating
             if (!_heatPumps.Contains(pump))
             {
                 _heatPumps.Add(pump);
-                LastModifiedAtUtc = DateTime.Now; // Modifica strutturale rilevante
+                LastModifiedAtUtc = DateTime.UtcNow; // Modifica strutturale rilevante
             }
         }
 
@@ -46,7 +46,7 @@ namespace BlaisePascal.SmartHouse.Domain.heating
 
             if (_heatPumps.Remove(pump))
             {
-                LastModifiedAtUtc = DateTime.Now;
+                LastModifiedAtUtc = DateTime.UtcNow;
             }
         }
 
@@ -66,7 +66,7 @@ namespace BlaisePascal.SmartHouse.Domain.heating
 
             // Sincronizziamo lo stato del Device genitore
             Status = (mode != ModeOptionThermostat.Off);
-            LastModifiedAtUtc = DateTime.Now;
+            LastModifiedAtUtc = DateTime.UtcNow;
 
             // Map thermostat mode -> heat pump mode
             ModeOptionHeatPump hpMode = ModeOptionHeatPump.Off;
@@ -97,7 +97,7 @@ namespace BlaisePascal.SmartHouse.Domain.heating
         public void SetTargetTemperature(int temperature)
         {
             TargetTemperature = temperature;
-            LastModifiedAtUtc = DateTime.Now;
+            LastModifiedAtUtc = DateTime.UtcNow;
 
             // Propagate desired temperature to all pumps (simple direct call)
             foreach (var pump in _heatPumps)

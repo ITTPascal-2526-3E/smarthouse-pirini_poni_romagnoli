@@ -2,7 +2,7 @@
 using BlaisePascal.SmartHouse.Domain.illumination;
 using System;
 
-namespace BlaisePascal.SmartHouse.Domain
+namespace BlaisePascal.SmartHouse.Domain.illumination
 {
     // Represents a basic smart lamp device
     public class Lamp : Device, IDimmable

@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using BlaisePascal.SmartHouse.Domain.illumination;
+using BlaisePascal.SmartHouse.Domain.Abstraction;
+using Xunit;
 
 namespace Blaisepascal.Smarthouse.Domain.unitTests
 {
@@ -10,7 +9,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests
     {
         private Led CreateLed()
         {
-            return new Led("Living Room LED", false, BlaisePascal.SmartHouse.Domain.illumination.ColorOption.White);
+            return new Led("Living Room LED", false, ColorOption.White);
         }
 
         [Fact]

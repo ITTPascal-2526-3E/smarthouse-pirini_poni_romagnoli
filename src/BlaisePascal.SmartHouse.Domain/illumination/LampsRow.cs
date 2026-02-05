@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace BlaisePascal.SmartHouse.Domain
+namespace BlaisePascal.SmartHouse.Domain.illumination
 {
     // Represents a row of lamps that can be controlled as a group
     public sealed class LampsRow : Device

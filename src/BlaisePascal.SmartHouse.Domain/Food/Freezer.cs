@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlaisePascal.SmartHouse.Domain
+namespace BlaisePascal.SmartHouse.Domain.Food
 {
     public class Freezer : Device 
     {
@@ -15,7 +15,7 @@ namespace BlaisePascal.SmartHouse.Domain
 
 
         // temperature
-        public double CurrentFreezerTemperatureCelsius { get; private set; }
+        public double CurrentTemperature { get; private set; }
         public const double STANDARD_TEMPERATURE_CELSIUS = -18.0;
         public const double MIN_TEMPERATURE_CELSIUS = -24.0;
         public const double MAX_TEMPERATURE_CELSIUS = -6.0;
@@ -31,7 +31,7 @@ namespace BlaisePascal.SmartHouse.Domain
             Brand = brand;
             Model = model;
             CapacityLiters = capacityLiters;
-            CurrentFreezerTemperatureCelsius = STANDARD_TEMPERATURE_CELSIUS; // Default freezer temperature
+            CurrentTemperature = STANDARD_TEMPERATURE_CELSIUS; // Default freezer temperature
             IsDoorOpen = false;
             IsLightOn = false;
             Touch();
@@ -54,22 +54,17 @@ namespace BlaisePascal.SmartHouse.Domain
         // Overloaded method to set freezer temperature explicitly
         public void SetFreezerTemperature(double targetTemperature)
         {
-            
-
             if (targetTemperature < MIN_TEMPERATURE_CELSIUS || targetTemperature > MAX_TEMPERATURE_CELSIUS)
             {
                 return;
             }
-            CurrentFreezerTemperatureCelsius = targetTemperature;
+            CurrentTemperature = targetTemperature;
             Touch();
         }
 
         public override string ToString()
         {
-            return $"{base.ToString()}, Temp: {CurrentFreezerTemperatureCelsius}C°";
+            return $"{base.ToString()}, Temp: {CurrentTemperature}C°";
         }
-
-
-
     }
 }

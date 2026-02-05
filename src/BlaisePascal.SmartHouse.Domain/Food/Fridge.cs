@@ -13,18 +13,18 @@ namespace BlaisePascal.SmartHouse.Domain.Food
         public int CapacityLiters { get; private set; }
         
         // Indicates if the fridge light is on
-        public bool LightOn { get; private set; } // Renamed to PascalCase
+        public bool IsLightOn { get; private set; } // Renamed for consistency
 
         // Fridge temperatures
         // Current temperature in Celsius
-        public double CurrentFridgeTemperatureCelsius { get; private set; }
+        public double CurrentTemperature { get; private set; }
         public const double MIN_FRIDGE_TEMPERATURE_CELSIUS = 0.0;
         public const double MAX_FRIDGE_TEMPERATURE_CELSIUS = 6.0;
         public const double STANDARD_FRIDGE_TEMPERATURE_CELSIUS = 4.0; 
         
 
         // Indicates if the fridge door is open
-        public bool IsFridgeDoorOpen { get; private set; }
+        public bool IsDoorOpen { get; private set; }
         
 
         public Fridge(string brand, string model, int capacityLiters,string name)
@@ -34,26 +34,26 @@ namespace BlaisePascal.SmartHouse.Domain.Food
             Model = model;
             CapacityLiters = capacityLiters;
 
-            CurrentFridgeTemperatureCelsius = STANDARD_FRIDGE_TEMPERATURE_CELSIUS; // Default fridge temperature
+            CurrentTemperature = STANDARD_FRIDGE_TEMPERATURE_CELSIUS; // Default fridge temperature
 
-            IsFridgeDoorOpen = false;
-            LightOn = false;
+            IsDoorOpen = false;
+            IsLightOn = false;
             Touch();
         }
 
         // Opens the fridge door
         public override void ToggleOn() 
         {
-            IsFridgeDoorOpen = true;
-            LightOn = true;
+            IsDoorOpen = true;
+            IsLightOn = true;
             Touch();
         }
 
         // Closes the fridge door
         public override void ToggleOff() 
         {
-            IsFridgeDoorOpen = false;
-            LightOn = false;
+            IsDoorOpen = false;
+            IsLightOn = false;
             Touch();
         }
 
@@ -64,13 +64,13 @@ namespace BlaisePascal.SmartHouse.Domain.Food
             {
                 return;
             }
-            CurrentFridgeTemperatureCelsius = targetTemperature;
+            CurrentTemperature = targetTemperature;
             Touch();
         }
 
         public override string ToString()
         {
-            return $"{base.ToString()}, Temp: {CurrentFridgeTemperatureCelsius}C°";
+            return $"{base.ToString()}, Temp: {CurrentTemperature}C°";
         }
     }
 }
