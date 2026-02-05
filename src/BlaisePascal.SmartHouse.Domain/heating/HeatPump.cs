@@ -1,6 +1,7 @@
 ﻿using BlaisePascal.SmartHouse.Domain.Abstraction;
 using BlaisePascal.SmartHouse.Domain.heating;
 using BlaisePascal.SmartHouse.Domain.illumination;
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
 using System;
 
 namespace BlaisePascal.SmartHouse.Domain.heating
@@ -9,10 +10,10 @@ namespace BlaisePascal.SmartHouse.Domain.heating
     public sealed class HeatPump : Device, ITemperatureControl, IProgrammable
     {
         // Current measured temperature
-        public int CurrentTemperature { get; private set; }
+        public Temperature CurrentTemperature { get; private set; }
 
         // Target temperature set by the user or thermostat
-        public int TargetTemperature { get; private set; }
+        public Temperature TargetTemperature { get; private set; }
 
         // Current operating mode of the heat pump
         public ModeOptionHeatPump Mode { get; private set; }
@@ -30,10 +31,10 @@ namespace BlaisePascal.SmartHouse.Domain.heating
         public bool IsOn => Status;
 
         // Fan or power intensity (0–100)
-        public int Power { get; private set; }
+        public Power Power { get; private set; }
 
         // Airflow angle (1–90 degrees)
-        public int Angle { get; private set; }
+        public Angle Angle { get; private set; }
 
         // Indicates if fixed-angle mode is enabled
         public bool FixedAngleOn { get; private set; }
@@ -45,35 +46,17 @@ namespace BlaisePascal.SmartHouse.Domain.heating
         public DateTime? ScheduledOff { get; private set; }
 
         // Minimum allowed temperature
-        private const int MIN_TEMPERATURE = 16;
+        private const double MIN_TEMPERATURE = 16.0;
 
         // Maximum allowed temperature
-        private const int MAX_TEMPERATURE = 30;
+        private const double MAX_TEMPERATURE = 30.0;
 
         // Default temperature used as starting point when needed
-        private const int DEFAULTE_TEMPERATURE = 20;
-
-        // Minimum allowed power level
-        private const int MIN_POW = 0;
-
-        // Maximum allowed power level
-        private const int MAX_POW = 100;
-
-        // Default power level
-        private const int DEFAULTE_POW = 50;
-
-        // Minimum airflow angle
-        private const int MIN_ANGLE = 1;
-
-        // Maximum airflow angle
-        private const int MAX_ANGLE = 90;
-
-        // Default airflow angle
-        private const int DEFAULTE_ANGLE = 45;
+        private const double DEFAULTE_TEMPERATURE = 20.0;
 
 
         // Constructor initializes a heat pump with basic identification and initial temperature
-        public HeatPump(int initialTemperature,string name = "Unnamed HeatPump",string brand = "Generic",string model = "ModelX", EnergyClass energyEfficiency = EnergyClass.A_plus_plus)
+        public HeatPump(Temperature initialTemperature, string name = "Unnamed HeatPump", string brand = "Generic", string model = "ModelX", EnergyClass energyEfficiency = EnergyClass.A_plus_plus)
             : base(name, false) // Initializes Device with name and OFF status
         {
             CurrentTemperature = initialTemperature;
@@ -81,8 +64,8 @@ namespace BlaisePascal.SmartHouse.Domain.heating
             Brand = brand;
             Model = model;
             EnergyEfficiency = energyEfficiency;
-            Power = DEFAULTE_POW;
-            Angle = DEFAULTE_ANGLE;
+            Power = new Power(50); // Default Power
+            Angle = new Angle(45); // Default Angle
             Touch();// Initial modification timestamp
         }
 
@@ -104,7 +87,7 @@ namespace BlaisePascal.SmartHouse.Domain.heating
         }
 
         // Sets the target temperature using internal validation logic
-        public void SetTargetTemperature(int temperature)
+        public void SetTargetTemperature(Temperature temperature)
         {
             ChangeTemperature(temperature);
         }
@@ -117,15 +100,14 @@ namespace BlaisePascal.SmartHouse.Domain.heating
             // Simulate internal working: move current temperature toward the target
             if (Mode == ModeOptionHeatPump.Heating && CurrentTemperature < TargetTemperature)
             {
-                CurrentTemperature++;
+                CurrentTemperature = CurrentTemperature + 1.0;
             }
             else if (Mode == ModeOptionHeatPump.Cooling && CurrentTemperature > TargetTemperature)
             {
-                CurrentTemperature--;
+                CurrentTemperature = CurrentTemperature - 1.0;
             }
 
             // We do not call Touch() here because Update may be called very frequently;
-            
         }
 
         // Turns the heat pump ON and updates the last modified timestamp
@@ -149,27 +131,55 @@ namespace BlaisePascal.SmartHouse.Domain.heating
         }
 
         // Validates and updates the target temperature
-        public void ChangeTemperature(int temperature)
+        public void ChangeTemperature(Temperature temperature)
         {
-            TargetTemperature = Clamp(temperature, MIN_TEMPERATURE, MAX_TEMPERATURE);
+            // We use the double value for clamping, then create a new Temperature
+            double clampedVal = Math.Clamp(temperature.Value, MIN_TEMPERATURE, MAX_TEMPERATURE);
+            TargetTemperature = new Temperature(clampedVal);
             Touch();
         }
 
+        // Overload for legacy support
+        public void ChangeTemperature(int temperature)
+        {
+            ChangeTemperature(new Temperature(temperature));
+        }
+
         // Returns the current target temperature
-        public int GetTemperature()
+        public Temperature GetTemperature()
         {
             return TargetTemperature;
         }
 
         // Validates and updates the power level
-        public void ChangePower(int power)
+        public void ChangePower(Power power)
         {
-            Power = Clamp(power, MIN_POW, MAX_POW);
+            Power = power;
             Touch();
         }
 
+        // Overload for legacy support
+        public void ChangePower(int power)
+        {
+            try
+            {
+                Power = new Power(power);
+                Touch();
+            }
+            catch (ArgumentException)
+            {
+                // Ignore invalid values (fail silent as per previous Clamp behavior implies valid-only, but clamping is different than ignoring. 
+                // Previous code: Power = Clamp(power, MIN_POW, MAX_POW); -> This forced the value into range.
+                // New behavior with VO: We can either clamp here OR throw.
+                // To maintain equivalent behavior to "Clamp", we should clamp the int before creating the VO.
+                int clamped = Math.Clamp(power, Power.MinValue, Power.MaxValue);
+                Power = new Power(clamped);
+                Touch();
+            }
+        }
+
         // Returns the current power level
-        public int GetPower()
+        public Power GetPower()
         {
             return Power;
         }
@@ -179,14 +189,23 @@ namespace BlaisePascal.SmartHouse.Domain.heating
         public void SetFixedAngle()
         {
             FixedAngleOn = true;
-            Angle = DEFAULTE_ANGLE;
+            Angle = new Angle(45); // Default Angle
             Touch();
         }
 
         // Validates and updates the airflow angle
+        public void ChangeAngle(Angle angle)
+        {
+            Angle = angle;
+            Touch();
+        }
+
+        // Overload for legacy support
         public void ChangeAngle(int angle)
         {
-            Angle = Clamp(angle, MIN_ANGLE, MAX_ANGLE);
+            // Maintain clamping behavior
+            int clamped = Math.Clamp(angle, Angle.MinValue, Angle.MaxValue);
+            Angle = new Angle(clamped);
             Touch();
         }
 
@@ -216,12 +235,5 @@ namespace BlaisePascal.SmartHouse.Domain.heating
             Touch();
         }
 
-        // Helper method that constrains a value within a min and max range
-        private static int Clamp(int value, int min, int max)
-        {
-            if (value < min) return min;
-            if (value > max) return max;
-            return value;
-        }
     }
 }

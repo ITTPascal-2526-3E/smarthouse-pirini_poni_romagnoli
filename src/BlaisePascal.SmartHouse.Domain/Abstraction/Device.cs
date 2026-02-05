@@ -1,4 +1,6 @@
 ﻿using System;
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
+
 namespace BlaisePascal.SmartHouse.Domain.Abstraction
 {
     // Base class for all smart devices in the smart house
@@ -8,7 +10,7 @@ namespace BlaisePascal.SmartHouse.Domain.Abstraction
         public Guid DeviceId { get; } = Guid.NewGuid();
 
         // Human-readable name of the device
-        public string Name { get; protected set; }// protected means that only this class and derived can modify it
+        public DeviceName Name { get; protected set; }// protected means that only this class and derived can modify it
 
         // Indicates whether the device is currently ON or OFF
         public bool Status { get; protected set; }
@@ -22,7 +24,7 @@ namespace BlaisePascal.SmartHouse.Domain.Abstraction
         // Constructor initializes the device name, status and timestamps
         protected Device(string name, bool status)
         {
-            Name = name;
+            Name = new DeviceName(name);
             Status = status;
             CreatedAtUtc = DateTime.UtcNow;
             LastModifiedAtUtc = CreatedAtUtc;
@@ -51,7 +53,7 @@ namespace BlaisePascal.SmartHouse.Domain.Abstraction
         // Changes the visible device name and updates the last modified timestamp
         public void Rename(string newName)
         {
-            Name = newName;
+            Name = new DeviceName(newName);
             Touch();
         }
 

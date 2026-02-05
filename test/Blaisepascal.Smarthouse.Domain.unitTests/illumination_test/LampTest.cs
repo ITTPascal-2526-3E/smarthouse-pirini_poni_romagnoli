@@ -1,7 +1,6 @@
 ﻿using BlaisePascal.SmartHouse.Domain;
 using BlaisePascal.SmartHouse.Domain.illumination;
-using System;
-using Xunit;
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
 
 namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
 {
@@ -30,7 +29,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
 
             // Assert
             Assert.False(lamp.IsOn);
-            Assert.Equal(0, lamp.LuminosityPercentage);
+            Assert.Equal(0, lamp.CurrentLuminosity.Value);
         }
 
         // The test verifies that constructor sets all fixed properties correctly
@@ -60,7 +59,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
 
             // Assert
             Assert.True(lamp.IsOn);
-            Assert.Equal(100, lamp.LuminosityPercentage);
+            Assert.Equal(100, lamp.CurrentLuminosity.Value);
         }
 
         // The test verifies that TurnOff sets IsOn to false and luminosity to zero
@@ -76,7 +75,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
 
             // Assert
             Assert.False(lamp.IsOn);
-            Assert.Equal(0, lamp.LuminosityPercentage);
+            Assert.Equal(0, lamp.CurrentLuminosity.Value);
         }
 
         // The test checks that SetLuminosity works when lamp is ON and value is valid
@@ -91,7 +90,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
             lamp.SetLuminosity(50);
 
             // Assert
-            Assert.Equal(50, lamp.LuminosityPercentage);
+            Assert.Equal(50, lamp.CurrentLuminosity.Value);
         }
 
         // The test checks that SetLuminosity does nothing when lamp is OFF
@@ -105,7 +104,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
             lamp.SetLuminosity(50);
 
             // Assert
-            Assert.Equal(0, lamp.LuminosityPercentage);
+            Assert.Equal(0, lamp.CurrentLuminosity.Value);
         }
 
         // The test checks that negative luminosity values are ignored
@@ -120,7 +119,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
             lamp.SetLuminosity(-10);
 
             // Assert
-            Assert.Equal(100, lamp.LuminosityPercentage);
+            Assert.Equal(100, lamp.CurrentLuminosity.Value);
         }
 
         // The test checks that values greater than 100 are ignored
@@ -136,7 +135,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
             lamp.SetLuminosity(150);
 
             // Assert
-            Assert.Equal(50, lamp.LuminosityPercentage);
+            Assert.Equal(50, lamp.CurrentLuminosity.Value);
         }
 
         // The test verifies that boundary values 0 and 100 are accepted
@@ -151,13 +150,13 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
             lamp.SetLuminosity(0);
 
             // Assert
-            Assert.Equal(0, lamp.LuminosityPercentage);
+            Assert.Equal(0, lamp.CurrentLuminosity.Value);
 
             // Act
             lamp.SetLuminosity(100);
 
             // Assert
-            Assert.Equal(100, lamp.LuminosityPercentage);
+            Assert.Equal(100, lamp.CurrentLuminosity.Value);
         }
 
         // The test verifies that calling TurnOn again resets luminosity to 100
@@ -173,7 +172,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
             lamp.ToggleOn();
 
             // Assert
-            Assert.Equal(100, lamp.LuminosityPercentage);
+            Assert.Equal(100, lamp.CurrentLuminosity.Value);
         }
 
         // The test checks that the Color property can be changed
@@ -190,6 +189,6 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
             Assert.Equal(ColorOption.Blue, lamp.Color);
         }
 
-        
+
     }
 }

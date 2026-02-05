@@ -1,5 +1,6 @@
 ﻿using BlaisePascal.SmartHouse.Domain.Abstraction;
 using BlaisePascal.SmartHouse.Domain.illumination;
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
 using System;
 
 namespace BlaisePascal.SmartHouse.Domain.illumination
@@ -14,8 +15,8 @@ namespace BlaisePascal.SmartHouse.Domain.illumination
         public int Width { get; private set; }
         public int Height { get; private set; }
 
-        public int Luminosity => 0; // Matrix doesn't have a single luminosity value, returning 0 or derived
-        public void SetLuminosity(int value) => SetAllIntensity(value);
+        public Luminosity Luminosity => new Luminosity(0); // Matrix doesn't have a single luminosity value, returning 0 or derived
+        public void SetLuminosity(Luminosity value) => SetAllIntensity(value.Value);
 
         public MatrixLed(string name, bool status, int wid, int hei)
             : base(name, status)

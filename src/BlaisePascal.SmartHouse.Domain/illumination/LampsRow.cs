@@ -1,4 +1,5 @@
 ﻿using BlaisePascal.SmartHouse.Domain.Abstraction;
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 
@@ -49,10 +50,10 @@ namespace BlaisePascal.SmartHouse.Domain.illumination
         }
 
         // Sets luminosity for all lamps and updates row status if needed
-        public void SetLuminosityAllLamps(int percentage)
+        public void SetLuminosityAllLamps(Luminosity luminosity)
         {
             // If luminosity is set above zero, consider the row as active
-            if (percentage > 0 && !Status)
+            if (luminosity.Value > 0 && !Status)
             {
                 Status = true;
                 Touch();
@@ -60,8 +61,13 @@ namespace BlaisePascal.SmartHouse.Domain.illumination
 
             foreach (var lamp in _lamps)
             {
-                lamp.SetLuminosity(percentage);
+                lamp.SetLuminosity(luminosity);
             }
+        }
+
+        public void SetLuminosityAllLamps(int percentage)
+        {
+            SetLuminosityAllLamps(new Luminosity(percentage));
         }
 
         // Turns OFF the lamp at the specified index, if valid
@@ -84,12 +90,17 @@ namespace BlaisePascal.SmartHouse.Domain.illumination
         }
 
         // Sets luminosity for the lamp at the specified index, if valid
-        public void SetLuminosityAtIndex(int index, int percentage)
+        public void SetLuminosityAtIndex(int index, Luminosity luminosity)
         {
             if (index < 0 || index >= _lamps.Count) return;
 
-            _lamps[index].SetLuminosity(percentage);
+            _lamps[index].SetLuminosity(luminosity);
             Touch();
+        }
+
+        public void SetLuminosityAtIndex(int index, int percentage)
+        {
+            SetLuminosityAtIndex(index, new Luminosity(percentage));
         }
 
         // Returns the number of lamps that are currently ON in the row

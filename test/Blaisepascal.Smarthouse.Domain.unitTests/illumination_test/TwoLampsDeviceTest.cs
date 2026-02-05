@@ -2,6 +2,7 @@ using System;
 using Xunit;
 using BlaisePascal.SmartHouse.Domain;
 using BlaisePascal.SmartHouse.Domain.illumination;
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
 
 namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
 {
@@ -200,8 +201,8 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
             device.SetLuminosityBothLamps(60);
 
             // Assert
-            Assert.Equal(60, lampA.LuminosityPercentage);
-            Assert.Equal(60, lampB.LuminosityPercentage);
+            Assert.Equal(60, lampA.CurrentLuminosity.Value);
+            Assert.Equal(60, lampB.CurrentLuminosity.Value);
             Assert.True(device.Status);
         }
 
@@ -265,8 +266,8 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
             device.SetLuminosityAtIndex(1, 30);
 
             // Assert
-            Assert.Equal(100, lampA.LuminosityPercentage);
-            Assert.Equal(30, lampB.LuminosityPercentage);
+            Assert.Equal(100, lampA.CurrentLuminosity.Value);
+            Assert.Equal(30, lampB.CurrentLuminosity.Value);
         }
 
         // The test verifies that index-based methods do not throw for invalid indices
@@ -309,8 +310,8 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
             device.UpdateBothEcoLamps(futureTime);
 
             // Assert
-            Assert.Equal(30, ecoLamp.LuminosityPercentage);   // EcoLamp dims
-            Assert.Equal(100, normalLamp.LuminosityPercentage); // Normal lamp not affected by Eco update
+            Assert.Equal(30, ecoLamp.CurrentLuminosity.Value);   // EcoLamp dims
+            Assert.Equal(100, normalLamp.CurrentLuminosity.Value); // Normal lamp not affected by Eco update
         }
 
         // The test verifies that RegisterPresenceBothEcoLamps restores brightness on EcoLamp
@@ -325,13 +326,13 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
             device.TurnOnBothLamps();
 
             device.UpdateBothEcoLamps(DateTime.UtcNow.AddMinutes(10));
-            Assert.Equal(30, ecoLamp.LuminosityPercentage);
+            Assert.Equal(30, ecoLamp.CurrentLuminosity.Value);
 
             // Act
             device.RegisterPresenceBothEcoLamps();
 
             // Assert
-            Assert.Equal(100, ecoLamp.LuminosityPercentage);
+            Assert.Equal(100, ecoLamp.CurrentLuminosity.Value);
         }
 
         // The test verifies that ScheduleBothEcoLamps configures scheduling on EcoLamps

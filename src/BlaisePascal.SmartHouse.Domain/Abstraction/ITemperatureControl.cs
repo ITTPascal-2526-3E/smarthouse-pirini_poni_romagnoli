@@ -1,11 +1,12 @@
 using System;
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
 
 namespace BlaisePascal.SmartHouse.Domain.Abstraction
 {
     public interface ITemperatureControl
     {
-        int CurrentTemperature { get; }
-        int TargetTemperature { get; }
-        void SetTargetTemperature(int temperature);
+        Temperature CurrentTemperature { get; }
+        Temperature TargetTemperature { get; }
+        void SetTargetTemperature(Temperature temperature);
     }
 }

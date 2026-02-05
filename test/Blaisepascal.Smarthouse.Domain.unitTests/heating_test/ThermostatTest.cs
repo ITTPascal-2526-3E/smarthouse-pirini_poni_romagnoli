@@ -1,5 +1,6 @@
 using BlaisePascal.SmartHouse.Domain;
 using BlaisePascal.SmartHouse.Domain.heating;
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
 using System;
 using Xunit;
 
@@ -10,13 +11,13 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
         // Helper method to create a default thermostat
         private static Thermostat CreateDefaultThermostat()
         {
-            return new Thermostat(20, ModeOptionThermostat.Off, 22);
+            return new Thermostat(new Temperature(20), ModeOptionThermostat.Off, new Temperature(22));
         }
-        
+
         // Helper method to create a default heat pump
         private static HeatPump CreateDefaultHeatPump(string name = "DemoHeatPump")
         {
-            return new HeatPump(20, name);
+            return new HeatPump(new Temperature(20), name);
         }
 
         // Test that the constructor initializes basic properties and status correctly
@@ -25,8 +26,8 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
         {
             var thermostat = CreateDefaultThermostat();
 
-            Assert.Equal(20, thermostat.CurrentTemperature);
-            Assert.Equal(22, thermostat.TargetTemperature);
+            Assert.Equal(20, thermostat.CurrentTemperature.Value);
+            Assert.Equal(22, thermostat.TargetTemperature.Value);
             Assert.Equal(ModeOptionThermostat.Off, thermostat.Mode);
             Assert.False(thermostat.Status);
         }
@@ -39,9 +40,9 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
             var pump = CreateDefaultHeatPump();
 
             thermostat.AddHeatPump(pump);
-            thermostat.SetTargetTemperature(25);
+            thermostat.SetTargetTemperature(new Temperature(25));
 
-            Assert.Equal(25, pump.TargetTemperature);
+            Assert.Equal(25, pump.TargetTemperature.Value);
         }
 
         // Test that removing a heat pump prevents it from receiving further commands
@@ -54,9 +55,9 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
             thermostat.AddHeatPump(pump);
             thermostat.RemoveHeatPump(pump);
 
-            thermostat.SetTargetTemperature(25);
+            thermostat.SetTargetTemperature(new Temperature(25));
 
-            Assert.NotEqual(25, pump.TargetTemperature);
+            Assert.NotEqual(25, pump.TargetTemperature.Value);
         }
 
         // Test that SetTargetTemperature updates property and propagates to all pumps
@@ -70,11 +71,11 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
             thermostat.AddHeatPump(pump1);
             thermostat.AddHeatPump(pump2);
 
-            thermostat.SetTargetTemperature(24);
+            thermostat.SetTargetTemperature(new Temperature(24));
 
-            Assert.Equal(24, thermostat.TargetTemperature);
-            Assert.Equal(24, pump1.TargetTemperature);
-            Assert.Equal(24, pump2.TargetTemperature);
+            Assert.Equal(24, thermostat.TargetTemperature.Value);
+            Assert.Equal(24, pump1.TargetTemperature.Value);
+            Assert.Equal(24, pump2.TargetTemperature.Value);
         }
 
         // Test that when current temperature is below target, mode becomes Heating for thermostat and pumps
@@ -88,8 +89,8 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
             thermostat.AddHeatPump(pump1);
             thermostat.AddHeatPump(pump2);
 
-            thermostat.SetTargetTemperature(22);
-            thermostat.updateCurrentTemp(19);
+            thermostat.SetTargetTemperature(new Temperature(22));
+            thermostat.updateCurrentTemp(new Temperature(19));
 
             Assert.Equal(ModeOptionThermostat.Heating, thermostat.Mode);
             Assert.Equal(ModeOptionHeatPump.Heating, pump1.Mode);
@@ -106,8 +107,8 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
 
             thermostat.AddHeatPump(pump);
 
-            thermostat.SetTargetTemperature(22);
-            thermostat.updateCurrentTemp(24);
+            thermostat.SetTargetTemperature(new Temperature(22));
+            thermostat.updateCurrentTemp(new Temperature(24));
 
             Assert.Equal(ModeOptionThermostat.Cooling, thermostat.Mode);
             Assert.Equal(ModeOptionHeatPump.Cooling, pump.Mode);
@@ -123,8 +124,8 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
 
             thermostat.AddHeatPump(pump);
 
-            thermostat.SetTargetTemperature(22);
-            thermostat.updateCurrentTemp(22);
+            thermostat.SetTargetTemperature(new Temperature(22));
+            thermostat.updateCurrentTemp(new Temperature(22));
 
             Assert.Equal(ModeOptionThermostat.Off, thermostat.Mode);
             Assert.Equal(ModeOptionHeatPump.Off, pump.Mode);

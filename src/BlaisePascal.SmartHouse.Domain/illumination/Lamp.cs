@@ -1,5 +1,6 @@
 ﻿using BlaisePascal.SmartHouse.Domain.Abstraction;
 using BlaisePascal.SmartHouse.Domain.illumination;
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
 using System;
 
 namespace BlaisePascal.SmartHouse.Domain.illumination
@@ -7,18 +8,11 @@ namespace BlaisePascal.SmartHouse.Domain.illumination
     // Represents a basic smart lamp device
     public class Lamp : Device, IDimmable
     {
-        // Minimum allowed luminosity percentage
-        public const int MinLuminosity = 0;
-
-        // Maximum allowed luminosity percentage
-        public const int MaxLuminosity = 100;
-
         // Lamp power in watts
-        public int Power { get; } 
-        
-        // Luminosity property from IDimmable
-        public int Luminosity => LuminosityPercentage;
+        public int Power { get; }
 
+        // Luminosity property from IDimmable
+        public Luminosity Luminosity => CurrentLuminosity;
 
         // Lamp color chosen from predefined options
         public ColorOption Color { get; set; }
@@ -32,8 +26,8 @@ namespace BlaisePascal.SmartHouse.Domain.illumination
         // Energy efficiency label (e.g. A++, B, etc.)
         public EnergyClass EnergyEfficiency { get; }
 
-        // Brightness level (0–100%)
-        public int LuminosityPercentage { get; protected set; }
+        // Brightness level
+        public Luminosity CurrentLuminosity { get; protected set; }
 
         // Indicates if the lamp is currently ON (mapped to the base Status)
         public bool IsOn => Status;
@@ -47,7 +41,7 @@ namespace BlaisePascal.SmartHouse.Domain.illumination
             Model = model;
             Brand = brand;
             EnergyEfficiency = energyClass;
-            LuminosityPercentage = MinLuminosity;
+            CurrentLuminosity = new Luminosity(0);
             Touch(); // We consider the creation as an initial modification
         }
 
@@ -55,7 +49,7 @@ namespace BlaisePascal.SmartHouse.Domain.illumination
         public override void ToggleOn()
         {
             base.ToggleOn();
-            LuminosityPercentage = MaxLuminosity;
+            CurrentLuminosity = new Luminosity(100);
             Touch();
         }
 
@@ -63,12 +57,12 @@ namespace BlaisePascal.SmartHouse.Domain.illumination
         public override void ToggleOff()
         {
             base.ToggleOff();
-            LuminosityPercentage = MinLuminosity;
+            CurrentLuminosity = new Luminosity(0);
             Touch();
         }
 
         // Adjusts brightness if the lamp is ON and the requested value is in the valid range
-        public virtual void SetLuminosity(int percentage)//virtual allows derived classes to override this method
+        public virtual void SetLuminosity(Luminosity luminosity)//virtual allows derived classes to override this method
         {
             // Brightness can be adjusted only if the lamp is ON
             if (!IsOn)
@@ -76,18 +70,26 @@ namespace BlaisePascal.SmartHouse.Domain.illumination
                 return;
             }
 
-            // Reject values outside of the allowed range
-            if (percentage < MinLuminosity || percentage > MaxLuminosity)
-            {
-                return;
-            }
-
-            LuminosityPercentage = percentage;
+            CurrentLuminosity = luminosity;
             Touch();
         }
+
+        // Overload for convenience if needed, or forced by legacy code
+        public void SetLuminosity(int value)
+        {
+            try
+            {
+                SetLuminosity(new Luminosity(value));
+            }
+            catch (ArgumentException)
+            {
+                // Ignore invalid values as per previous logic (return)
+            }
+        }
+
         public override string ToString()
         {
-             return $"{base.ToString()}, Model: {Model}, Brightness: {LuminosityPercentage}%";
+            return $"{base.ToString()}, Model: {Model}, Brightness: {CurrentLuminosity}";
         }
     }
 }

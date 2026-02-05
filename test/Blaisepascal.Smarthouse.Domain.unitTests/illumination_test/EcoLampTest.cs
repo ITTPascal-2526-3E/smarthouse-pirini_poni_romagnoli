@@ -1,5 +1,6 @@
 ﻿using BlaisePascal.SmartHouse.Domain;
 using BlaisePascal.SmartHouse.Domain.illumination;
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
 using System;
 using System.Threading.Tasks;
 using Xunit;
@@ -28,7 +29,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
             lamp.Update(timeInFuture);
 
             // Assert
-            Assert.Equal(30, lamp.LuminosityPercentage);
+            Assert.Equal(30, lamp.CurrentLuminosity.Value);
         }
 
         // The test checks that brightness stays full before the 5 minutes timeout
@@ -45,7 +46,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
             lamp.Update(timeInFuture);
 
             // Assert
-            Assert.Equal(100, lamp.LuminosityPercentage);
+            Assert.Equal(100, lamp.CurrentLuminosity.Value);
         }
 
         // The test checks that RegisterPresence restores full brightness from dim mode
@@ -57,13 +58,13 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
             lamp.ToggleOn();
 
             lamp.Update(DateTime.UtcNow.AddMinutes(10));
-            Assert.Equal(30, lamp.LuminosityPercentage);
+            Assert.Equal(30, lamp.CurrentLuminosity.Value);
 
             // Act
             lamp.RegisterPresence();
 
             // Assert
-            Assert.Equal(100, lamp.LuminosityPercentage);
+            Assert.Equal(100, lamp.CurrentLuminosity.Value);
         }
 
         // The test checks that scheduled ON time turns the lamp ON and clears the schedule

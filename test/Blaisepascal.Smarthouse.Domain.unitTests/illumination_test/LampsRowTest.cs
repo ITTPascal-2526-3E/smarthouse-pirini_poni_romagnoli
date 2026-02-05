@@ -1,5 +1,6 @@
 using BlaisePascal.SmartHouse.Domain;
 using BlaisePascal.SmartHouse.Domain.illumination;
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
 
 namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
 {
@@ -157,8 +158,8 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
             device.SetLuminosityAllLamps(55);
 
             // Assert
-            Assert.Equal(55, lamp1.LuminosityPercentage);
-            Assert.Equal(55, lamp2.LuminosityPercentage);
+            Assert.Equal(55, lamp1.CurrentLuminosity.Value);
+            Assert.Equal(55, lamp2.CurrentLuminosity.Value);
         }
 
         // The test checks that TurnOnLampAtIndex turns on only the selected lamp
@@ -219,8 +220,8 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
             device.UpdateAllEcoLamps(DateTime.UtcNow.AddMinutes(10));
 
             // Assert
-            Assert.Equal(30, ecoLamp.LuminosityPercentage);
-            Assert.Equal(100, normalLamp.LuminosityPercentage);
+            Assert.Equal(30, ecoLamp.CurrentLuminosity.Value);
+            Assert.Equal(100, normalLamp.CurrentLuminosity.Value);
         }
 
         // The test checks that RegisterPresenceAllEcoLamps restores brightness on EcoLamps
@@ -234,13 +235,13 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
             device.AddLamp(ecoLamp);
             device.TurnOnAllLamps();
             device.UpdateAllEcoLamps(DateTime.UtcNow.AddMinutes(10));
-            Assert.Equal(30, ecoLamp.LuminosityPercentage);
+            Assert.Equal(30, ecoLamp.CurrentLuminosity.Value);
 
             // Act
             device.RegisterPresenceAllEcoLamps();
 
             // Assert
-            Assert.Equal(100, ecoLamp.LuminosityPercentage);
+            Assert.Equal(100, ecoLamp.CurrentLuminosity.Value);
         }
     }
 }

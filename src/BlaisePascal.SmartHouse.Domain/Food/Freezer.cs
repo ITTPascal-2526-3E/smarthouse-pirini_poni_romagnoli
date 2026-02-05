@@ -1,4 +1,5 @@
 ﻿using BlaisePascal.SmartHouse.Domain.Abstraction;
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BlaisePascal.SmartHouse.Domain.Food
 {
-    public class Freezer : Device 
+    public class Freezer : Device
     {
         public string Brand { get; private set; }
         public string Model { get; private set; }
@@ -15,7 +16,7 @@ namespace BlaisePascal.SmartHouse.Domain.Food
 
 
         // temperature
-        public double CurrentTemperature { get; private set; }
+        public Temperature CurrentTemperature { get; private set; }
         public const double STANDARD_TEMPERATURE_CELSIUS = -18.0;
         public const double MIN_TEMPERATURE_CELSIUS = -24.0;
         public const double MAX_TEMPERATURE_CELSIUS = -6.0;
@@ -31,30 +32,30 @@ namespace BlaisePascal.SmartHouse.Domain.Food
             Brand = brand;
             Model = model;
             CapacityLiters = capacityLiters;
-            CurrentTemperature = STANDARD_TEMPERATURE_CELSIUS; // Default freezer temperature
+            CurrentTemperature = new Temperature(STANDARD_TEMPERATURE_CELSIUS); // Default freezer temperature
             IsDoorOpen = false;
             IsLightOn = false;
             Touch();
         }
 
         // Opens the freezer door
-        public override void ToggleOn() 
+        public override void ToggleOn()
         {
             IsDoorOpen = true;
             IsLightOn = true;
             Touch();
         }
         public override void ToggleOff()
-        { 
+        {
             IsDoorOpen = false;
             IsLightOn = false;
             Touch();
         }
 
         // Overloaded method to set freezer temperature explicitly
-        public void SetFreezerTemperature(double targetTemperature)
+        public void SetFreezerTemperature(Temperature targetTemperature)
         {
-            if (targetTemperature < MIN_TEMPERATURE_CELSIUS || targetTemperature > MAX_TEMPERATURE_CELSIUS)
+            if (targetTemperature.Value < MIN_TEMPERATURE_CELSIUS || targetTemperature.Value > MAX_TEMPERATURE_CELSIUS)
             {
                 return;
             }
@@ -62,9 +63,15 @@ namespace BlaisePascal.SmartHouse.Domain.Food
             Touch();
         }
 
+        // Overload for primitive doubling
+        public void SetFreezerTemperature(double targetTemperature)
+        {
+            SetFreezerTemperature(new Temperature(targetTemperature));
+        }
+
         public override string ToString()
         {
-            return $"{base.ToString()}, Temp: {CurrentTemperature}C°";
+            return $"{base.ToString()}, Temp: {CurrentTemperature}";
         }
     }
 }

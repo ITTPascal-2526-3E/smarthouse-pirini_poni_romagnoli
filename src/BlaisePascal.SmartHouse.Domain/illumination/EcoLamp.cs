@@ -1,5 +1,6 @@
 ﻿using BlaisePascal.SmartHouse.Domain.illumination;
 using BlaisePascal.SmartHouse.Domain.Abstraction;
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
 using System;
 
 namespace BlaisePascal.SmartHouse.Domain.illumination
@@ -44,9 +45,9 @@ namespace BlaisePascal.SmartHouse.Domain.illumination
             lastPresenceTime = DateTime.UtcNow;
 
             // if the lamp is ON but dimmed(oscurato) due to no presence, restore full brightness
-            if (IsOn && LuminosityPercentage < MaxLuminosity)
+            if (IsOn && CurrentLuminosity.Value < Luminosity.MaxValue)
             {
-                SetLuminosity(MaxLuminosity);
+                SetLuminosity(new Luminosity(Luminosity.MaxValue));
             }
         }
 
@@ -81,9 +82,9 @@ namespace BlaisePascal.SmartHouse.Domain.illumination
                 if (now - lastPresenceTime >= noPresenceTimeout)
                 {
                     // No presence for too long -> dim down to the target percentage
-                    if (LuminosityPercentage > PresenceDimLuminosity)
+                    if (CurrentLuminosity.Value > PresenceDimLuminosity)
                     {
-                        SetLuminosity(PresenceDimLuminosity);
+                        SetLuminosity(new Luminosity(PresenceDimLuminosity));
                     }
                 }
             }

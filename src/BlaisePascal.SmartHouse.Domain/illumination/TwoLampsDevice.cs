@@ -1,4 +1,5 @@
 ﻿using BlaisePascal.SmartHouse.Domain.Abstraction;
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
 using System;
 
 namespace BlaisePascal.SmartHouse.Domain.illumination
@@ -164,14 +165,14 @@ namespace BlaisePascal.SmartHouse.Domain.illumination
         }
 
         // Sets luminosity for both lamps and updates device status if luminosity is greater than zero
-        public void SetLuminosityBothLamps(int percentage)
+        public void SetLuminosityBothLamps(Luminosity luminosity)
         {
             if (LampA == null && LampB == null)
             {
                 return;
             }
 
-            if (percentage > 0 && !Status)
+            if (luminosity.Value > 0 && !Status)
             {
                 ToggleOn();
                 Touch();
@@ -183,13 +184,18 @@ namespace BlaisePascal.SmartHouse.Domain.illumination
 
             if (LampA != null)
             {
-                LampA.SetLuminosity(percentage);
+                LampA.SetLuminosity(luminosity);
             }
 
             if (LampB != null)
             {
-                LampB.SetLuminosity(percentage);
+                LampB.SetLuminosity(luminosity);
             }
+        }
+
+        public void SetLuminosityBothLamps(int percentage)
+        {
+            SetLuminosityBothLamps(new Luminosity(percentage));
         }
 
         // Turns OFF the lamp at the given index (0 or 1), if it exists
@@ -227,7 +233,7 @@ namespace BlaisePascal.SmartHouse.Domain.illumination
         }
 
         // Sets luminosity for the lamp at the given index (0 or 1), if it exists
-        public void SetLuminosityAtIndex(int index, int percentage)
+        public void SetLuminosityAtIndex(int index, Luminosity luminosity)
         {
             var lamp = GetLampAtIndex(index);
             if (lamp == null)
@@ -235,14 +241,19 @@ namespace BlaisePascal.SmartHouse.Domain.illumination
                 return;
             }
 
-            lamp.SetLuminosity(percentage);
+            lamp.SetLuminosity(luminosity);
 
-            if (percentage > 0 && !Status)
+            if (luminosity.Value > 0 && !Status)
             {
                 Status = true;
             }
 
             Touch();
+        }
+
+        public void SetLuminosityAtIndex(int index, int percentage)
+        {
+            SetLuminosityAtIndex(index, new Luminosity(percentage));
         }
 
         // Calls Update on both EcoLamp instances contained in this device

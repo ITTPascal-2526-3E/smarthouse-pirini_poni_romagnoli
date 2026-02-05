@@ -4,6 +4,7 @@ using BlaisePascal.SmartHouse.Domain.heating;
 using BlaisePascal.SmartHouse.Domain.illumination;
 using BlaisePascal.SmartHouse.Domain.security;
 using BlaisePascal.SmartHouse.Domain.Food;
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 
@@ -25,9 +26,9 @@ internal sealed class Program
         Door frontDoor = new Door("Main Entrance", status: false); // Closed initially
 
         // --- 4. Heating: Thermostat & HeatPumps ---
-        HeatPump pump1 = new HeatPump(20, "Living Room AC");
-        HeatPump pump2 = new HeatPump(18, "Bedroom AC");
-        Thermostat thermostat = new Thermostat(20, ModeOptionThermostat.Off, 22);
+        HeatPump pump1 = new HeatPump(new Temperature(20), "Living Room AC");
+        HeatPump pump2 = new HeatPump(new Temperature(18), "Bedroom AC");
+        Thermostat thermostat = new Thermostat(new Temperature(20), ModeOptionThermostat.Off, new Temperature(22));
         thermostat.AddHeatPump(pump1);
         thermostat.AddHeatPump(pump2);
 
@@ -58,7 +59,7 @@ internal sealed class Program
             // Show brief status summary
             Console.WriteLine($"Lamps: {lampsRow.GetOnLampsCount()} ON | Door: {(frontDoor.Status ? "OPEN" : "CLOSED")} ({(frontDoor.IsLocked ? "LOCKED" : "UNLOCKED")})");
             Console.WriteLine($"CCTV: {(camera.IsRecording ? "REC" : "IDLE")} | Alarm: {(alarm.IsArmed ? "ARMED" : "DISARMED")}");
-            Console.WriteLine($"Thermostat: {thermostat.Mode} (Target: {thermostat.TargetTemperature}°C)");
+            Console.WriteLine($"Thermostat: {thermostat.Mode} (Target: {thermostat.TargetTemperature})");
 
             Console.Write("Enter Command: ");
 
@@ -112,10 +113,10 @@ internal sealed class Program
                     else thermostat.SetMode(ModeOptionThermostat.Off);
                     break;
                 case ConsoleKey.T:
-                    thermostat.SetTargetTemperature(thermostat.TargetTemperature + 1);
+                    thermostat.SetTargetTemperature(thermostat.TargetTemperature + 1.0);
                     break;
                 case ConsoleKey.R:
-                    thermostat.SetTargetTemperature(thermostat.TargetTemperature - 1);
+                    thermostat.SetTargetTemperature(thermostat.TargetTemperature - 1.0);
                     break;
 
                 // --- Alarm ---
@@ -134,25 +135,7 @@ internal sealed class Program
                     else fridge.ToggleOn();
                     break;
                 case ConsoleKey.G:
-                    // fridge.MyFreezer is used if it was a Refrigerator, but here 'fridge' is Fridge
-                    // Wait, Program.cs has: fridge = new Fridge(...)
-                    // And there is no separate freezer variable in Main?
-                    // Ah, fridge has a status. But wait, fridge only has IsFridgeDoorOpen in the original code.
-                    // Let's check how the user handles Freezer in Program.cs.
-                    // Step 54: [G] Open/Close Freezer
-                    // Original code: if (fridge.IsFreezerDoorOpen) fridge.ToggleOff();
-                    // Wait, Fridge.cs didn't have IsFreezerDoorOpen in Step 71.
-                    // Ah, Refrigerator.cs has MyFridge and MyFreezer.
-                    // In Program.cs Step 19:
-                    // BlaisePascal.SmartHouse.Domain.Food.Fridge fridge = new BlaisePascal.SmartHouse.Domain.Food.Fridge("Samsung", "FamilyHub", 500, "Kitchen Fridge");
-                    // It's a FRIDGE, not a Refrigerator. 
-                    // So Case G was bugged in the original code too because Fridge doesn't have IsFreezerDoorOpen.
-                    // I will fix G to toggle the door of the NEXT device if it's a freezer, or just fix it to do nothing if it's just a fridge.
-                    // Actually, let me check if there is a Freezer in Program.cs.
-                    // No, only Fridge.
-                    // I'll leave G as it is but fix naming if I can find where it points.
-                    // Actually, let's assume the user might want a Refrigerator instead.
-                    // But I should stick to fixing the obvious bug.
+                    // See comments in previous version regarding G quirk
                     break;
 
                 // --- System ---

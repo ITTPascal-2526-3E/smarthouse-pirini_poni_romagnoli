@@ -1,4 +1,5 @@
 ﻿using BlaisePascal.SmartHouse.Domain.Abstraction;
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
 using System;
 
 namespace BlaisePascal.SmartHouse.Domain.Food
@@ -11,30 +12,29 @@ namespace BlaisePascal.SmartHouse.Domain.Food
         public string Model { get; private set; }
         // Capacity in liters
         public int CapacityLiters { get; private set; }
-        
+
         // Indicates if the fridge light is on
         public bool IsLightOn { get; private set; } // Renamed for consistency
 
         // Fridge temperatures
-        // Current temperature in Celsius
-        public double CurrentTemperature { get; private set; }
+        // Current temperature
+        public Temperature CurrentTemperature { get; private set; }
         public const double MIN_FRIDGE_TEMPERATURE_CELSIUS = 0.0;
         public const double MAX_FRIDGE_TEMPERATURE_CELSIUS = 6.0;
-        public const double STANDARD_FRIDGE_TEMPERATURE_CELSIUS = 4.0; 
-        
+        public const double STANDARD_FRIDGE_TEMPERATURE_CELSIUS = 4.0;
 
         // Indicates if the fridge door is open
         public bool IsDoorOpen { get; private set; }
-        
 
-        public Fridge(string brand, string model, int capacityLiters,string name)
+
+        public Fridge(string brand, string model, int capacityLiters, string name)
             : base(name, true) // Fridge usually starts ON
         {
             Brand = brand;
             Model = model;
             CapacityLiters = capacityLiters;
 
-            CurrentTemperature = STANDARD_FRIDGE_TEMPERATURE_CELSIUS; // Default fridge temperature
+            CurrentTemperature = new Temperature(STANDARD_FRIDGE_TEMPERATURE_CELSIUS); // Default fridge temperature
 
             IsDoorOpen = false;
             IsLightOn = false;
@@ -42,7 +42,7 @@ namespace BlaisePascal.SmartHouse.Domain.Food
         }
 
         // Opens the fridge door
-        public override void ToggleOn() 
+        public override void ToggleOn()
         {
             IsDoorOpen = true;
             IsLightOn = true;
@@ -50,7 +50,7 @@ namespace BlaisePascal.SmartHouse.Domain.Food
         }
 
         // Closes the fridge door
-        public override void ToggleOff() 
+        public override void ToggleOff()
         {
             IsDoorOpen = false;
             IsLightOn = false;
@@ -58,9 +58,9 @@ namespace BlaisePascal.SmartHouse.Domain.Food
         }
 
         // Sets current fridge's temperature to the one wanted
-        public void SetFridgeTemperature(double targetTemperature)
-        { 
-            if(targetTemperature < MIN_FRIDGE_TEMPERATURE_CELSIUS || targetTemperature > MAX_FRIDGE_TEMPERATURE_CELSIUS)
+        public void SetFridgeTemperature(Temperature targetTemperature)
+        {
+            if (targetTemperature.Value < MIN_FRIDGE_TEMPERATURE_CELSIUS || targetTemperature.Value > MAX_FRIDGE_TEMPERATURE_CELSIUS)
             {
                 return;
             }
@@ -68,9 +68,15 @@ namespace BlaisePascal.SmartHouse.Domain.Food
             Touch();
         }
 
+        // Overload for primitive doubling
+        public void SetFridgeTemperature(double targetTemperature)
+        {
+            SetFridgeTemperature(new Temperature(targetTemperature));
+        }
+
         public override string ToString()
         {
-            return $"{base.ToString()}, Temp: {CurrentTemperature}C°";
+            return $"{base.ToString()}, Temp: {CurrentTemperature}";
         }
     }
 }

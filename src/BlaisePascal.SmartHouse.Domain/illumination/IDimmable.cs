@@ -1,10 +1,11 @@
 using System;
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
 
 namespace BlaisePascal.SmartHouse.Domain.Abstraction
 {
     public interface IDimmable
     {
-        int Luminosity { get; }
-        void SetLuminosity(int value);
+        Luminosity Luminosity { get; }
+        void SetLuminosity(Luminosity value);
     }
 }

@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using BlaisePascal.SmartHouse.Domain;
 using BlaisePascal.SmartHouse.Domain.Abstraction;
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
 
 namespace BlaisePascal.SmartHouse.Domain.heating
 {
     public sealed class Thermostat : Device, ITemperatureControl
     {
-        public int CurrentTemperature { get; private set; }
+        public Temperature CurrentTemperature { get; private set; }
         public ModeOptionThermostat Mode { get; private set; }
-        public int TargetTemperature { get; private set; }
+        public Temperature TargetTemperature { get; private set; }
 
         // List of  heat pumps
         public List<HeatPump> _heatPumps = new List<HeatPump>();
@@ -18,7 +19,7 @@ namespace BlaisePascal.SmartHouse.Domain.heating
         // RIMOSSO: private string name... -> Ora usa base.Name ereditato da Device
 
         // Costruttore
-        public Thermostat(int currtemp, ModeOptionThermostat mod, int targtemp)
+        public Thermostat(Temperature currtemp, ModeOptionThermostat mod, Temperature targtemp)
             : base("Unnamed Thermostat", mod != ModeOptionThermostat.Off) // Se mod non è Off, lo Status è true
         {
             CurrentTemperature = currtemp;
@@ -51,7 +52,7 @@ namespace BlaisePascal.SmartHouse.Domain.heating
         }
 
         // Update current measured temperature
-        public void updateCurrentTemp(int temp)
+        public void updateCurrentTemp(Temperature temp)
         {
             CurrentTemperature = temp;
             // LastmodifiedAtUtc viene aggiornato implicitamente da ControlMode -> SetMode
@@ -94,7 +95,7 @@ namespace BlaisePascal.SmartHouse.Domain.heating
         }
 
         // Set target temperature and propagate to heat pumps
-        public void SetTargetTemperature(int temperature)
+        public void SetTargetTemperature(Temperature temperature)
         {
             TargetTemperature = temperature;
             LastModifiedAtUtc = DateTime.UtcNow;
@@ -108,6 +109,9 @@ namespace BlaisePascal.SmartHouse.Domain.heating
             // Re-evaluate the mode after changing the target
             ControlMode();
         }
+
+        // Overload for legacy support or convenience if needed, but safer to force VO.
+        // I'll leave basic methods for now.
 
         // simple control method to set mode based on current and target temperatures
         private void ControlMode()

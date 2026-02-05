@@ -3,6 +3,7 @@ using Xunit;
 using BlaisePascal.SmartHouse.Domain;
 using BlaisePascal.SmartHouse.Domain.heating;
 using BlaisePascal.SmartHouse.Domain.illumination;
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
 
 namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
 {
@@ -26,7 +27,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
         // Helper method to create a default heat pump
         private static HeatPump CreateDefaultHeatPump()
         {
-            return new HeatPump(InitialTemp, Name, Brand, Model, EnergyRating);
+            return new HeatPump(new Temperature(InitialTemp), Name, Brand, Model, EnergyRating);
         }
 
         // The test verifies that the constructor sets defaults and initial OFF state correctly
@@ -38,10 +39,11 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
 
             // Assert
             Assert.False(heatPump.IsOn);
-            Assert.Equal(DefaultPower, heatPump.Power);
-            Assert.Equal(DefaultAngle, heatPump.Angle);
-            Assert.Equal(InitialTemp, heatPump.CurrentTemperature);
-            Assert.Equal(InitialTemp, heatPump.TargetTemperature);
+            // Assert
+            Assert.Equal(DefaultPower, heatPump.Power.Value);
+            Assert.Equal(DefaultAngle, heatPump.Angle.Value);
+            Assert.Equal(InitialTemp, heatPump.CurrentTemperature.Value);
+            Assert.Equal(InitialTemp, heatPump.TargetTemperature.Value);
         }
 
         // The test checks that fixed properties are correctly assigned by the constructor
@@ -113,7 +115,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
             heatPump.ChangeTemperature(validTemp);
 
             // Assert
-            Assert.Equal(validTemp, heatPump.TargetTemperature);
+            Assert.Equal(validTemp, heatPump.TargetTemperature.Value);
         }
 
         // The test checks that temperature is clamped to the minimum when too low
@@ -127,7 +129,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
             heatPump.ChangeTemperature(10);
 
             // Assert
-            Assert.Equal(MinTemp, heatPump.TargetTemperature);
+            Assert.Equal(MinTemp, heatPump.TargetTemperature.Value);
         }
 
         // The test checks that temperature is clamped to the maximum when too high
@@ -141,7 +143,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
             heatPump.ChangeTemperature(35);
 
             // Assert
-            Assert.Equal(MaxTemp, heatPump.TargetTemperature);
+            Assert.Equal(MaxTemp, heatPump.TargetTemperature.Value);
         }
 
         // The test verifies that ChangePower accepts values inside the allowed range
@@ -155,7 +157,8 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
             heatPump.ChangePower(80);
 
             // Assert
-            Assert.Equal(80, heatPump.Power);
+            // Assert
+            Assert.Equal(80, heatPump.Power.Value);
         }
 
         // The test verifies that ChangePower clamps values outside the allowed range
@@ -168,17 +171,17 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
             // Act
             heatPump.ChangePower(150);
             // Assert: too high
-            Assert.Equal(MaxPower, heatPump.Power);
+            Assert.Equal(MaxPower, heatPump.Power.Value);
 
             // Act
             heatPump.ChangePower(-10);
             // Assert: too low
-            Assert.Equal(MinPower, heatPump.Power);
+            Assert.Equal(MinPower, heatPump.Power.Value);
         }
 
         // The test checks that the power increases by 5 when using the button method
-        
-        
+
+
         [Fact]
         public void SetFixedAngle_EnablesFlagAndResetsAngle()
         {
@@ -191,7 +194,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
 
             // Assert
             Assert.True(heatPump.FixedAngleOn);
-            Assert.Equal(DefaultAngle, heatPump.Angle);
+            Assert.Equal(DefaultAngle, heatPump.Angle.Value);
         }
 
         // The test verifies that ChangeAngle clamps values above the maximum
@@ -205,7 +208,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
             heatPump.ChangeAngle(100);
 
             // Assert
-            Assert.Equal(90, heatPump.Angle);
+            Assert.Equal(90, heatPump.Angle.Value);
         }
 
         // The test checks that Update increases temperature by 1 in heating mode when below target
@@ -215,13 +218,13 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
             // Arrange
             var heatPump = CreateDefaultHeatPump();
             heatPump.SetMode(ModeOptionHeatPump.Heating);
-            heatPump.SetTargetTemperature(25);
+            heatPump.SetTargetTemperature(new Temperature(25));
 
             // Act
             heatPump.Update();
 
             // Assert
-            Assert.Equal(InitialTemp + 1, heatPump.CurrentTemperature);
+            Assert.Equal(InitialTemp + 1, heatPump.CurrentTemperature.Value);
         }
 
         // The test checks that Update decreases temperature by 1 in cooling mode when above target
@@ -231,13 +234,13 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
             // Arrange
             var heatPump = CreateDefaultHeatPump();
             heatPump.SetMode(ModeOptionHeatPump.Cooling);
-            heatPump.SetTargetTemperature(18);
+            heatPump.SetTargetTemperature(new Temperature(18));
 
             // Act
             heatPump.Update();
 
             // Assert
-            Assert.Equal(InitialTemp - 1, heatPump.CurrentTemperature);
+            Assert.Equal(InitialTemp - 1, heatPump.CurrentTemperature.Value);
         }
 
         // The test verifies that Update does nothing when the pump is OFF
@@ -252,7 +255,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
             heatPump.Update();
 
             // Assert
-            Assert.Equal(InitialTemp, heatPump.CurrentTemperature);
+            Assert.Equal(InitialTemp, heatPump.CurrentTemperature.Value);
         }
 
         // The test verifies that UpdateSchedule turns the heat pump ON at the scheduled ON time
