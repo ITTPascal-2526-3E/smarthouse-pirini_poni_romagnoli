@@ -3,7 +3,7 @@ using System;
 
 namespace BlaisePascal.SmartHouse.Domain.Food
 {
-    public sealed class Fridge : Device
+    public class Fridge : Device
     {
         // Manufacturer brand
         public string Brand { get; private set; }
@@ -18,32 +18,26 @@ namespace BlaisePascal.SmartHouse.Domain.Food
         // Fridge temperatures
         // Current temperature in Celsius
         public double CurrentFridgeTemperatureCelsius { get; private set; }
-        public const double MinFridgeTemperatureCelsius = 2.0;
-        public const double MaxFridgeTemperatureCelsius = 6.0;
-
-        //Freezer temperatures 
-        // Current freezer temperature in Celsius
-        public double CurrentFreezerTemperatureCelsius { get; private set; }
-        public const double MinFreezerTemperatureCelsius = -18.0;
-        public const double MaxFreezerTemperatureCelsius = -12.0;
+        public const double MIN_FRIDGE_TEMPERATURE_CELSIUS = 0.0;
+        public const double MAX_FRIDGE_TEMPERATURE_CELSIUS = 6.0;
+        public const double STANDARD_FRIDGE_TEMPERATURE_CELSIUS = 4.0; 
+        
 
         // Indicates if the fridge door is open
         public bool IsFridgeDoorOpen { get; private set; }
-        public bool IsFreezerDoorOpen { get; private set; } // Renamed to PascalCase
+        
 
-        public Fridge(string brand, string model, int capacityLiters, string name)
+        public Fridge(string brand, string model, int capacityLiters,string name)
             : base(name, true) // Fridge usually starts ON
         {
             Brand = brand;
             Model = model;
             CapacityLiters = capacityLiters;
 
-            CurrentFridgeTemperatureCelsius = 4.0; // Default fridge temperature
-            CurrentFreezerTemperatureCelsius = -15.0; // Default freezer temperature
+            CurrentFridgeTemperatureCelsius = STANDARD_FRIDGE_TEMPERATURE_CELSIUS; // Default fridge temperature
 
             IsFridgeDoorOpen = false;
             LightOn = false;
-            IsFreezerDoorOpen = false;
             Touch();
         }
 
@@ -63,22 +57,10 @@ namespace BlaisePascal.SmartHouse.Domain.Food
             Touch();
         }
 
-        // Opens the freezer door
-        public void OpenFreezerDoor()
-        {
-            ToggleOn();
-        }
-
-        // Closes the freezer door
-        public void CloseFreezerDoor()
-        {
-            ToggleOff();
-        }
-
         // Sets current fridge's temperature to the one wanted
-        public void SetTemperature(double targetTemperature)
+        public void SetFridgeTemperature(double targetTemperature)
         { 
-            if(targetTemperature < MinFridgeTemperatureCelsius || targetTemperature > MaxFridgeTemperatureCelsius)
+            if(targetTemperature < MIN_FRIDGE_TEMPERATURE_CELSIUS || targetTemperature > MAX_FRIDGE_TEMPERATURE_CELSIUS)
             {
                 return;
             }
@@ -86,26 +68,9 @@ namespace BlaisePascal.SmartHouse.Domain.Food
             Touch();
         }
 
-        // Overloaded method to set freezer temperature explicitly
-        public void SetTemperature(double targetTemperature, bool isFreezer)
-        {
-            if (!isFreezer)
-            {
-                SetTemperature(targetTemperature);
-                return;
-            }
-
-            if (targetTemperature < MinFreezerTemperatureCelsius || targetTemperature > MaxFreezerTemperatureCelsius)
-            {
-                return;
-            }
-            CurrentFreezerTemperatureCelsius = targetTemperature;
-            Touch();
-        }
-
         public override string ToString()
         {
-            return $"{base.ToString()}, Temp: {CurrentFridgeTemperatureCelsius}C, Freezer: {CurrentFreezerTemperatureCelsius}C";
+            return $"{base.ToString()}, Temp: {CurrentFridgeTemperatureCelsius}C°";
         }
     }
 }
