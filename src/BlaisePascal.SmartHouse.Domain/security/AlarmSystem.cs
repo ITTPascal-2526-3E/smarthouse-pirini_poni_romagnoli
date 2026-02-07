@@ -82,7 +82,7 @@ namespace BlaisePascal.SmartHouse.Domain.security
         }
         public override void TriggerAlarm()
         {
-             Console.WriteLine($"ALARM: System '{Name}' SIREN BLARING!");
+             RaiseAlarm("SIREN BLARING!");
         }
      }
 }

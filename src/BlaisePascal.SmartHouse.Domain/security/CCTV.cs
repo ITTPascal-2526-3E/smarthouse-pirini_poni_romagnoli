@@ -88,7 +88,7 @@ namespace BlaisePascal.SmartHouse.Domain.security
         public override void TriggerAlarm()
         {
             StartRecording();
-            Console.WriteLine($"ALARM: CCTV '{Name}' recording started due to trigger!");
+            RaiseAlarm("recording started due to trigger!");
         }
 
         public override string ToString()

@@ -83,7 +83,7 @@ namespace BlaisePascal.SmartHouse.Domain.security
         public override void TriggerAlarm()
         {
             // Implementation specific to Door (e.g. log intrusion)
-            Console.WriteLine($"ALARM: Door '{Name}' breached!");
+            RaiseAlarm("breached!");
         }
 
         public override string ToString()

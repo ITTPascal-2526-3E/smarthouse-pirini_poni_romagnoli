@@ -11,7 +11,19 @@ namespace BlaisePascal.SmartHouse.Domain.security
             IsArmed = true; // Default to armed for security
         }
 
+
+        public event Action<string, string>? OnAlarm;
+
         public abstract void TriggerAlarm();
+
+        protected void RaiseAlarm(string message)
+        {
+             // Manual check: only call the subscribers if some exist (not null)
+             if (OnAlarm != null)
+             {
+                 OnAlarm(Name.Value, message);
+             }
+        }
 
         public virtual void Arm()
         {

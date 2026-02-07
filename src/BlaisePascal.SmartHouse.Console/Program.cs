@@ -40,6 +40,16 @@ internal sealed class Program
 
         List<Device> allDevices = new List<Device> { lampsRow, camera, frontDoor, pump1, pump2, thermostat, alarm, fridge };
 
+        // Subscribe to alarm events
+        Action<string, string> alarmHandler = (deviceName, message) =>
+        {
+            Console.WriteLine($"ALARM: {deviceName} {message}");
+        };
+
+        camera.OnAlarm += alarmHandler;
+        frontDoor.OnAlarm += alarmHandler;
+        alarm.OnAlarm += alarmHandler;
+
         bool running = true;
         Console.WriteLine("DEVICES READY.");
 
