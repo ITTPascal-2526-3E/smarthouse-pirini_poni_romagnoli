@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using BlaisePascal.SmartHouse.Domain.security;
+using BlaisePascal.SmartHouse.Domain.Security.SecurityDevices;
+using BlaisePascal.SmartHouse.Domain.Security.SecurityAbstraction;
 
 namespace Blaisepascal.Smarthouse.Domain.unitTests.security_test
 {

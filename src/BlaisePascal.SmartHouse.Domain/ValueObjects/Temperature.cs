@@ -3,7 +3,7 @@ using System;
 namespace BlaisePascal.SmartHouse.Domain.ValueObjects
 {
     // Encapsulates a temperature value with validation and conversion logic
-    public record Temperature
+    public class Temperature
     {
         // Value in Celsius
         public double Value { get; }
@@ -28,13 +28,13 @@ namespace BlaisePascal.SmartHouse.Domain.ValueObjects
         }
 
         // Allows the record to be treated like a double in calculations
-        public static implicit operator double(Temperature temp)
+        public static implicit operator double(Temperature temp)//implicit means that the conversion is done automatically by the compiler. It allows to use the Temperature object as a double in calculations
         {
             return temp.Value;
         }
 
         // Allows creating a Temperature from a double value
-        public static explicit operator Temperature(double value)
+        public static explicit operator Temperature(double value)//explicit means that the conversion is done manually by the developer. It allows to use the Temperature object as a double in calculations
         {
             return new Temperature(value);
         }

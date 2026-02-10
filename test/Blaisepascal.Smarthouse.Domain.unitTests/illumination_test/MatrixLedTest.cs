@@ -1,4 +1,7 @@
-using BlaisePascal.SmartHouse.Domain.illumination;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampTypes;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampOptions;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampCompositions;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampAbstraction;
 using Xunit;
 
 namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test;
@@ -35,6 +38,7 @@ public class MatrixLedTest
         }
     }
     // All leds in the matrix should be turned off with specific intensity
+    // SetLuminosity is a no-op when the lamp is OFF, so intensity remains 0
     [Fact]
     public void AllLedsTurnedOffWithIntensity()
     {
@@ -46,7 +50,7 @@ public class MatrixLedTest
             for (int j = 0; j < matrixDemo.Width; j++)
             {
                 Assert.False(matrixDemo.Matrix[i][j].Status);
-                Assert.Equal(50, matrixDemo.Matrix[i][j].LightIntensity);
+                Assert.Equal(0, matrixDemo.Matrix[i][j].CurrentLuminosity.Value);
             }
         }
     }

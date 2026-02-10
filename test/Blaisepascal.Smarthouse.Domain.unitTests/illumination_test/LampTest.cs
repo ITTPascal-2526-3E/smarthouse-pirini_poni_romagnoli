@@ -1,5 +1,8 @@
 ﻿using BlaisePascal.SmartHouse.Domain;
-using BlaisePascal.SmartHouse.Domain.illumination;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampTypes;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampOptions;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampCompositions;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampAbstraction;
 using BlaisePascal.SmartHouse.Domain.ValueObjects;
 
 namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
@@ -11,7 +14,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
         private const ColorOption Color = ColorOption.WarmWhite;
         private const string Model = "XU-200";
         private const string Brand = "SmartTech";
-        private const EnergyClass EnergyClassValue = EnergyClass.A_plus_plus;
+        private const EnergyClass EnergyClassValue = EnergyClass.A;
         private const string Name = "Desk Lamp";
 
         // Helper to create a default lamp

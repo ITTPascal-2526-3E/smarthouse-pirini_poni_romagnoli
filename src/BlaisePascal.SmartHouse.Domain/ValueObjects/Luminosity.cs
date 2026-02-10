@@ -3,7 +3,7 @@ using System;
 namespace BlaisePascal.SmartHouse.Domain.ValueObjects
 {
     // Represent the brightness level of a lamp as a percentage (0-100)
-    public record Luminosity
+    public class Luminosity
     {
         // Internal value of the luminosity
         public int Value { get; }
@@ -28,13 +28,13 @@ namespace BlaisePascal.SmartHouse.Domain.ValueObjects
         }
 
         // Allows using the Luminosity object directly as an int
-        public static implicit operator int(Luminosity lum)
+        public static implicit operator int(Luminosity lum)//see Temp for specs
         {
             return lum.Value;
         }
 
         // Allows creating a Luminosity object from an int value (explicit cast)
-        public static explicit operator Luminosity(int value)
+        public static explicit operator Luminosity(int value)//see Temp for specs
         {
             return new Luminosity(value);
         }

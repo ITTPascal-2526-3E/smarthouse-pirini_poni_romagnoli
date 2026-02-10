@@ -1,5 +1,8 @@
 ﻿using BlaisePascal.SmartHouse.Domain;
-using BlaisePascal.SmartHouse.Domain.illumination;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampTypes;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampOptions;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampCompositions;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampAbstraction;
 using BlaisePascal.SmartHouse.Domain.ValueObjects;
 using System;
 using System.Threading.Tasks;
@@ -12,7 +15,8 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
         // Helper to create a new EcoLamp
         private static EcoLamp CreateDefaultEcoLamp()
         {
-            return new EcoLamp(10, ColorOption.White, "Eco-1", "GreenTech", EnergyClass.A_plus_plus_plus, "My Eco Lamp");
+            var ecoLamp = new EcoLamp(10, ColorOption.NeutralWhite, "EcoModel", "EcoBrand", EnergyClass.A, "EcoLamp1");
+            return ecoLamp;
         }
 
         // The test checks that brightness is lowered after 5 minutes of no presence.

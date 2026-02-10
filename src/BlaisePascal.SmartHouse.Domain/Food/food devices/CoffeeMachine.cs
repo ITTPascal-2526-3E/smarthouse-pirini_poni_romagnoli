@@ -1,5 +1,5 @@
 ﻿using BlaisePascal.SmartHouse.Domain.Abstraction;
-using BlaisePascal.SmartHouse.Domain.illumination;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampOptions;
 
 namespace BlaisePascal.SmartHouse.Domain.Food
 {

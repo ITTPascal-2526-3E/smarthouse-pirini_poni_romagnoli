@@ -3,7 +3,7 @@ using System;
 namespace BlaisePascal.SmartHouse.Domain.ValueObjects
 {
     // Represents the airflow angle of the heat pump (1-90 degrees)
-    public record Angle
+    public class Angle
     {
         // Internal value of the angle
         public int Value { get; }
@@ -28,13 +28,13 @@ namespace BlaisePascal.SmartHouse.Domain.ValueObjects
         }
 
         // Allows using the Angle object directly as an int
-        public static implicit operator int(Angle angle)
+        public static implicit operator int(Angle angle)//see temperature for specs
         {
             return angle.Value;
         }
 
         // Allows creating a Angle object from an int value (explicit cast)
-        public static explicit operator Angle(int value)
+        public static explicit operator Angle(int value)//see temperature for specs
         {
             return new Angle(value);
         }
