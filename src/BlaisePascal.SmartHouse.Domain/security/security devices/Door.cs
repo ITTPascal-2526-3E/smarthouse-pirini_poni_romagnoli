@@ -4,7 +4,7 @@ using BlaisePascal.SmartHouse.Domain.Abstraction;
 namespace BlaisePascal.SmartHouse.Domain.security
 {
     // Represents a smart door that can be opened, closed, locked and unlocked
-    public sealed class Door : SecurityDevice
+    public  class Door : SecurityDevice
     {
         // Indicates whether the door is locked
         public bool IsLocked { get; private set; }
