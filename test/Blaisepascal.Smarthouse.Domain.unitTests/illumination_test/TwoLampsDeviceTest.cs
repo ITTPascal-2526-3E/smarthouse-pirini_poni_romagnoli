@@ -1,7 +1,10 @@
 using System;
 using Xunit;
 using BlaisePascal.SmartHouse.Domain;
-using BlaisePascal.SmartHouse.Domain.illumination;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampTypes;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampOptions;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampCompositions;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampAbstraction;
 using BlaisePascal.SmartHouse.Domain.ValueObjects;
 
 namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
@@ -19,7 +22,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
         {
             return new Lamp(
                 10,
-                ColorOption.White,
+                ColorOption.NeutralWhite,
                 "Std-1",
                 "BrandA",
                 EnergyClass.A,
@@ -34,7 +37,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
                 ColorOption.WarmWhite,
                 "Eco-1",
                 "BrandB",
-                EnergyClass.A_plus_plus,
+                EnergyClass.A,
                 name);
         }
 

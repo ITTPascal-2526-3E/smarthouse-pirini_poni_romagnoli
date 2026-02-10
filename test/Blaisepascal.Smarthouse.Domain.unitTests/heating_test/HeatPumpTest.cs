@@ -1,8 +1,9 @@
 using System;
 using Xunit;
 using BlaisePascal.SmartHouse.Domain;
-using BlaisePascal.SmartHouse.Domain.heating;
-using BlaisePascal.SmartHouse.Domain.illumination;
+using BlaisePascal.SmartHouse.Domain.Heating.HeatingDevices;
+using BlaisePascal.SmartHouse.Domain.Heating.HeatingOptions;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampOptions;
 using BlaisePascal.SmartHouse.Domain.ValueObjects;
 
 namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
@@ -14,7 +15,7 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests.heating_test
         private const string Name = "Living Room Heat Pump";
         private const string Brand = "ClimaTech";
         private const string Model = "HP-3000";
-        private const EnergyClass EnergyRating = EnergyClass.A_plus_plus;
+        private const EnergyClass EnergyRating = EnergyClass.A;
 
         // Limits defined in the HeatPump class
         private const int MinTemp = 16;

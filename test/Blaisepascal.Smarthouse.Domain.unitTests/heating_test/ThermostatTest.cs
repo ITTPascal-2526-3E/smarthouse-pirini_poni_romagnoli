@@ -1,5 +1,6 @@
 using BlaisePascal.SmartHouse.Domain;
-using BlaisePascal.SmartHouse.Domain.heating;
+using BlaisePascal.SmartHouse.Domain.Heating.HeatingDevices;
+using BlaisePascal.SmartHouse.Domain.Heating.HeatingOptions;
 using BlaisePascal.SmartHouse.Domain.ValueObjects;
 using System;
 using Xunit;

@@ -1,15 +1,18 @@
 ﻿using System;
-using BlaisePascal.SmartHouse.Domain.illumination;
-using BlaisePascal.SmartHouse.Domain.Abstraction;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampTypes;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampOptions;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampCompositions;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampAbstraction;
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
 using Xunit;
 
-namespace Blaisepascal.Smarthouse.Domain.unitTests
+namespace Blaisepascal.Smarthouse.Domain.unitTests.illumination_test
 {
     public class LedTest
     {
         private Led CreateLed()
         {
-            return new Led("Living Room LED", false, ColorOption.White);
+            return new Led(1, ColorOption.NeutralWhite, "ModelX", "BrandY", EnergyClass.A);
         }
 
         [Fact]
@@ -18,9 +21,9 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests
             // Arrange
             var led = CreateLed();
             // Act
-            led.ChangeColor(BlaisePascal.SmartHouse.Domain.illumination.ColorOption.Blue);
+            led.ChangeColor(ColorOption.Blue);
             // Assert
-            Assert.Equal(BlaisePascal.SmartHouse.Domain.illumination.ColorOption.Blue, led.colorOption);
+            Assert.Equal(ColorOption.Blue, led.Color);
         }
 
         [Fact]
@@ -28,21 +31,20 @@ namespace Blaisepascal.Smarthouse.Domain.unitTests
         {
             // Arrange
             var led = CreateLed();
+            led.ToggleOn();
             // Act
             led.SetLightIntensity(85);
             // Assert
-            Assert.Equal(85, led.LightIntensity);
+            Assert.Equal(85, led.CurrentLuminosity.Value);
         }
 
         [Fact]
-        public void Led_InitializesWithDefaultIntensity()
+        public void Led_InitializesWithZeroLuminosity()
         {
             // Arrange & Act
             var led = CreateLed();
             // Assert
-            Assert.Equal(70, led.LightIntensity);
+            Assert.Equal(0, led.CurrentLuminosity.Value);
         }
-
-        
     }
 }

@@ -3,7 +3,7 @@ using System;
 namespace BlaisePascal.SmartHouse.Domain.ValueObjects
 {
     // Represents the power intensity level of the heat pump (0-100)
-    public record Power
+    public class Power
     {
         // Internal value of the power intensity
         public int Value { get; }
@@ -28,13 +28,13 @@ namespace BlaisePascal.SmartHouse.Domain.ValueObjects
         }
 
         // Allows using the Power object directly as an int
-        public static implicit operator int(Power power)
+        public static implicit operator int(Power power)//see temperature for specs
         {
             return power.Value;
         }
 
         // Allows creating a Power object from an int value (explicit cast)
-        public static explicit operator Power(int value)
+        public static explicit operator Power(int value)//see temperature for specs
         {
             return new Power(value);
         }

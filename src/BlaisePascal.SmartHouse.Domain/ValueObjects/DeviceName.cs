@@ -3,7 +3,7 @@ using System;
 namespace BlaisePascal.SmartHouse.Domain.ValueObjects
 {
     // Ensures that a device name is valid (non-empty)
-    public record DeviceName
+    public class DeviceName
     {
         // String value of the name
         public string Value { get; }
@@ -24,12 +24,12 @@ namespace BlaisePascal.SmartHouse.Domain.ValueObjects
         }
 
         // Allows implicit conversion between DeviceName and string for zero-friction usage
-        public static implicit operator string(DeviceName name)
+        public static implicit operator string(DeviceName name)//see temperature for specs
         {
             return name.Value;
         }
 
-        public static implicit operator DeviceName(string value)
+        public static implicit operator DeviceName(string value)//see temperature for specs
         {
             return new DeviceName(value);
         }

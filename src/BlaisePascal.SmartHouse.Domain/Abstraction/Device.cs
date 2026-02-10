@@ -4,7 +4,7 @@ using BlaisePascal.SmartHouse.Domain.ValueObjects;
 namespace BlaisePascal.SmartHouse.Domain.Abstraction
 {
     // Base class for all smart devices in the smart house
-    public abstract class Device : IToggable
+    public abstract class Device : ITogglable
     {
         // Unique identifier for the device
         public Guid DeviceId { get; } = Guid.NewGuid();
