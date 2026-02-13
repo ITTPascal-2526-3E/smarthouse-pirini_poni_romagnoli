@@ -31,14 +31,14 @@ internal sealed class Program
         {
             Console.Clear();
             Console.WriteLine("SMART HOUSE CONTROL");
-            Console.WriteLine("-------------------");
+            Console.WriteLine("");
             Console.WriteLine($"1. Illumination ({_lamps.Count} lamps)");
             Console.WriteLine($"2. Security (Alarm: {_alarm.IsArmed})");
             Console.WriteLine($"3. Heating (Thermostat: {_thermostat.Mode})");
             Console.WriteLine("4. Food & Appliances");
             Console.WriteLine("5. Full Status");
             Console.WriteLine("Q. Exit");
-            Console.WriteLine("-------------------");
+            Console.WriteLine("");
             Console.Write("> ");
 
             var key = Console.ReadKey(true).Key;
@@ -105,14 +105,14 @@ internal sealed class Program
         {
             Console.Clear();
             Console.WriteLine("ILLUMINATION");
-            Console.WriteLine("------------");
+            Console.WriteLine("");
             for (int i = 0; i < _lamps.Count; i++)
             {
                 var l = _lamps[i];
                 string status = l.IsOn ? "ON" : "OFF";
                 Console.WriteLine($"{i + 1}. [{status}] {l.Name} (Lum: {l.CurrentLuminosity.Value})");
             }
-            Console.WriteLine("------------");
+            Console.WriteLine("");
             Console.WriteLine("[T] Toggle lamp #");
             Console.WriteLine("[A] Turn All ON");
             Console.WriteLine("[O] Turn All OFF");
@@ -159,7 +159,7 @@ internal sealed class Program
         {
             Console.Clear();
             Console.WriteLine("SECURITY");
-            Console.WriteLine("--------");
+            Console.WriteLine("");
             Console.WriteLine("Doors:");
             for (int i = 0; i < _doors.Count; i++)
             {
@@ -170,7 +170,7 @@ internal sealed class Program
             }
             Console.WriteLine($"Camera: {_camera.Name} " + (_camera.IsRecording ? "[RECORDING]" : "[IDLE]"));
             Console.WriteLine($"Alarm: {(_alarm.IsArmed ? "ARMED" : "DISARMED")}");
-            Console.WriteLine("--------");
+            Console.WriteLine("");
             Console.WriteLine("[D] Toggle door (open/close)");
             Console.WriteLine("[K] Lock/Unlock door");
             Console.WriteLine("[C] Toggle CCTV");
@@ -220,7 +220,7 @@ internal sealed class Program
         {
             Console.Clear();
             Console.WriteLine("HEATING");
-            Console.WriteLine("-------");
+            Console.WriteLine("");
             Console.WriteLine($"Thermostat: {_thermostat.Mode}");
             Console.WriteLine($"Current Temp: {_thermostat.CurrentTemperature}");
             Console.WriteLine($"Target Temp:  {_thermostat.TargetTemperature}");
@@ -231,7 +231,7 @@ internal sealed class Program
                 string status = p.IsOn ? "ON" : "OFF";
                 Console.WriteLine($"{i + 1}. [{status}] {p.Name} ({p.CurrentTemperature} -> {p.TargetTemperature})");
             }
-            Console.WriteLine("-------");
+            Console.WriteLine("");
             Console.WriteLine("[M] Cycle Mode");
             Console.WriteLine("[T] Set Target Temp");
             Console.WriteLine("[P] Toggle Pump");
@@ -282,12 +282,12 @@ internal sealed class Program
         {
             Console.Clear();
             Console.WriteLine("FOOD & APPLIANCES");
-            Console.WriteLine("-----------------");
+            Console.WriteLine("");
             Console.WriteLine($"Coffee Machine: {_coffee.Name} [{(_coffee.Status ? "ON" : "OFF")}]");
             Console.WriteLine($"Refrigerator: {_fridge.Name}");
             Console.WriteLine($"  Fridge:  {_fridge.MyFridge.CurrentTemperature}C {(_fridge.MyFridge.IsDoorOpen ? "(OPEN)" : "(CLOSED)")}");
             Console.WriteLine($"  Freezer: {_fridge.MyFreezer.CurrentTemperature}C {(_fridge.MyFreezer.IsDoorOpen ? "(OPEN)" : "(CLOSED)")}");
-            Console.WriteLine("-----------------");
+            Console.WriteLine("");
             Console.WriteLine("[C] Toggle Coffee Machine");
             Console.WriteLine("[F] Open/Close Fridge");
             Console.WriteLine("[Z] Open/Close Freezer");
@@ -320,7 +320,7 @@ internal sealed class Program
     {
         Console.Clear();
         Console.WriteLine("FULL DEVICE STATUS");
-        Console.WriteLine("------------------");
+        Console.WriteLine("");
         PrintList("Lamps", _lamps);
         PrintList("Doors", _doors);
         Console.WriteLine($"Camera: {_camera}");
@@ -329,7 +329,7 @@ internal sealed class Program
         Console.WriteLine($"Thermostat: {_thermostat}");
         Console.WriteLine($"Coffee: {_coffee}");
         Console.WriteLine($"Refrigerator: {_fridge}");
-        Console.WriteLine("------------------");
+        Console.WriteLine("");
         Console.WriteLine("Press any key to back...");
         Console.ReadKey(true);
     }
