@@ -6,4 +6,20 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Abstraction\" />
+    <Folder Include="Food\food devices\" />
+    <Folder Include="Heating\HeatingDevices\" />
+    <Folder Include="Heating\HeatingOptions\" />
+    <Folder Include="Illumination\LampAbstraction\" />
+    <Folder Include="Illumination\LampCompositions\" />
+    <Folder Include="Illumination\LampOptions\" />
+    <Folder Include="Illumination\LampTypes\" />
+    <Folder Include="Security\Repositories\Commands\" />
+    <Folder Include="Security\Repositories\Queries\" />
+    <Folder Include="Security\SecurityDevices\" />
+    <Folder Include="Security\SecutirtyAbstraction\" />
+    <Folder Include="ValueObjects\" />
+  </ItemGroup>
+
 </Project>
