@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BlaisePascal.SmartHouse.Application.Illumination.Repositories.Commands
 {
-    internal class RemoveLampCommand
+    public class RemoveLampCommand
     {
     }
 }

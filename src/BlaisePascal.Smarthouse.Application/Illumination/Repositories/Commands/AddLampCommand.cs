@@ -5,12 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using BlaisePascal.SmartHouse.Domain.Illumination.Repositories;
 using BlaisePascal.SmartHouse.Domain.Illumination;
-using BlaisePascal.SmartHouse.Domain.Common.ValueObjects;
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampTypes;
+
 
 
 namespace BlaisePascal.SmartHouse.Application.Illumination.Repositories.Commands
 {
-    internal class AddLampCommand
+    public class AddLampCommand
     {
         private readonly ILampRepository _lampRepository;
 
