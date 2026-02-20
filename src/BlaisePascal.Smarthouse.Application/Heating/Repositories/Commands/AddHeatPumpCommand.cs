@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlaisePascal.Smarthouse.Application.Heating.Repositories.Commands
+namespace BlaisePascal.SmartHouse.Application.Heating.Repositories.Commands
 {
     internal class AddHeatPumpCommand
     {

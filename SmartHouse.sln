@@ -18,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{9DF70304-0
 		docs\CODE REVIEW.docx = docs\CODE REVIEW.docx
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlaisePascal.Smarthouse.Application", "src\BlaisePascal.Smarthouse.Application\BlaisePascal.Smarthouse.Application.csproj", "{539B869F-E87E-4FD3-9D9A-005000168B36}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlaisePascal.SmartHouse.Application", "src\BlaisePascal.Smarthouse.Application\BlaisePascal.SmartHouse.Application.csproj", "{539B869F-E87E-4FD3-9D9A-005000168B36}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

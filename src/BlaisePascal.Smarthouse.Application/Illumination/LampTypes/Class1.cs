@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlaisePascal.SmartHouse.Application.Heating.Repositories.Commands
+namespace BlaisePascal.Smarthouse.Application.Illumination.LampTypes
 {
-    internal class RemoveThermostatCommand
+    internal class Class1
     {
     }
 }
