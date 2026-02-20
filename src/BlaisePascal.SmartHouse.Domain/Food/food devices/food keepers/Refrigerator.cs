@@ -28,9 +28,9 @@ namespace BlaisePascal.SmartHouse.Domain.Food
             MyFridge.SetFridgeTemperature(targetTemp);
         }
 
-        public void ReturnFridgeInformation()
+        public string ReturnFridgeInformation()
         {
-            MyFridge.ToString();
+            return MyFridge.ToString();
         }
 
         public void OpenFreezer()
@@ -48,9 +48,9 @@ namespace BlaisePascal.SmartHouse.Domain.Food
             MyFreezer.SetFreezerTemperature(targetTemp);
         }
 
-        public void ReturnFreezerInformation()
+        public string ReturnFreezerInformation()
         {
-            MyFreezer.ToString();
+            return MyFreezer.ToString();
         }
     }
 }

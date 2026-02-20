@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BlaisePascal.SmartHouse.Domain.Illumination.Repositories;
-using BlaisePascal.SmartHouse.Domain.Illumination;
-using BlaisePascal.SmartHouse.Domain.ValueObjects;
 using BlaisePascal.SmartHouse.Domain.Illumination.LampTypes;
-
-
+using BlaisePascal.SmartHouse.Domain.Illumination.LampOptions;
 
 namespace BlaisePascal.SmartHouse.Application.Illumination.Repositories.Commands
 {
@@ -21,14 +14,10 @@ namespace BlaisePascal.SmartHouse.Application.Illumination.Repositories.Commands
             _lampRepository = lampRepository;
         }
 
-        public void Execute(string name)// L'utente mi passa il nome 
+        public void Execute(int power, ColorOption color, string model, string brand, EnergyClass energyClass, string name)
         {
-            var lamp = new Lamp(new DeviceName(name)); // Creo una nuova lampada con il nome passato dall'utente
-            _lampRepository.Add(lamp); // Aggiungo la lampada al repository
-
+            var lamp = new Lamp(power, color, model, brand, energyClass, name);
+            _lampRepository.Add(lamp);
         }
-
-
-
     }
 }

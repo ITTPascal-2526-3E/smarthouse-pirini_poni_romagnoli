@@ -44,17 +44,17 @@ namespace BlaisePascal.SmartHouse.Domain.Food
         // Opens the fridge door
         public override void ToggleOn()
         {
+            base.ToggleOn();
             IsDoorOpen = true;
             IsLightOn = true;
-            Touch();
         }
 
         // Closes the fridge door
         public override void ToggleOff()
         {
+            base.ToggleOff();
             IsDoorOpen = false;
             IsLightOn = false;
-            Touch();
         }
 
         // Sets current fridge's temperature to the one wanted

@@ -1,12 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using BlaisePascal.SmartHouse.Domain.Heating.HeatingDevices;
+using BlaisePascal.SmartHouse.Domain.Heating.Repositories;
 
 namespace BlaisePascal.SmartHouse.Application.Heating.Repositories.Queries
 {
-    internal class GetHeatPumpByIDQuery
+    public class GetHeatPumpByIDQuery
     {
+        private readonly IHeatPumpRepository _heatPumpRepository;
+
+        public GetHeatPumpByIDQuery(IHeatPumpRepository heatPumpRepository)
+        {
+            _heatPumpRepository = heatPumpRepository;
+        }
+
+        public HeatPump? Execute(Guid id)
+        {
+            return _heatPumpRepository.GetById(id);
+        }
     }
 }

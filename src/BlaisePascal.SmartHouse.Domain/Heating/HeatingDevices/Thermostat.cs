@@ -14,7 +14,7 @@ namespace BlaisePascal.SmartHouse.Domain.Heating.HeatingDevices
         public Temperature TargetTemperature { get; private set; }
 
         // List of  heat pumps
-        public List<HeatPump> _heatPumps = new List<HeatPump>();
+        private readonly List<HeatPump> _heatPumps = new List<HeatPump>();
 
 
         // RIMOSSO: private string name... -> Ora usa base.Name ereditato da Device

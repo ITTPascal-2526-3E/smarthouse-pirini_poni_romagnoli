@@ -7,14 +7,14 @@ namespace BlaisePascal.SmartHouse.Domain.Food
     {
         public string Brand { get; set; }
         public string Model { get; set; }
-        public EnergyClass EnergyEfficiency; // Fixed spelling
+        public EnergyClass EnergyEfficiency { get; set; }
         public bool IsReady { get; set; } // True if the coffee machine is ready to use
         public DateTime IgnitionTime { get; set; } // Time of ignition
         public DateTime ShutdownTime { get; set; } // Time of shutdown
         public DateTime? ScheduledOn { get; private set; } // Scheduled time to turn ON
         public DateTime? ScheduledOff { get; private set; } // Scheduled time to turn OFF       
 
-        public CoffeeMachine(string name, string brand, string model, EnergyClass energyEfficiency, bool status) : base(name, true)
+        public CoffeeMachine(string name, string brand, string model, EnergyClass energyEfficiency, bool status) : base(name, status)
         {
             Brand = brand;
             Model = model;

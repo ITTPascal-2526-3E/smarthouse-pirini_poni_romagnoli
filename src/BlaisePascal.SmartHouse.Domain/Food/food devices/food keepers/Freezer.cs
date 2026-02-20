@@ -41,15 +41,17 @@ namespace BlaisePascal.SmartHouse.Domain.Food
         // Opens the freezer door
         public override void ToggleOn()
         {
+            base.ToggleOn();
             IsDoorOpen = true;
             IsLightOn = true;
-            Touch();
         }
+
+        // Closes the freezer door
         public override void ToggleOff()
         {
+            base.ToggleOff();
             IsDoorOpen = false;
             IsLightOn = false;
-            Touch();
         }
 
         // Overloaded method to set freezer temperature explicitly
