@@ -11,6 +11,7 @@ namespace BlaisePascal.SmartHouse.Domain.Security.Repositories
         void Update(CCTV cctv);
         void Remove(Guid id);
         CCTV? GetById(Guid id);
+        void TriggerAlarm(CCTV cctv);
         List<CCTV> GetAll();
     }
 }
