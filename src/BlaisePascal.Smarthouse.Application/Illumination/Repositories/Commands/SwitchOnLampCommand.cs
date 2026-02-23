@@ -7,11 +7,11 @@ using BlaisePascal.SmartHouse.Domain.Illumination.Repositories;
 
 namespace BlaisePascal.SmartHouse.Application.Illumination.Repositories.Commands
 {
-    public class UpdateLampCommand
+    public class SwitchOnLampCommand
     {
         private readonly ILampRepository _lampRepository;
 
-        public UpdateLampCommand(ILampRepository lampRepository)
+        public SwitchOnLampCommand(ILampRepository lampRepository)
         {
             _lampRepository = lampRepository;
         }
@@ -21,6 +21,7 @@ namespace BlaisePascal.SmartHouse.Application.Illumination.Repositories.Commands
             var lamp = _lampRepository.GetById(lampId);
             if (lamp != null)
             {
+                lamp.ToggleOn();
                 _lampRepository.Update(lamp);
 
             }

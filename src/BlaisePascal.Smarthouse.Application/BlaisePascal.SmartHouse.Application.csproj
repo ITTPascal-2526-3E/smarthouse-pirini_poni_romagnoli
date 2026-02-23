@@ -17,7 +17,7 @@
     <Folder Include="Security\Repositories\Commands\" />
     <Folder Include="Security\Repositories\Queries\" />
     <Folder Include="Security\SecurityDevices\" />
-    <Folder Include="Security\SecutirtyAbstraction\" />
+    <Folder Include="Security\SecurityAbstraction\" />
     <Folder Include="ValueObjects\" />
   </ItemGroup>
 
