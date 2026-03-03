@@ -6,7 +6,7 @@ namespace BlaisePascal.SmartHouse.Domain.ValueObjects
     public class Luminosity
     {
         // Internal value of the luminosity
-        public int Value { get; }
+        public int Value { get; set; }
 
         public const int MinValue = 0;
         public const int MaxValue = 100;

@@ -10,7 +10,7 @@ namespace BlaisePascal.SmartHouse.Domain.Illumination.LampTypes
     public class Lamp : Device, IDimmable
     {
         // Lamp power in watts
-        public int Power { get; }
+        public int Power { get; set; }
 
         // Luminosity property from IDimmable
         public Luminosity Luminosity => CurrentLuminosity;
@@ -19,16 +19,16 @@ namespace BlaisePascal.SmartHouse.Domain.Illumination.LampTypes
         public ColorOption Color { get; set; }
 
         // Manufacturer brand
-        public string Brand { get; }
+        public string Brand { get; set; }
 
         // Lamp model name or number
-        public string Model { get; }
+        public string Model { get; set; }
 
         // Energy efficiency label (e.g. A++, B, etc.)
-        public EnergyClass EnergyEfficiency { get; }
+        public EnergyClass EnergyEfficiency { get; set; }
 
         // Brightness level
-        public Luminosity CurrentLuminosity { get; protected set; }
+        public Luminosity CurrentLuminosity { get; set; }
 
         // Indicates if the lamp is currently ON (mapped to the base Status)
         public bool IsOn => Status;
@@ -86,6 +86,17 @@ namespace BlaisePascal.SmartHouse.Domain.Illumination.LampTypes
             {
                 // Ignore invalid values as per previous logic (return)
             }
+        }
+
+
+        public void GetLuminosity(Luminosity Luminosity)
+        {
+            if (!IsOn) {
+                return;
+            }
+            Luminosity = CurrentLuminosity;
+            Touch();
+
         }
 
         public override string ToString()

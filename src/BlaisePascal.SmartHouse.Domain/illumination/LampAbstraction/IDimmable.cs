@@ -5,7 +5,7 @@ namespace BlaisePascal.SmartHouse.Domain.Illumination.LampAbstraction
 {
     public interface IDimmable
     {
-        Luminosity Luminosity { get; }
+        Luminosity Luminosity { get; set; }
         void SetLuminosity(Luminosity value);
     }
 }

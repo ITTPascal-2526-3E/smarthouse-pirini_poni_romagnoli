@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\src\BlaisePascal.Smarthouse.Application\BlaisePascal.SmartHouse.Application.csproj" />
+    <ProjectReference Include="..\src\BlaisePascal.SmartHouse.Domain\BlaisePascal.SmartHouse.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -14,6 +14,8 @@
     <Folder Include="Illumination\LampAbstraction\" />
     <Folder Include="Illumination\LampCompositions\" />
     <Folder Include="Illumination\LampOptions\" />
+    <Folder Include="Abstraction\" />
+    <Folder Include="ValueObjects\" />
     <Folder Include="Security\Repositories\Commands\" />
     <Folder Include="Security\Repositories\Queries\" />
     <Folder Include="Security\SecurityDevices\" />
