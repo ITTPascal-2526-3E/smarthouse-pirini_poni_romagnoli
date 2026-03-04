@@ -20,7 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{9DF70304-0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlaisePascal.SmartHouse.Application", "src\BlaisePascal.Smarthouse.Application\BlaisePascal.SmartHouse.Application.csproj", "{539B869F-E87E-4FD3-9D9A-005000168B36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlaisePascal.SmartHouse.Infrastructure", "BlaisePascal.SmartHouse.Infrastructure\BlaisePascal.SmartHouse.Infrastructure.csproj", "{BDCB0915-E7ED-4E00-B53F-BEA8C82FE710}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlaisePascal.SmartHouse.Infrastructure", "src\BlaisePascal.SmartHouse.Infrastructure\BlaisePascal.SmartHouse.Infrastructure.csproj", "{BDCB0915-E7ED-4E00-B53F-BEA8C82FE710}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
