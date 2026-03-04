@@ -1,6 +1,7 @@
 ﻿using BlaisePascal.SmartHouse.Domain.Illumination.LampOptions;
 using BlaisePascal.SmartHouse.Domain.Illumination.LampTypes;
 using BlaisePascal.SmartHouse.Domain.Illumination.Repositories;
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -99,6 +100,8 @@ namespace BlaisePascal.SmartHouse.Infrastructure.Repositories.Devices.Illuminati
                     dto.LastModifiedAtUtc.ToString("o")
                 ));
             }
+
+            File.WriteAllLines(_csvFilePath, lines);
         }
 
         private ColorOption ParseColor(string color)
@@ -138,28 +141,25 @@ namespace BlaisePascal.SmartHouse.Infrastructure.Repositories.Devices.Illuminati
             foreach (var line in File.ReadLines(_csvFilePath).Skip(1))
             {
                 var parts = line.Split(',');
-                
-                var dto = new Lamp
-                {
-                    DeviceId = Guid.Parse(parts[0]),
-                    Name = parts[1],
-                    Status = bool.Parse(parts[2]),
-                    Power = int.Parse(parts[3]),
-                    Color = ParseColor(parts[4]),
-                    Model = parts[5],
-                    Brand = parts[6],
-                    EnergyEfficiency = ParseEnergyClass(parts[7]),
-                    Luminosity = int.Parse(parts[8]),
-                    LastModifiedAtUtc = DateTime.Parse(parts[9])
-                };
 
-                return lamps;
+                var power = int.Parse(parts[3]);
+                var color = ParseColor(parts[4]);
+                var model = parts[5];
+                var brand = parts[6];
+                var energyClass = ParseEnergyClass(parts[7]);
+                var name = parts[1];
 
+                var lamp = new Lamp(power, color, model, brand, energyClass, name);
+                lamp.DeviceId = Guid.Parse(parts[0]);
+                lamp.Status = bool.Parse(parts[2]);
+                lamp.CurrentLuminosity = new Luminosity(int.Parse(parts[8]));
+                lamp.LastModifiedAtUtc = DateTime.Parse(parts[9]);
+
+                lamps.Add(lamp);
             }
+
+            return lamps;
         }
     }
 }
-
-
-        
 

@@ -19,15 +19,6 @@ namespace BlaisePascal.SmartHouse.Domain.Security.SecurityDevices
             Touch();
         }
 
-        public override void ToggleOn()
-        {
-            IsLocked = true;
-        }
-
-        public override void ToggleOff()
-        {
-            IsLocked = false;
-        }
 
         // Opens the door only if it is not locked and updates the device status
         public void OpenDoor()
@@ -51,14 +42,14 @@ namespace BlaisePascal.SmartHouse.Domain.Security.SecurityDevices
         // Locks the door and prevents it from being opened without a key
         public void LockDoor()
         {
-            ToggleOn(); 
+            IsLocked = true;
             Touch();
         }
 
         // Unlocks the door and allows it to be opened
         public void UnlockDoor()
         {
-            ToggleOff();
+            IsLocked = false;
             Touch();
         }
 
@@ -66,7 +57,7 @@ namespace BlaisePascal.SmartHouse.Domain.Security.SecurityDevices
         public void OpenDoorWithKey()
         {
             // Unlock the door first
-            ToggleOff();
+            IsLocked = false;
             // Then open the door
             base.ToggleOn();
             Touch();
@@ -78,7 +69,7 @@ namespace BlaisePascal.SmartHouse.Domain.Security.SecurityDevices
             // Close the door
             base.ToggleOff();
             // Lock the door after closing
-            ToggleOn();
+            IsLocked = true;
             Touch();
         }
         public override void TriggerAlarm()

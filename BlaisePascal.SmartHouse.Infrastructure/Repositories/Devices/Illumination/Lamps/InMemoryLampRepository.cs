@@ -15,7 +15,7 @@ namespace BlaisePascal.SmartHouse.Infrastructure.Repositories.Devices.Illuminati
 {
     internal class InMemoryLampRepository : ILampRepository
     {
-        private readonly List<Lamp?> _lamps;
+        private readonly List<Lamp?> _lamps = new List<Lamp?>();
         public InMemoryLampRepository()
         {
 

@@ -13,7 +13,11 @@ namespace BlaisePascal.SmartHouse.Domain.Illumination.LampTypes
         public int Power { get; set; }
 
         // Luminosity property from IDimmable
-        public Luminosity Luminosity => CurrentLuminosity;
+        public Luminosity Luminosity
+        {
+            get => CurrentLuminosity;
+            set => CurrentLuminosity = value;
+        }
 
         // Lamp color chosen from predefined options
         public ColorOption Color { get; set; }
@@ -89,14 +93,9 @@ namespace BlaisePascal.SmartHouse.Domain.Illumination.LampTypes
         }
 
 
-        public void GetLuminosity(Luminosity Luminosity)
+        public Luminosity GetLuminosity()
         {
-            if (!IsOn) {
-                return;
-            }
-            Luminosity = CurrentLuminosity;
-            Touch();
-
+            return CurrentLuminosity;
         }
 
         public override string ToString()

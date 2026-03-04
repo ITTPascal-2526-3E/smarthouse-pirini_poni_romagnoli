@@ -18,7 +18,11 @@ namespace BlaisePascal.SmartHouse.Domain.Illumination.LampCompositions
         public int Width { get; private set; }
         public int Height { get; private set; }
 
-        public Luminosity Luminosity => new Luminosity(0); // Matrix doesn't have a single luminosity value, returning 0 or derived
+        public Luminosity Luminosity
+        {
+            get => new Luminosity(0); // Matrix doesn't have a single luminosity value, returning 0 or derived
+            set => SetAllIntensity(value.Value); // Delegate to SetAllIntensity
+        }
         public void SetLuminosity(Luminosity value) => SetAllIntensity(value.Value);
 
         public MatrixLed(string name, bool status, int wid, int hei)

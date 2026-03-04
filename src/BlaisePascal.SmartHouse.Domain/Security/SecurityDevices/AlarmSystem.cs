@@ -65,7 +65,7 @@ namespace BlaisePascal.SmartHouse.Domain.Security.SecurityDevices
         {
             if (base.Status == false)
             { 
-                Notification = true;
+                Notification = false;
             }
         }
 
@@ -73,7 +73,7 @@ namespace BlaisePascal.SmartHouse.Domain.Security.SecurityDevices
         {
             if (base.Status == true)
             {
-                Notification = false;
+                Notification = true;
             }
         }
         public override void TriggerAlarm()
