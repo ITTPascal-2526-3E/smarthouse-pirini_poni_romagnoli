@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
+using BlaisePascal.SmartHouse.Domain.Food.Repositories;
 
 namespace BlaisePascal.Smarthouse.Application.Food.Repositories.Commands
 {
-    internal class RemoveRefrigeratorCommand
+    public class RemoveRefrigeratorCommand
     {
+        private readonly IRefrigeratorRepository _repository;
+
+        public RemoveRefrigeratorCommand(IRefrigeratorRepository repository)
+        {
+            _repository = repository;
+        }
+
+        public void Execute(Guid id)
+        {
+            _repository.Remove(id);
+        }
     }
 }

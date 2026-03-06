@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using BlaisePascal.SmartHouse.Domain.Security.SecurityDevices;
 
 namespace BlaisePascal.SmartHouse.Application.Security.Repositories.Commands
 {
-    internal class AddCCTVCommand
+    public class AddCCTVCommand
     {
         private readonly ICCTVRepository _cctvRepository;
 

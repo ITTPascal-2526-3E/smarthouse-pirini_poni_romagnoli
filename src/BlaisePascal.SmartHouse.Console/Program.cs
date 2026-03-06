@@ -1,40 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Linq;
-using BlaisePascal.SmartHouse.Domain.Abstraction;
-using BlaisePascal.SmartHouse.Domain.Illumination.LampTypes;
+
+// Domain
+using BlaisePascal.SmartHouse.Domain.ValueObjects;
 using BlaisePascal.SmartHouse.Domain.Illumination.LampOptions;
-using BlaisePascal.SmartHouse.Domain.Security.SecurityDevices;
-using BlaisePascal.SmartHouse.Domain.Heating.HeatingDevices;
 using BlaisePascal.SmartHouse.Domain.Heating.HeatingOptions;
 using BlaisePascal.SmartHouse.Domain.Food;
-using BlaisePascal.SmartHouse.Domain.ValueObjects;
+
+// Infrastructure Repositories
+using BlaisePascal.SmartHouse.Infrastructure.Repositories.Devices.Illumination.Lamps;
+using BlaisePascal.SmartHouse.Infrastructure.Repositories.Devices.Security;
+using BlaisePascal.SmartHouse.Infrastructure.Repositories.Devices.Heating;
+using BlaisePascal.SmartHouse.Infrastructure.Repositories.Devices.Food;
+
+// Application Use Cases - Illumination
+using BlaisePascal.SmartHouse.Application.Illumination.Repositories.Commands;
+using BlaisePascal.SmartHouse.Application.Illumination.Repositories.Queries;
+
+// Application Use Cases - Security
+using BlaisePascal.SmartHouse.Application.Security.Repositories.Commands;
+using BlaisePascal.SmartHouse.Application.Security.Repositories.Queries;
+
+// Application Use Cases - Heating
+using BlaisePascal.SmartHouse.Application.Heating.Repositories.Commands;
+using BlaisePascal.SmartHouse.Application.Heating.Repositories.Queries;
+
+// Application Use Cases - Food
+using BlaisePascal.Smarthouse.Application.Food.Repositories.Commands;
+using BlaisePascal.Smarthouse.Application.Food.Repositories.Queries;
 
 internal sealed class Program
 {
-    // Devices
-    static List<Lamp> _lamps = null!;
-    static List<Door> _doors = null!;
-    static CCTV _camera = null!;
-    static AlarmSystem _alarm = null!;
-    static Thermostat _thermostat = null!;
-    static List<HeatPump> _pumps = null!;
-    static CoffeeMachine _coffee = null!;
-    static Refrigerator _fridge = null!;
+    // Repositories
+    static InMemoryLampRepository _lampRepo = new InMemoryLampRepository();
+    static InMemoryDoorRepository _doorRepo = new InMemoryDoorRepository();
+    static InMemoryCCTVRepository _cctvRepo = new InMemoryCCTVRepository();
+    static InMemoryAlarmSystemRepository _alarmRepo = new InMemoryAlarmSystemRepository();
+    static InMemoryThermostatRepository _thermostatRepo = new InMemoryThermostatRepository();
+    static InMemoryHeatPumpRepository _heatPumpRepo = new InMemoryHeatPumpRepository();
+    static InMemoryCoffeeMachineRepository _coffeeRepo = new InMemoryCoffeeMachineRepository();
+    static InMemoryRefrigeratorRepository _fridgeRepo = new InMemoryRefrigeratorRepository();
+
+    // Queries
+    static GetAllLampsQuery _getAllLamps = new GetAllLampsQuery(_lampRepo);
+    static GetAllCCTVQuery _getAllCctv = new GetAllCCTVQuery(_cctvRepo);
+    static GetAllThermostatsQuery _getAllThermostats = new GetAllThermostatsQuery(_thermostatRepo);
+    static GetAllHeatPumpsQuery _getAllHeatPumps = new GetAllHeatPumpsQuery(_heatPumpRepo);
+    static GetAllCoffeeMachinesQuery _getAllCoffee = new GetAllCoffeeMachinesQuery(_coffeeRepo);
+    static GetAllRefrigeratorsQuery _getAllFridges = new GetAllRefrigeratorsQuery(_fridgeRepo);
+
+    // Commands
+    // Illumination
+    static SwitchOnLampCommand _switchOnLamp = new SwitchOnLampCommand(_lampRepo);
+    static SwitchOffLampCommand _switchOffLamp = new SwitchOffLampCommand(_lampRepo);
+    static UpdateLampCommand _updateLamp = new UpdateLampCommand(_lampRepo);
+
+    // Heating
+    static UpdateThermostatCommand _updateThermostat = new UpdateThermostatCommand(_thermostatRepo);
+    static UpdateHeatPumpCommand _updateHeatPump = new UpdateHeatPumpCommand(_heatPumpRepo);
+
+    // We will instantiate commands as needed to avoid too much boilerplate upfront
+    static AddLampCommand _addLamp = new AddLampCommand(_lampRepo);
+    
+    // Security 
+    static AddCCTVCommand _addCctv = new AddCCTVCommand(_cctvRepo);
+    static UpdateCCTVCommand _updateCctv = new UpdateCCTVCommand(_cctvRepo);
 
     static void Main(string[] args)
     {
-        InitDevices();
+        InitData();
 
         bool running = true;
         while (running)
         {
             Console.Clear();
-            Console.WriteLine("SMART HOUSE CONTROL");
+            Console.WriteLine("SMART HOUSE CONTROL (USE CASES OVER CQRS)");
             Console.WriteLine("");
-            Console.WriteLine($"1. Illumination ({_lamps.Count} lamps)");
-            Console.WriteLine($"2. Security (Alarm: {_alarm.IsArmed})");
-            Console.WriteLine($"3. Heating (Thermostat: {_thermostat.Mode})");
+            
+            var lamps = _getAllLamps.Execute();
+            var cctvs = _getAllCctv.Execute();
+            var doors = _doorRepo.GetAll();
+            var alarm = _alarmRepo.GetAll().First();
+            var thermostat = _getAllThermostats.Execute().First();
+            
+            Console.WriteLine($"1. Illumination ({lamps.Count} lamps)");
+            Console.WriteLine($"2. Security (Alarm: {alarm.IsArmed})");
+            Console.WriteLine($"3. Heating (Thermostat: {thermostat.Mode})");
             Console.WriteLine("4. Food & Appliances");
             Console.WriteLine("5. Full Status");
             Console.WriteLine("Q. Exit");
@@ -54,48 +105,55 @@ internal sealed class Program
         }
     }
 
-    static void InitDevices()
+    static void InitData()
     {
-        _lamps = new List<Lamp>
-        {
-            new Lamp(60, ColorOption.WarmWhite, "L-Living", "Philips", EnergyClass.A, "Living Room Lamp"),
-            new EcoLamp(40, ColorOption.NeutralWhite, "Eco-Hall", "Osram", EnergyClass.A, "Hallway EcoLamp"),
-            new Led(1, ColorOption.CoolWhite, "Strip-1", "Samsung", EnergyClass.A)
-        };
+        // Illumination
+        _addLamp.Execute(60, ColorOption.WarmWhite, "Philips", "Living Room Lamp", EnergyClass.A, "L-Living");
+        _addLamp.Execute(40, ColorOption.NeutralWhite, "Osram", "Hallway EcoLamp", EnergyClass.A, "Eco-Hall");
+        _addLamp.Execute(1, ColorOption.CoolWhite, "Samsung", "LED Strip", EnergyClass.A, "Strip-1");
 
-        _doors = new List<Door>
-        {
-            new Door("Front Door", false),
-            new Door("Back Door", false)
-        };
+        // Security
+        _doorRepo.Add(new BlaisePascal.SmartHouse.Domain.Security.SecurityDevices.Door("Front Door", false));
+        _doorRepo.Add(new BlaisePascal.SmartHouse.Domain.Security.SecurityDevices.Door("Back Door", false));
 
-        _camera = new CCTV("Cam-Front", "Sony", "4K", 10, 1, "Front Garden Camera", false);
-        _alarm = new AlarmSystem("Verisure", "V-Pro");
+        var cctv = new BlaisePascal.SmartHouse.Domain.Security.SecurityDevices.CCTV("Cam-Front", "Sony", "4K", 10, 1, "Front Garden Camera", false);
+        _cctvRepo.Add(cctv);
 
-        _pumps = new List<HeatPump>
-        {
-            new HeatPump(new Temperature(20), "Living Room AC"),
-            new HeatPump(new Temperature(18), "Bedroom AC")
-        };
+        var alarm = new BlaisePascal.SmartHouse.Domain.Security.SecurityDevices.AlarmSystem("Verisure", "V-Pro");
+        _alarmRepo.Add(alarm);
 
-        _thermostat = new Thermostat(new Temperature(20), ModeOptionThermostat.Off, new Temperature(22));
-        foreach (var p in _pumps) _thermostat.AddHeatPump(p);
-
-        _coffee = new CoffeeMachine("Morning Brew", "DeLonghi", "Magnifica", EnergyClass.A, false);
-
-        var fridge = new Fridge("Samsung", "FamilyHub", 500, "Kitchen Fridge");
-        var freezer = new Freezer("Samsung", "FamilyHub", 200, "Kitchen Freezer");
-        _fridge = new Refrigerator(fridge, "Kitchen Refrigerator", freezer);
-
+        // Security Alarms subscriptions
         Action<string, string> handler = (name, msg) =>
         {
             Console.WriteLine($"\n[ALARM] {name}: {msg}");
             Console.Write("Press any key...");
             Console.ReadKey(true);
         };
-        _camera.OnAlarm += handler;
-        _alarm.OnAlarm += handler;
-        foreach (var d in _doors) d.OnAlarm += handler;
+        cctv.OnAlarm += handler;
+        alarm.OnAlarm += handler;
+        foreach (var d in _doorRepo.GetAll()) d.OnAlarm += handler;
+
+        // Heating
+        var hp1 = new BlaisePascal.SmartHouse.Domain.Heating.HeatingDevices.HeatPump(new Temperature(20), "Living Room AC");
+        var hp2 = new BlaisePascal.SmartHouse.Domain.Heating.HeatingDevices.HeatPump(new Temperature(18), "Bedroom AC");
+        _heatPumpRepo.Add(hp1);
+        _heatPumpRepo.Add(hp2);
+
+        var thermostat = new BlaisePascal.SmartHouse.Domain.Heating.HeatingDevices.Thermostat(new Temperature(20), ModeOptionThermostat.Off, new Temperature(22));
+        var addPumpCommand = new BlaisePascal.SmartHouse.Application.Heating.Repositories.Commands.AddHeatPumpCommand(_heatPumpRepo);
+        
+        thermostat.AddHeatPump(hp1);
+        thermostat.AddHeatPump(hp2);
+        _thermostatRepo.Add(thermostat);
+
+        // Food
+        var addCoffee = new AddCoffeeMachineCommand(_coffeeRepo);
+        addCoffee.Execute("Morning Brew", "DeLonghi", "Magnifica", EnergyClass.A, false);
+
+        var fridge = new Fridge("Samsung", "FamilyHub", 500, "Kitchen Fridge");
+        var freezer = new Freezer("Samsung", "FamilyHub", 200, "Kitchen Freezer");
+        var addFridge = new AddRefrigeratorCommand(_fridgeRepo);
+        addFridge.Execute(fridge, "Kitchen Refrigerator", freezer);
     }
 
     static void IlluminationMenu()
@@ -106,11 +164,13 @@ internal sealed class Program
             Console.Clear();
             Console.WriteLine("ILLUMINATION");
             Console.WriteLine("");
-            for (int i = 0; i < _lamps.Count; i++)
+            var lamps = _getAllLamps.Execute();
+            
+            for (int i = 0; i < lamps.Count; i++)
             {
-                var l = _lamps[i];
+                var l = lamps[i];
                 string status = l.IsOn ? "ON" : "OFF";
-                Console.WriteLine($"{i + 1}. [{status}] {l.Name} (Lum: {l.CurrentLuminosity.Value})");
+                Console.WriteLine($"{i + 1}. [{status}] {l.Name} (Lum: {l.CurrentLuminosity?.Value ?? 0})");
             }
             Console.WriteLine("");
             Console.WriteLine("[T] Toggle lamp #");
@@ -124,26 +184,30 @@ internal sealed class Program
             {
                 case ConsoleKey.T:
                     Console.Write("Lamp #: ");
-                    if (int.TryParse(Console.ReadLine(), out int ti) && ti >= 1 && ti <= _lamps.Count)
+                    if (int.TryParse(Console.ReadLine(), out int ti) && ti >= 1 && ti <= lamps.Count)
                     {
-                        if (_lamps[ti - 1].IsOn) _lamps[ti - 1].ToggleOff(); else _lamps[ti - 1].ToggleOn();
+                        var lamp = lamps[ti - 1];
+                        if (lamp.IsOn) _switchOffLamp.Execute(lamp.DeviceId); else _switchOnLamp.Execute(lamp.DeviceId);
                     }
                     break;
                 case ConsoleKey.A:
-                    foreach (var l in _lamps) l.ToggleOn();
+                    foreach (var l in lamps) _switchOnLamp.Execute(l.DeviceId);
                     break;
                 case ConsoleKey.O:
-                    foreach (var l in _lamps) l.ToggleOff();
+                    foreach (var l in lamps) _switchOffLamp.Execute(l.DeviceId);
                     break;
                 case ConsoleKey.L:
                     Console.Write("Lamp #: ");
-                    if (int.TryParse(Console.ReadLine(), out int li) && li >= 1 && li <= _lamps.Count)
+                    if (int.TryParse(Console.ReadLine(), out int li) && li >= 1 && li <= lamps.Count)
                     {
                         Console.Write("Luminosity (0-100): ");
                         if (int.TryParse(Console.ReadLine(), out int lum))
                         {
-                            if (!_lamps[li - 1].IsOn) _lamps[li - 1].ToggleOn();
-                            _lamps[li - 1].SetLuminosity(lum);
+                            var lamp = lamps[li - 1];
+                            if (!lamp.IsOn) _switchOnLamp.Execute(lamp.DeviceId);
+                            
+                            lamp.SetLuminosity(lum); // Domain change
+                            _updateLamp.Execute(lamp.DeviceId); // Persistence
                         }
                     }
                     break;
@@ -160,16 +224,21 @@ internal sealed class Program
             Console.Clear();
             Console.WriteLine("SECURITY");
             Console.WriteLine("");
+            
+            var doors = _doorRepo.GetAll();
+            var camera = _getAllCctv.Execute().First();
+            var alarm = _alarmRepo.GetAll().First();
+
             Console.WriteLine("Doors:");
-            for (int i = 0; i < _doors.Count; i++)
+            for (int i = 0; i < doors.Count; i++)
             {
-                var d = _doors[i];
+                var d = doors[i];
                 string locked = d.IsLocked ? "LOCKED" : "UNLOCKED";
                 string state = d.Status ? "OPEN" : "CLOSED";
                 Console.WriteLine($"{i + 1}. {d.Name} [{locked}] ({state})");
             }
-            Console.WriteLine($"Camera: {_camera.Name} " + (_camera.IsRecording ? "[RECORDING]" : "[IDLE]"));
-            Console.WriteLine($"Alarm: {(_alarm.IsArmed ? "ARMED" : "DISARMED")}");
+            Console.WriteLine($"Camera: {camera.Name} " + (camera.IsRecording ? "[RECORDING]" : "[IDLE]"));
+            Console.WriteLine($"Alarm: {(alarm.IsArmed ? "ARMED" : "DISARMED")}");
             Console.WriteLine("");
             Console.WriteLine("[D] Toggle door (open/close)");
             Console.WriteLine("[K] Lock/Unlock door");
@@ -184,29 +253,36 @@ internal sealed class Program
             {
                 case ConsoleKey.D:
                     Console.Write("Door #: ");
-                    if (int.TryParse(Console.ReadLine(), out int di) && di >= 1 && di <= _doors.Count)
+                    if (int.TryParse(Console.ReadLine(), out int di) && di >= 1 && di <= doors.Count)
                     {
-                        if (_doors[di - 1].Status) _doors[di - 1].CloseDoor(); else _doors[di - 1].OpenDoor();
+                        var door = doors[di - 1];
+                        if (door.Status) door.CloseDoor(); else door.OpenDoor();
+                        _doorRepo.Update(door);
                     }
                     break;
                 case ConsoleKey.K:
                     Console.Write("Door #: ");
-                    if (int.TryParse(Console.ReadLine(), out int ki) && ki >= 1 && ki <= _doors.Count)
+                    if (int.TryParse(Console.ReadLine(), out int ki) && ki >= 1 && ki <= doors.Count)
                     {
-                        if (_doors[ki - 1].IsLocked) _doors[ki - 1].UnlockDoor(); else _doors[ki - 1].LockDoor();
+                        var door = doors[ki - 1];
+                        if (door.IsLocked) door.UnlockDoor(); else door.LockDoor();
+                        _doorRepo.Update(door);
                     }
                     break;
                 case ConsoleKey.C:
-                    if (_camera.IsRecording) _camera.StopRecording(); else _camera.StartRecording();
+                    if (camera.IsRecording) camera.StopRecording(); else camera.StartRecording();
+                    _updateCctv.Execute(camera.DeviceId);
                     break;
                 case ConsoleKey.V:
-                    _camera.ToggleNightVision();
+                    camera.ToggleNightVision();
+                    _updateCctv.Execute(camera.DeviceId);
                     break;
                 case ConsoleKey.A:
-                    if (_alarm.IsArmed) _alarm.Disarm(); else _alarm.Arm();
+                    if (alarm.IsArmed) alarm.Disarm(); else alarm.Arm();
+                    _alarmRepo.Update(alarm);
                     break;
                 case ConsoleKey.D1: // '!'
-                    if (_alarm.IsArmed) _alarm.TriggerAlarm();
+                    if (alarm.IsArmed) alarm.TriggerAlarm();
                     break;
                 case ConsoleKey.B: stay = false; break;
             }
@@ -221,13 +297,17 @@ internal sealed class Program
             Console.Clear();
             Console.WriteLine("HEATING");
             Console.WriteLine("");
-            Console.WriteLine($"Thermostat: {_thermostat.Mode}");
-            Console.WriteLine($"Current Temp: {_thermostat.CurrentTemperature}");
-            Console.WriteLine($"Target Temp:  {_thermostat.TargetTemperature}");
+            
+            var thermostat = _getAllThermostats.Execute().First();
+            var pumps = _getAllHeatPumps.Execute();
+
+            Console.WriteLine($"Thermostat: {thermostat.Mode}");
+            Console.WriteLine($"Current Temp: {thermostat.CurrentTemperature}");
+            Console.WriteLine($"Target Temp:  {thermostat.TargetTemperature}");
             Console.WriteLine("Heat Pumps:");
-            for (int i = 0; i < _pumps.Count; i++)
+            for (int i = 0; i < pumps.Count; i++)
             {
-                var p = _pumps[i];
+                var p = pumps[i];
                 string status = p.IsOn ? "ON" : "OFF";
                 Console.WriteLine($"{i + 1}. [{status}] {p.Name} ({p.CurrentTemperature} -> {p.TargetTemperature})");
             }
@@ -242,32 +322,41 @@ internal sealed class Program
             switch (Console.ReadKey(true).Key)
             {
                 case ConsoleKey.M:
-                    if (_thermostat.Mode == ModeOptionThermostat.Off)
-                        _thermostat.SetMode(ModeOptionThermostat.Heating);
-                    else if (_thermostat.Mode == ModeOptionThermostat.Heating)
-                        _thermostat.SetMode(ModeOptionThermostat.Cooling);
+                    ModeOptionThermostat newMode = thermostat.Mode;
+                    if (thermostat.Mode == ModeOptionThermostat.Off)
+                        newMode = ModeOptionThermostat.Heating;
+                    else if (thermostat.Mode == ModeOptionThermostat.Heating)
+                        newMode = ModeOptionThermostat.Cooling;
                     else
-                        _thermostat.SetMode(ModeOptionThermostat.Off);
+                        newMode = ModeOptionThermostat.Off;
+                    _updateThermostat.Execute(thermostat.DeviceId, thermostat.TargetTemperature, newMode);
                     break;
                 case ConsoleKey.T:
                     Console.Write("Target Temp: ");
                     if (double.TryParse(Console.ReadLine(), out double t))
-                        _thermostat.SetTargetTemperature(new Temperature(t));
+                    {
+                        _updateThermostat.Execute(thermostat.DeviceId, new Temperature(t), thermostat.Mode);
+                    }
                     break;
                 case ConsoleKey.P:
                     Console.Write("Pump #: ");
-                    if (int.TryParse(Console.ReadLine(), out int pi) && pi >= 1 && pi <= _pumps.Count)
+                    if (int.TryParse(Console.ReadLine(), out int pi) && pi >= 1 && pi <= pumps.Count)
                     {
-                        if (_pumps[pi - 1].IsOn) _pumps[pi - 1].ToggleOff(); else _pumps[pi - 1].ToggleOn();
+                        var pump = pumps[pi - 1];
+                        if (pump.IsOn) pump.ToggleOff(); else pump.ToggleOn();
+                        _updateHeatPump.Execute(pump.DeviceId, pump.TargetTemperature, pump.Power);
                     }
                     break;
                 case ConsoleKey.W:
                     Console.Write("Pump #: ");
-                    if (int.TryParse(Console.ReadLine(), out int wi) && wi >= 1 && wi <= _pumps.Count)
+                    if (int.TryParse(Console.ReadLine(), out int wi) && wi >= 1 && wi <= pumps.Count)
                     {
                         Console.Write("Power (0-100): ");
                         if (int.TryParse(Console.ReadLine(), out int pow))
-                            _pumps[wi - 1].ChangePower(pow);
+                        {
+                            var pump = pumps[wi - 1];
+                            _updateHeatPump.Execute(pump.DeviceId, pump.TargetTemperature, new Power(pow));
+                        }
                     }
                     break;
                 case ConsoleKey.B: stay = false; break;
@@ -278,15 +367,22 @@ internal sealed class Program
     static void FoodMenu()
     {
         bool stay = true;
+        var updateCoffee = new UpdateCoffeeMachineCommand(_coffeeRepo);
+        var updateFridge = new UpdateRefrigeratorCommand(_fridgeRepo);
+
         while (stay)
         {
             Console.Clear();
             Console.WriteLine("FOOD & APPLIANCES");
             Console.WriteLine("");
-            Console.WriteLine($"Coffee Machine: {_coffee.Name} [{(_coffee.Status ? "ON" : "OFF")}]");
-            Console.WriteLine($"Refrigerator: {_fridge.Name}");
-            Console.WriteLine($"  Fridge:  {_fridge.MyFridge.CurrentTemperature}C {(_fridge.MyFridge.IsDoorOpen ? "(OPEN)" : "(CLOSED)")}");
-            Console.WriteLine($"  Freezer: {_fridge.MyFreezer.CurrentTemperature}C {(_fridge.MyFreezer.IsDoorOpen ? "(OPEN)" : "(CLOSED)")}");
+            
+            var coffee = _getAllCoffee.Execute().First();
+            var fridge = _getAllFridges.Execute().First();
+
+            Console.WriteLine($"Coffee Machine: {coffee.Name} [{(coffee.Status ? "ON" : "OFF")}]");
+            Console.WriteLine($"Refrigerator: {fridge.Name}");
+            Console.WriteLine($"  Fridge:  {fridge.MyFridge.CurrentTemperature}C {(fridge.MyFridge.IsDoorOpen ? "(OPEN)" : "(CLOSED)")}");
+            Console.WriteLine($"  Freezer: {fridge.MyFreezer.CurrentTemperature}C {(fridge.MyFreezer.IsDoorOpen ? "(OPEN)" : "(CLOSED)")}");
             Console.WriteLine("");
             Console.WriteLine("[C] Toggle Coffee Machine");
             Console.WriteLine("[F] Open/Close Fridge");
@@ -298,18 +394,24 @@ internal sealed class Program
             switch (Console.ReadKey(true).Key)
             {
                 case ConsoleKey.C:
-                    if (_coffee.Status) _coffee.ToggleOff(); else _coffee.ToggleOn();
+                    if (coffee.Status) coffee.ToggleOff(); else coffee.ToggleOn();
+                    updateCoffee.Execute(coffee);
                     break;
                 case ConsoleKey.F:
-                    if (_fridge.MyFridge.IsDoorOpen) _fridge.CloseFridge(); else _fridge.OpenFridge();
+                    if (fridge.MyFridge.IsDoorOpen) fridge.CloseFridge(); else fridge.OpenFridge();
+                    updateFridge.Execute(fridge);
                     break;
                 case ConsoleKey.Z:
-                    if (_fridge.MyFreezer.IsDoorOpen) _fridge.CloseFreezer(); else _fridge.OpenFreezer();
+                    if (fridge.MyFreezer.IsDoorOpen) fridge.CloseFreezer(); else fridge.OpenFreezer();
+                    updateFridge.Execute(fridge);
                     break;
                 case ConsoleKey.T:
                     Console.Write("Temp (0-6): ");
                     if (double.TryParse(Console.ReadLine(), out double ft))
-                        _fridge.SetMyFridgeTemp(new Temperature(ft));
+                    {
+                        fridge.SetMyFridgeTemp(new Temperature(ft));
+                        updateFridge.Execute(fridge);
+                    }
                     break;
                 case ConsoleKey.B: stay = false; break;
             }
@@ -321,20 +423,21 @@ internal sealed class Program
         Console.Clear();
         Console.WriteLine("FULL DEVICE STATUS");
         Console.WriteLine("");
-        PrintList("Lamps", _lamps);
-        PrintList("Doors", _doors);
-        Console.WriteLine($"Camera: {_camera}");
-        Console.WriteLine($"Alarm: {_alarm}");
-        PrintList("Heat Pumps", _pumps);
-        Console.WriteLine($"Thermostat: {_thermostat}");
-        Console.WriteLine($"Coffee: {_coffee}");
-        Console.WriteLine($"Refrigerator: {_fridge}");
+        
+        PrintList("Lamps", _getAllLamps.Execute());
+        PrintList("Doors", _doorRepo.GetAll());
+        Console.WriteLine($"Camera: {_getAllCctv.Execute().First()}");
+        Console.WriteLine($"Alarm: {_alarmRepo.GetAll().First()}");
+        PrintList("Heat Pumps", _getAllHeatPumps.Execute());
+        Console.WriteLine($"Thermostat: {_getAllThermostats.Execute().First()}");
+        Console.WriteLine($"Coffee: {_getAllCoffee.Execute().First()}");
+        Console.WriteLine($"Refrigerator: {_getAllFridges.Execute().First()}");
         Console.WriteLine("");
         Console.WriteLine("Press any key to back...");
         Console.ReadKey(true);
     }
 
-    static void PrintList<T>(string title, List<T> items)
+    static void PrintList<T>(string title, System.Collections.Generic.IEnumerable<T> items)
     {
         Console.WriteLine($"{title}:");
         foreach (var item in items) Console.WriteLine($"  {item}");

@@ -1,12 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
+using BlaisePascal.SmartHouse.Domain.Food;
+using BlaisePascal.SmartHouse.Domain.Food.Repositories;
 
 namespace BlaisePascal.Smarthouse.Application.Food.Repositories.Commands
 {
-    internal class AddRefrigeratorCommand
+    public class AddRefrigeratorCommand
     {
+        private readonly IRefrigeratorRepository _repository;
+
+        public AddRefrigeratorCommand(IRefrigeratorRepository repository)
+        {
+            _repository = repository;
+        }
+
+        public void Execute(Fridge fridge, string name, Freezer freezer)
+        {
+            var refrigerator = new Refrigerator(fridge, name, freezer);
+            _repository.Add(refrigerator);
+        }
     }
 }

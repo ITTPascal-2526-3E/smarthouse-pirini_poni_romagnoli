@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +13,7 @@ namespace BlaisePascal.SmartHouse.Infrastructure.Repositories.Devices.Illuminati
 
 
 {
-    internal class InMemoryLampRepository : ILampRepository
+    public class InMemoryLampRepository : ILampRepository
     {
         private readonly List<Lamp?> _lamps = new List<Lamp?>();
         public InMemoryLampRepository()

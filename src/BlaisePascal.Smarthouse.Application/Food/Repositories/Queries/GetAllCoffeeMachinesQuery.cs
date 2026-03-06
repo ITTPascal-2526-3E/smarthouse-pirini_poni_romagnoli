@@ -1,12 +1,21 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using BlaisePascal.SmartHouse.Domain.Food;
+using BlaisePascal.SmartHouse.Domain.Food.Repositories;
 
 namespace BlaisePascal.Smarthouse.Application.Food.Repositories.Queries
 {
-    internal class GetAllCoffeeMachinesQuery
+    public class GetAllCoffeeMachinesQuery
     {
+        private readonly ICoffeeMachineRepository _repository;
+
+        public GetAllCoffeeMachinesQuery(ICoffeeMachineRepository repository)
+        {
+            _repository = repository;
+        }
+
+        public List<CoffeeMachine> Execute()
+        {
+            return _repository.GetAll();
+        }
     }
 }

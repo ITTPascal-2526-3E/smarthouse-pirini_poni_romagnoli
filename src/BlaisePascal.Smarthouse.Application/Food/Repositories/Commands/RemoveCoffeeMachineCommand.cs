@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
+using BlaisePascal.SmartHouse.Domain.Food.Repositories;
 
 namespace BlaisePascal.Smarthouse.Application.Food.Repositories.Commands
 {
-    internal class RemoveCoffeeMachineCommand
+    public class RemoveCoffeeMachineCommand
     {
+        private readonly ICoffeeMachineRepository _repository;
+
+        public RemoveCoffeeMachineCommand(ICoffeeMachineRepository repository)
+        {
+            _repository = repository;
+        }
+
+        public void Execute(Guid id)
+        {
+            _repository.Remove(id);
+        }
     }
 }
