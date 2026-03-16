@@ -9,8 +9,8 @@ using BlaisePascal.SmartHouse.Domain.Heating.HeatingOptions;
 
 using BlaisePascal.SmartHouse.Infrastructure.Repositories.Devices.Heating;
 
-using BlaisePascal.SmartHouse.Application.Heating.Repositories.Commands;
-using BlaisePascal.SmartHouse.Application.Heating.Repositories.Queries;
+using BlaisePascal.SmartHouse.Application.Heating.Commands;
+using BlaisePascal.SmartHouse.Application.Heating.Queries;
 
 namespace BlaisePascal.SmartHouse.Console.Controllers
 {
@@ -37,8 +37,8 @@ namespace BlaisePascal.SmartHouse.Console.Controllers
         private readonly RemoveThermostatCommand _removeThermostat;
         private readonly UpdateHeatPumpCommand _updateHeatPump;
         private readonly UpdateThermostatCommand _updateThermostat;
-        private readonly DisplayHeatPumpStatusCommand _displayHeatPumpStatus;
-        private readonly DisplayThermostatStatusCommand _displayThermostatStatus;
+        private readonly GetHeatPumpStatusQuery _displayHeatPumpStatus;
+        private readonly GetThermostatStatusQuery _displayThermostatStatus;
 
         public HeatingController()
         {
@@ -61,8 +61,8 @@ namespace BlaisePascal.SmartHouse.Console.Controllers
             _removeThermostat = new RemoveThermostatCommand(_thermostatRepo);
             _updateHeatPump = new UpdateHeatPumpCommand(_heatPumpRepo);
             _updateThermostat = new UpdateThermostatCommand(_thermostatRepo);
-            _displayHeatPumpStatus = new DisplayHeatPumpStatusCommand(_heatPumpRepo);
-            _displayThermostatStatus = new DisplayThermostatStatusCommand(_thermostatRepo);
+            _displayHeatPumpStatus = new GetHeatPumpStatusQuery(_heatPumpRepo);
+            _displayThermostatStatus = new GetThermostatStatusQuery(_thermostatRepo);
         }
 
         public void InitData()
@@ -235,7 +235,7 @@ namespace BlaisePascal.SmartHouse.Console.Controllers
                         if (int.TryParse(System.Console.ReadLine(), out int ii) && ii >= 1 && ii <= pumps.Count)
                         {
                             var pump = pumps[ii - 1];
-                            // DisplayHeatPumpStatusCommand
+                            // GetHeatPumpStatusQuery
                             string? statusInfo = _displayHeatPumpStatus.Execute(pump.DeviceId);
                             if (statusInfo != null) System.Console.WriteLine(statusInfo);
                             // GetHeatPumpActualTemperatureQuery
@@ -256,7 +256,7 @@ namespace BlaisePascal.SmartHouse.Console.Controllers
                         if (thermostats.Count > 0)
                         {
                             var thermostat = thermostats.First();
-                            // DisplayThermostatStatusCommand
+                            // GetThermostatStatusQuery
                             string? thStatus = _displayThermostatStatus.Execute(thermostat.DeviceId);
                             if (thStatus != null) System.Console.WriteLine(thStatus);
                             // GetThermostatActualTemperatureQuery
@@ -282,3 +282,4 @@ namespace BlaisePascal.SmartHouse.Console.Controllers
         }
     }
 }
+

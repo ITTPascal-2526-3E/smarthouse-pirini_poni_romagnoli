@@ -7,8 +7,8 @@ using BlaisePascal.SmartHouse.Domain.Food;
 
 using BlaisePascal.SmartHouse.Infrastructure.Repositories.Devices.Food;
 
-using BlaisePascal.Smarthouse.Application.Food.Repositories.Commands;
-using BlaisePascal.Smarthouse.Application.Food.Repositories.Queries;
+using BlaisePascal.Smarthouse.Application.Food.Commands;
+using BlaisePascal.Smarthouse.Application.Food.Queries;
 
 namespace BlaisePascal.SmartHouse.Console.Controllers
 {
@@ -250,3 +250,4 @@ namespace BlaisePascal.SmartHouse.Console.Controllers
         }
     }
 }
+

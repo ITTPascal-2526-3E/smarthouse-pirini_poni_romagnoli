@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using BlaisePascal.SmartHouse.Domain.ValueObjects;
 
 namespace BlaisePascal.SmartHouse.Domain.Abstraction
@@ -7,19 +7,19 @@ namespace BlaisePascal.SmartHouse.Domain.Abstraction
     public abstract class Device : ITogglable
     {
         // Unique identifier for the device
-        public Guid DeviceId { get; set; } = Guid.NewGuid();
+        public Guid DeviceId { get; protected set; } = Guid.NewGuid();
 
         // Human-readable name of the device
-        public DeviceName Name { get; set; }// protected means that only this class and derived can modify it
+        public DeviceName Name { get; protected set; }// protected means that only this class and derived can modify it
 
         // Indicates whether the device is currently ON or OFF
-        public bool Status { get;  set; }
+        public bool Status { get; protected set; }
 
         // Timestamp of device creation in UTC
-        public DateTime CreatedAtUtc { get; set; }
+        public DateTime CreatedAtUtc { get; protected set; }
 
         // Timestamp of last state modification in UTC
-        public DateTime LastModifiedAtUtc { get; set; }
+        public DateTime LastModifiedAtUtc { get; protected set; }
 
         // Constructor initializes the device name, status and timestamps
         protected Device(string name, bool status)

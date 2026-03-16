@@ -6,8 +6,8 @@ using BlaisePascal.SmartHouse.Domain.Security.SecurityDevices;
 
 using BlaisePascal.SmartHouse.Infrastructure.Repositories.Devices.Security;
 
-using BlaisePascal.SmartHouse.Application.Security.Repositories.Commands;
-using BlaisePascal.SmartHouse.Application.Security.Repositories.Queries;
+using BlaisePascal.SmartHouse.Application.Security.Commands;
+using BlaisePascal.SmartHouse.Application.Security.Queries;
 
 namespace BlaisePascal.SmartHouse.Console.Controllers
 {
@@ -31,7 +31,7 @@ namespace BlaisePascal.SmartHouse.Console.Controllers
         private readonly StartRecordingCCTVCommand _startRecording;
         private readonly StopRecordingCCTVCommand _stopRecording;
         private readonly TriggerAlarmCCTVCommand _triggerAlarmCctv;
-        private readonly DisplayCCTVStatusCommand _displayCctvStatus;
+        private readonly GetCCTVStatusQuery _displayCctvStatus;
 
         public SecurityController()
         {
@@ -51,7 +51,7 @@ namespace BlaisePascal.SmartHouse.Console.Controllers
             _startRecording = new StartRecordingCCTVCommand(_cctvRepo);
             _stopRecording = new StopRecordingCCTVCommand(_cctvRepo);
             _triggerAlarmCctv = new TriggerAlarmCCTVCommand(_cctvRepo);
-            _displayCctvStatus = new DisplayCCTVStatusCommand(_cctvRepo);
+            _displayCctvStatus = new GetCCTVStatusQuery(_cctvRepo);
         }
 
         public void InitData()
@@ -232,7 +232,7 @@ namespace BlaisePascal.SmartHouse.Console.Controllers
                         if (int.TryParse(System.Console.ReadLine(), out int ii) && ii >= 1 && ii <= cameras.Count)
                         {
                             var cam = cameras[ii - 1];
-                            // DisplayCCTVStatusCommand
+                            // GetCCTVStatusQuery
                             string statusStr = _displayCctvStatus.Execute(cam.DeviceId);
                             System.Console.WriteLine(statusStr);
                             // GetCCTVIsNightVisionOnQuery
@@ -265,3 +265,4 @@ namespace BlaisePascal.SmartHouse.Console.Controllers
         }
     }
 }
+

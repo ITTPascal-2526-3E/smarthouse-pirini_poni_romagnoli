@@ -1,12 +1,12 @@
-﻿using BlaisePascal.SmartHouse.Domain.Abstraction;
+using BlaisePascal.SmartHouse.Domain.Abstraction;
 using BlaisePascal.SmartHouse.Domain.ValueObjects;
 
 namespace BlaisePascal.SmartHouse.Domain.Food
 {
     public class Refrigerator : Device
     {
-        public Fridge MyFridge { get; set; }
-        public Freezer MyFreezer { get; set; }
+        public Fridge MyFridge { get; private set; }
+        public Freezer MyFreezer { get; private set; }
         public Refrigerator(Fridge fridge, string name, Freezer myFreezer) : base(name, true)
         {
             MyFridge = fridge;

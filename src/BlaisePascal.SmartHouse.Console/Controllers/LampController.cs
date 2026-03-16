@@ -7,8 +7,8 @@ using BlaisePascal.SmartHouse.Domain.Illumination.LampTypes;
 
 using BlaisePascal.SmartHouse.Infrastructure.Repositories.Devices.Illumination.Lamps;
 
-using BlaisePascal.SmartHouse.Application.Illumination.Repositories.Commands;
-using BlaisePascal.SmartHouse.Application.Illumination.Repositories.Queries;
+using BlaisePascal.SmartHouse.Application.Illumination.Commands;
+using BlaisePascal.SmartHouse.Application.Illumination.Queries;
 
 namespace BlaisePascal.SmartHouse.Console.Controllers
 {
@@ -27,7 +27,7 @@ namespace BlaisePascal.SmartHouse.Console.Controllers
         private readonly SwitchOnLampCommand _switchOnLamp;
         private readonly SwitchOffLampCommand _switchOffLamp;
         private readonly UpdateLampCommand _updateLamp;
-        private readonly DisplayLampStatusCommand _displayLampStatus;
+        private readonly GetLampStatusQuery _displayLampStatus;
 
         public LampController()
         {
@@ -42,7 +42,7 @@ namespace BlaisePascal.SmartHouse.Console.Controllers
             _switchOnLamp = new SwitchOnLampCommand(_lampRepo);
             _switchOffLamp = new SwitchOffLampCommand(_lampRepo);
             _updateLamp = new UpdateLampCommand(_lampRepo);
-            _displayLampStatus = new DisplayLampStatusCommand(_lampRepo);
+            _displayLampStatus = new GetLampStatusQuery(_lampRepo);
         }
 
         public void InitData()
@@ -182,7 +182,7 @@ namespace BlaisePascal.SmartHouse.Console.Controllers
                         if (int.TryParse(System.Console.ReadLine(), out int ii) && ii >= 1 && ii <= lamps.Count)
                         {
                             var lamp = lamps[ii - 1];
-                            // DisplayLampStatusCommand
+                            // GetLampStatusQuery
                             string? statusInfo = _displayLampStatus.Execute(lamp.DeviceId);
                             if (statusInfo != null)
                             {
@@ -205,3 +205,4 @@ namespace BlaisePascal.SmartHouse.Console.Controllers
         }
     }
 }
+

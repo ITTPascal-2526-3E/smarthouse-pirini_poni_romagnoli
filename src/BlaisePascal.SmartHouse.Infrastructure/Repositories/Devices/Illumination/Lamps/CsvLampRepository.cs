@@ -1,7 +1,8 @@
-﻿using BlaisePascal.SmartHouse.Domain.Illumination.LampOptions;
+using BlaisePascal.SmartHouse.Domain.Illumination.LampOptions;
 using BlaisePascal.SmartHouse.Domain.Illumination.LampTypes;
 using BlaisePascal.SmartHouse.Domain.Illumination.Repositories;
 using BlaisePascal.SmartHouse.Domain.ValueObjects;
+using BlaisePascal.SmartHouse.Domain.Abstraction;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -150,10 +151,10 @@ namespace BlaisePascal.SmartHouse.Infrastructure.Repositories.Devices.Illuminati
                 var name = parts[1];
 
                 var lamp = new Lamp(power, color, model, brand, energyClass, name);
-                lamp.DeviceId = Guid.Parse(parts[0]);
-                lamp.Status = bool.Parse(parts[2]);
-                lamp.CurrentLuminosity = new Luminosity(int.Parse(parts[8]));
-                lamp.LastModifiedAtUtc = DateTime.Parse(parts[9]);
+                typeof(Device).GetProperty("DeviceId")!.SetValue(lamp, Guid.Parse(parts[0]));
+                typeof(Device).GetProperty("Status")!.SetValue(lamp, bool.Parse(parts[2]));
+                typeof(Lamp).GetProperty("CurrentLuminosity", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance)!.SetValue(lamp, new Luminosity(int.Parse(parts[8])));
+                typeof(Device).GetProperty("LastModifiedAtUtc")!.SetValue(lamp, DateTime.Parse(parts[9]));
 
                 lamps.Add(lamp);
             }

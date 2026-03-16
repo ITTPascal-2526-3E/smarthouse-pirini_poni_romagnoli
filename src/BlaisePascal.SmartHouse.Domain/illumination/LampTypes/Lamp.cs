@@ -1,4 +1,4 @@
-﻿using BlaisePascal.SmartHouse.Domain.Abstraction;
+using BlaisePascal.SmartHouse.Domain.Abstraction;
 using BlaisePascal.SmartHouse.Domain.ValueObjects;
 using BlaisePascal.SmartHouse.Domain.Illumination.LampOptions;
 using BlaisePascal.SmartHouse.Domain.Illumination.LampAbstraction;
@@ -10,7 +10,7 @@ namespace BlaisePascal.SmartHouse.Domain.Illumination.LampTypes
     public class Lamp : Device, IDimmable
     {
         // Lamp power in watts
-        public int Power { get; set; }
+        public int Power { get; private set; }
 
         // Luminosity property from IDimmable
         public Luminosity Luminosity
@@ -20,19 +20,19 @@ namespace BlaisePascal.SmartHouse.Domain.Illumination.LampTypes
         }
 
         // Lamp color chosen from predefined options
-        public ColorOption Color { get; set; }
+        public ColorOption Color { get; protected set; }
 
         // Manufacturer brand
-        public string Brand { get; set; }
+        public string Brand { get; private set; }
 
         // Lamp model name or number
-        public string Model { get; set; }
+        public string Model { get; private set; }
 
         // Energy efficiency label (e.g. A++, B, etc.)
-        public EnergyClass EnergyEfficiency { get; set; }
+        public EnergyClass EnergyEfficiency { get; private set; }
 
         // Brightness level
-        public Luminosity CurrentLuminosity { get; set; }
+        public Luminosity CurrentLuminosity { get; private set; }
 
         // Indicates if the lamp is currently ON (mapped to the base Status)
         public bool IsOn => Status;

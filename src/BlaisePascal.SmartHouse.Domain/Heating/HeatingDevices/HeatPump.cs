@@ -1,4 +1,4 @@
-﻿using BlaisePascal.SmartHouse.Domain.Abstraction;
+using BlaisePascal.SmartHouse.Domain.Abstraction;
 using BlaisePascal.SmartHouse.Domain.Illumination.LampOptions;
 using BlaisePascal.SmartHouse.Domain.ValueObjects;
 using BlaisePascal.SmartHouse.Domain.Heating.HeatingOptions;
@@ -19,13 +19,13 @@ namespace BlaisePascal.SmartHouse.Domain.Heating.HeatingDevices
         public ModeOptionHeatPump Mode { get; private set; }
 
         // Brand identification
-        public string Brand { get; set; }
+        public string Brand { get; private set; }
 
         // Model identification
-        public string Model { get; set; }
+        public string Model { get; private set; }
 
         // Energy efficiency rating
-        public EnergyClass EnergyEfficiency { get; set; }
+        public EnergyClass EnergyEfficiency { get; private set; }
 
         // Indicates whether the device is currently ON (mapped to Status)
         public bool IsOn => Status;

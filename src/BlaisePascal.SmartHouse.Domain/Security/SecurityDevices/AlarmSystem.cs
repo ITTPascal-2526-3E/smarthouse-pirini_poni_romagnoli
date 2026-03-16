@@ -1,12 +1,12 @@
-﻿using BlaisePascal.SmartHouse.Domain.Security.SecurityAbstraction;
+using BlaisePascal.SmartHouse.Domain.Security.SecurityAbstraction;
 using BlaisePascal.SmartHouse.Domain.Abstraction;
 
 namespace BlaisePascal.SmartHouse.Domain.Security.SecurityDevices
 {
     public sealed class AlarmSystem : SecurityDevice
     {
-        public string Brand { get; set; }
-        public string Model { get; set; }
+        public string Brand { get; private set; }
+        public string Model { get; private set; }
 
         public AlarmSystem(string brand, string model) : base("System1SmartHouse", true)
         {

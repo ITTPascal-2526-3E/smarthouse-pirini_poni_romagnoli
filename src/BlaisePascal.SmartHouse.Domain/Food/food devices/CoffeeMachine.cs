@@ -1,16 +1,16 @@
-﻿using BlaisePascal.SmartHouse.Domain.Abstraction;
+using BlaisePascal.SmartHouse.Domain.Abstraction;
 using BlaisePascal.SmartHouse.Domain.Illumination.LampOptions;
 
 namespace BlaisePascal.SmartHouse.Domain.Food
 {
     public sealed class CoffeeMachine : Device, IProgrammable
     {
-        public string Brand { get; set; }
-        public string Model { get; set; }
-        public EnergyClass EnergyEfficiency { get; set; }
-        public bool IsReady { get; set; } // True if the coffee machine is ready to use
-        public DateTime IgnitionTime { get; set; } // Time of ignition
-        public DateTime ShutdownTime { get; set; } // Time of shutdown
+        public string Brand { get; private set; }
+        public string Model { get; private set; }
+        public EnergyClass EnergyEfficiency { get; private set; }
+        public bool IsReady { get; private set; } // True if the coffee machine is ready to use
+        public DateTime IgnitionTime { get; private set; } // Time of ignition
+        public DateTime ShutdownTime { get; private set; } // Time of shutdown
         public DateTime? ScheduledOn { get; private set; } // Scheduled time to turn ON
         public DateTime? ScheduledOff { get; private set; } // Scheduled time to turn OFF       
 
